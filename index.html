@@ -152,6 +152,101 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Qt学习笔记01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/10/23/Qt%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B001/">Qt学习笔记01</a>
+    </h1>
+  
+
+        
+        <a href="/2024/10/23/Qt%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B001/" class="archive-article-date">
+  	<time datetime="2024-10-23T10:58:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-10-23</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="通过按钮链接多窗口"><a href="#通过按钮链接多窗口" class="headerlink" title="通过按钮链接多窗口"></a>通过按钮链接多窗口</h2><p>注意点1 声明<br>    &#x2F;&#x2F;声明成员变量，指向newwindow1类型的对象<br>    QPointer<newwindow1> new_win1;<br>    QPointer<newwindow2> new_win2;<br>    QPointer<QQwin> new_win3;<br>注意点2 释放内存<br>newwindow2::newwindow2(QWidget *parent)<br>    : QDialog(parent)<br>    , ui(new Ui::newwindow2)<br>{<br>    ui-&gt;setupUi(this);<br>    &#x2F;&#x2F;关闭窗口时，自动析构释放内存<br>    setAttribute(Qt::WA_DeleteOnClose);<br>}</p>
+<h2 id="实现QQ抽屉效果核心技术"><a href="#实现QQ抽屉效果核心技术" class="headerlink" title="实现QQ抽屉效果核心技术"></a>实现QQ抽屉效果核心技术</h2><p>1.&#x2F;&#x2F;核心技术lambda创建一次性函数，增加代码简洁性，功能灵活性<br>void QQwin::connection()<br>{<br>    connect(ui-&gt;fam_btn,&amp;QPushButton::clicked,this,<a href="">this</a>{openDrawer(0);}); &#x2F;&#x2F;自定义链接connect，同时使用lambda一次性函数<br>    connect(ui-&gt;tea_btn,&amp;QPushButton::clicked,this,<a href="">this</a>{openDrawer(1);});<br>    connect(ui-&gt;fri_btn,&amp;QPushButton::clicked,this,<a href="">this</a>{openDrawer(2);});<br>}<br>2.&#x2F;&#x2F;核心技术QstackedWidget,卡片堆，用于通过索引管理多页面之间的切换！！！！！后面就是无限套娃一个列表套一个列表<br>    stackedWidget &#x3D; new QStackedWidget(drawerWidget);  &#x2F;&#x2F;堆抽屉，一次只能显示一个<br>    QVBoxLayout *drawerLayout &#x3D; new QVBoxLayout(drawerWidget); &#x2F;&#x2F;创建垂直布局<br>    drawerLayout-&gt;addWidget(stackedWidget); &#x2F;&#x2F;将堆放入布局<br>3.&#x2F;&#x2F;核心技术drawerAnimation打开抽屉动画设置<br>void QQwin::openDrawer(int index)<br>{<br>    stackedWidget-&gt;setCurrentIndex(index);<br>    static int OpenIndex &#x3D; -1; &#x2F;&#x2F; 静态变量</p>
+<pre><code>if (!isOpenDrawer) &#123;
+    // 从左侧滑出
+    drawerAnimation-&gt;setStartValue(QRect(-drawerWidget-&gt;width(), 0, drawerWidget-&gt;width(), height()));
+    drawerAnimation-&gt;setEndValue(QRect(120, 0, drawerWidget-&gt;width(), height()));
+    drawerWidget-&gt;show();
+    isOpenDrawer = true;
+    OpenIndex = index;
+&#125;  else if (OpenIndex == index) &#123;
+    // 如果点击的是当前打开的抽屉，就关闭它
+    drawerAnimation-&gt;setStartValue(QRect(120, 0, drawerWidget-&gt;width(), height()));
+    drawerAnimation-&gt;setEndValue(QRect(-drawerWidget-&gt;width(), 0, drawerWidget-&gt;width(), height()));
+    isOpenDrawer = false;
+    OpenIndex = -1;
+&#125; else &#123;
+    // 如果抽屉已经打开，那切换内容
+    OpenIndex = index;
+&#125;
+drawerAnimation-&gt;start();
+</code></pre>
+<p>}</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Qt Creator</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/10/23/Qt%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B001/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-操作系统内核笔记01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -484,6 +579,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Qt Creator</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">操作系统内核</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">挂载镜像磁盘</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
@@ -493,14 +600,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">操作系统内核</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">挂载镜像磁盘</a>
               </li>
             
             <div class="clearfix"></div>
