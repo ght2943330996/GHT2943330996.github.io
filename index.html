@@ -152,6 +152,90 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-操作系统内核系统调用全流程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/10/31/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%85%A8%E6%B5%81%E7%A8%8B/">操作系统内核系统调用全流程</a>
+    </h1>
+  
+
+        
+        <a href="/2024/10/31/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%85%A8%E6%B5%81%E7%A8%8B/" class="archive-article-date">
+  	<time datetime="2024-10-31T11:58:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-10-31</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一-windows环境配置"><a href="#一-windows环境配置" class="headerlink" title="一.windows环境配置"></a>一.windows环境配置</h2><p>1.检查系统更新，并打开虚拟机平台和子系统<br>2.去ms下载ubuntu20.04.6<br>3.在命令行更新安装wsl：wsl –update<br>4.运行ubuntu并设置账号<br>5.最后在win命令中检查：wsl -l -v     2为正确，如果是1先更新系统再wsl –set-version ubuntu将版本升级</p>
+<h2 id="二-ubuntu环境配置"><a href="#二-ubuntu环境配置" class="headerlink" title="二.ubuntu环境配置"></a>二.ubuntu环境配置</h2><p>1.先更新sudo apt update 和 sudo apt upgrade<br>2.安装工具sudo apt install build-essential<br>sudo apt install gcc-multilib<br>检查：gcc–version<br>3.同时将linux源码和busybox源码放入用户根目录下</p>
+<h2 id="三-编译内核"><a href="#三-编译内核" class="headerlink" title="三.编译内核"></a>三.编译内核</h2><p>1.安装软件包5个：sudo apt install flex<br>sudo apt install bison<br>sudo apt install libssl-dev<br>sudo apt install libelf-dev<br>sudo apt install libncurses-dev<br>2.在家目录下解压两个源码：linux：tar -xvJf linux-5.10.68.tar.xz<br>busybox:  tar -xvjf busybox-1.33.1.tar.bz2<br>3.进入linux根目录下配置内核：make defconfig<br>并且在源码下编译内核：make -j20</p>
+<h2 id="四：安装虚拟机"><a href="#四：安装虚拟机" class="headerlink" title="四：安装虚拟机"></a>四：安装虚拟机</h2><p>家目录下：sudo apt install qemu-system-x86</p>
+<h2 id="五：编译busybox"><a href="#五：编译busybox" class="headerlink" title="五：编译busybox"></a>五：编译busybox</h2><p>1.去到busybox根目录下：make defconfig<br>然后make menuconfig，去勾选Settings &#x2F; Build static binary<br>2.编译busybox：make install</p>
+<h2 id="六-制作镜像文件"><a href="#六-制作镜像文件" class="headerlink" title="六.制作镜像文件"></a>六.制作镜像文件</h2><p>1.在家目录下执行：dd if&#x3D;&#x2F;dev&#x2F;zero of&#x3D;rootfs.img bs&#x3D;1M count&#x3D;100<br>并格式化：mkfs.ext4 rootfs.img<br>2.创建挂载点：mkdir rootfs<br>挂载磁盘：sudo mount <del>&#x2F;rootfs.img rootfs<br>更名：sudo chown 用户名 -R rootfs<br>3.在</del>家目录下创建文件：mkdir -pv {bin,sbin,usr&#x2F;{bin,sbin},etc&#x2F;init.d,proc,sys,tmp,dev}<br>4.拷贝busybox中的文件：cp -drv <del>&#x2F;busybox-1.33.1.tar.bz2&#x2F;_install&#x2F;* .     *号和后面的圆点(.)之间有空格。<br>5.在rootfs下创建系统配置文件：nano etc&#x2F;inittab<br>输入以下代码：<br>::sysinit:&#x2F;etc&#x2F;init.d&#x2F;rcS<br>::respawn:-&#x2F;bin&#x2F;sh<br>::restart:&#x2F;sbin&#x2F;init<br>::shutdown:&#x2F;bin&#x2F;umount -a -r<br>保存退出<br>6.在rootfs下创建系统设置脚本：nano etc&#x2F;init.d&#x2F;rcS<br>输入以下代码：<br> #!&#x2F;bin&#x2F;sh<br> echo ‘INIT SCRIPT’<br> mount -t proc proc &#x2F;proc<br> mount -t sysfs sysfs &#x2F;sys<br> mount -t debugfs debugfs &#x2F;sys&#x2F;kernel&#x2F;debug<br> mount -t tmpfs tmpfs &#x2F;tmp<br> mdev -s<br> mount -n -o remount,rw &#x2F;<br> echo -e “\nBoot took $(cut -d’ ‘ -f1 &#x2F;proc&#x2F;uptime) seconds\n”<br>并在其下执行：chmod +x etc&#x2F;init.d&#x2F;rcS<br>7.在</del>下（也就是rootfs上级）卸载磁盘！！！十分重要：sudo umount rootfs<br>8.接着创建运行虚拟器命令：qemu-system-x86_64 -kernel ~&#x2F;linux-5.10.68&#x2F;arch&#x2F;x86&#x2F;boot&#x2F;bzImage -hda ~&#x2F;rootfs.img -append “root&#x3D;&#x2F;dev&#x2F;sda console&#x3D;ttyS0” -nographic<br>以后都可以直接用!qemu运行<br>9.测试：touch test看看有没有成功  最后poweroff退出</p>
+<h2 id="七-实现系统调用"><a href="#七-实现系统调用" class="headerlink" title="七.实现系统调用"></a>七.实现系统调用</h2><p>1.先到linux下，再开始操作。<br>添加系统调用函数原型: nano include&#x2F;linux&#x2F;syscalls.h    找到kernel&#x2F;sys.c *&#x2F;在后面添加asmlinkage long sys_mysyscall();<br>2.添加新的系统调用:nano arch&#x2F;x86&#x2F;entry&#x2F;syscalls&#x2F;syscall_64.tbl 在440之后添加441	common	mysyscall sys_mysyscall<br>3.在nano include&#x2F;uapi&#x2F;asm-generic&#x2F;unistd.h 在440后添加：#define NR_mysyscall 441<br>SYSCALL(__NR_mysyscall, sys_mysyscall)并修改#define __NR_syscalls 442 改成442<br>4.在 nano kernel&#x2F;sys_ni.c 中搜索This list is 在后面添加：COND_SYSCALL(mysyscall);  给不支持该系统调用的平台使用<br>5.在nano kernel&#x2F;sys.c中找到the same as 在后面添加代码：<br>SYSCALL_DEFINE0(mysyscall)<br>{<br> printk(“Hello&lt;学号&gt;!\n”);<br> return 0;<br>}<br>保存退出并重新编译内核：make -j20<br>6.返回~目录，创建系统调用程序：nano mysyscall.c<br>输入以下代码：<br>#include &lt;stdio.h&gt;<br>#include &lt;unistd.h&gt;</p>
+<p>int main()<br>{<br>        printf(“Calling mysyscall…\n”);<br>        long result &#x3D; syscall(441);<br>        printf(“Syscall result: %ld\n”,result);</p>
+<pre><code>    return 0;
+</code></pre>
+<p>}<br>保存退出并编译：gcc mysyscalls.c -static -o mysyscall<br>7.~目录下挂载：sudo mount rootfs.img rootfs<br>拷贝：cp mysyscall rootfs<br>卸载：sudo umount rootfs<br>最后运行虚拟机：!qemu<br>8.进到虚拟机里面，ls看文件，然后.&#x2F;mysyscall，查看系统调用是否成功，最后poweroff退出</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">操作系统内核</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/10/31/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%85%A8%E6%B5%81%E7%A8%8B/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Qt学习笔记01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -572,11 +656,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">操作系统内核</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">挂载镜像磁盘</a>
+                <a href="javascript:void(0)" class="js-tag color1">Qt Creator</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -592,7 +672,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Qt Creator</a>
+                <a href="javascript:void(0)" class="js-tag color2">操作系统内核</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">挂载镜像磁盘</a>
               </li>
             
             <div class="clearfix"></div>
