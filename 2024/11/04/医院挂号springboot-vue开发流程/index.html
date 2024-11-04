@@ -6,14 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Archives: 2024/10 | 我的第一个博客</title>
+  <title>医院挂号springboot+vue开发流程 | 我的第一个博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="我的第一个博客">
-<meta property="og:url" content="http://example.com/archives/2024/10/index.html">
+  <meta name="description" content="开发流程1.创建相应的数据库表，mysql，这是数据源。 2.创建实体层，Entity，他是个新创建的对象模型&#x2F;&#x2F; 示例：User.java@Datapublic class User {    private Long id;    private String username;    private String password;    &#x2F;&#x2F; … 其">
+<meta property="og:type" content="article">
+<meta property="og:title" content="医院挂号springboot+vue开发流程">
+<meta property="og:url" content="http://example.com/2024/11/04/%E5%8C%BB%E9%99%A2%E6%8C%82%E5%8F%B7springboot-vue%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/index.html">
 <meta property="og:site_name" content="我的第一个博客">
+<meta property="og:description" content="开发流程1.创建相应的数据库表，mysql，这是数据源。 2.创建实体层，Entity，他是个新创建的对象模型&#x2F;&#x2F; 示例：User.java@Datapublic class User {    private Long id;    private String username;    private String password;    &#x2F;&#x2F; … 其">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-11-04T08:05:57.000Z">
+<meta property="article:modified_time" content="2024-11-04T08:34:08.474Z">
 <meta property="article:author" content="seasons">
+<meta property="article:tag" content="springboot">
+<meta property="article:tag" content="vue">
+<meta property="article:tag" content="教程">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="我的第一个博客" type="application/atom+xml">
@@ -150,217 +157,212 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-医院挂号springboot-vue开发流程" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      医院挂号springboot+vue开发流程
+    </h1>
+  
+
+        
+        <a href="/2024/11/04/%E5%8C%BB%E9%99%A2%E6%8C%82%E5%8F%B7springboot-vue%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/" class="archive-article-date">
+  	<time datetime="2024-11-04T08:05:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-11-04</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="开发流程"><a href="#开发流程" class="headerlink" title="开发流程"></a>开发流程</h2><p>1.创建相应的数据库表，mysql，这是数据源。</p>
+<p>2.创建实体层，Entity，他是个新创建的对象模型<br>&#x2F;&#x2F; 示例：User.java<br>@Data<br>public class User {<br>    private Long id;<br>    private String username;<br>    private String password;<br>    &#x2F;&#x2F; … 其他属性<br>}<br>用途：<br>对应数据库表结构<br>定义数据模型<br>通常包含属性和getter&#x2F;setter方法<br>文件类型：<br>实体类（POJO）<br>数据传输对象（DTO）</p>
+<p>3.创建映射层，Mapper，他是映射你数据库操作的<br>&#x2F;&#x2F; 示例：UserMapper.java<br>@Mapper<br>public interface UserMapper {<br>    List<User> selectAll();<br>    User selectById(Long id);<br>    int insert(User user);<br>    &#x2F;&#x2F; … 其他数据库操作方法<br>}<br>用途：<br>负责数据库操作<br>定义SQL语句<br>实现数据持久化<br>文件类型：<br>Mapper接口<br>XML映射文件</p>
+<p>4.创建服务层，Service，他比较复杂，所有的业务逻辑都在这里，比如组合多个mapper操作，处理业务规则，数据校验等<br>&#x2F;&#x2F; 示例：UserService.java<br>@Service<br>public class UserServiceImpl implements UserService {<br>    @Autowired<br>    private UserMapper userMapper;</p>
+<pre><code>public Result register(User user) &#123;
+    // 1. 业务规则验证
+    if (user.getPassword().length() &lt; 6) &#123;
+        return Result.error(&quot;密码长度不能小于6位&quot;);
+    &#125;
+    
+    // 2. 业务逻辑处理
+    if (userMapper.findByUsername(user.getUsername()) != null) &#123;
+        return Result.error(&quot;用户名已存在&quot;);
+    &#125;
+    
+    // 3. 密码加密
+    user.setPassword(encryptPassword(user.getPassword()));
+    
+    // 4. 调用Mapper保存数据
+    userMapper.insert(user);
+    
+    // 5. 发送注册成功邮件
+    sendWelcomeEmail(user.getEmail());
+    
+    return Result.success();
+&#125;
+</code></pre>
+<p>}<br>用途：<br>实现业务逻辑<br>处理事务<br>调用Mapper层<br>文件类型：<br>服务接口<br>服务实现类</p>
+<p>5.创建控制层，Controller，他是处理和响应HTTP请求的，并连接Service层<br>&#x2F;&#x2F; 示例：UserController.java<br>@RestController<br>@RequestMapping(“&#x2F;api&#x2F;users”)<br>public class UserController {<br>    @Autowired<br>    private UserService userService;</p>
+<pre><code>@GetMapping(&quot;/&#123;id&#125;&quot;)
+public Result&lt;User&gt; getUser(@PathVariable Long id) &#123;
+    return Result.success(userService.getUserById(id));
+&#125;
+</code></pre>
+<p>}<br>用途：<br>处理HTTP请求<br>参数验证<br>调用Service层<br>文件类型：<br>控制器类<br>请求处理方法</p>
+<h2 id="数据流向以及完整流程（数据的去回一定都是这个流程，不能直接页面调用数据库数据）"><a href="#数据流向以及完整流程（数据的去回一定都是这个流程，不能直接页面调用数据库数据）" class="headerlink" title="数据流向以及完整流程（数据的去回一定都是这个流程，不能直接页面调用数据库数据）"></a>数据流向以及完整流程（数据的去回一定都是这个流程，不能直接页面调用数据库数据）</h2><p>浏览器 &lt;-&gt; Controller &lt;-&gt; Service &lt;-&gt; Mapper &lt;-&gt; 数据库</p>
+<p>完整流程：<br>1.用户在页面填写注册信息<br>2.点击注册按钮，前端调用Controller的API<br>3.Controller接收请求，调用Service<br>4.Service执行业务逻辑：<br>验证密码长度<br>检查用户名是否存在<br>加密密码<br>调用Mapper保存数据<br>Mapper执行数据库操作，将数据存入数据库，并返回结果<br>返回结果给前端展示</p>
+<p>所以Service层就像是一个”业务指挥官”：<br>它知道”要做什么”（业务规则）<br>它调动各种资源（Mapper、其他Service）<br>它确保业务的完整性（事务处理）<br>它处理各种业务场景（异常情况）<br>这就是为什么需要Service层的原因：它封装了核心业务逻辑，使得业务规则可以被集中管理和复用。</p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2024" class="archive-year">2024</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2024/10/31/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%85%A8%E6%B5%81%E7%A8%8B/" class="archive-article-date">
-  	<time datetime="2024-10-31T11:58:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-10-31</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2024/10/31/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%85%A8%E6%B5%81%E7%A8%8B/">操作系统内核系统调用全流程</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">操作系统内核</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2024/10/23/Qt%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B001/" class="archive-article-date">
-  	<time datetime="2024-10-23T10:58:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-10-23</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2024/10/23/Qt%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B001/">Qt学习笔记01</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Qt Creator</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2024/10/23/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E7%AC%94%E8%AE%B001/" class="archive-article-date">
-  	<time datetime="2024-10-23T09:51:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-10-23</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2024/10/23/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E7%AC%94%E8%AE%B001/">操作系统内核笔记01</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">操作系统内核</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">springboot</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">挂载镜像磁盘</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vue</a>
         		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2024/10/22/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0(%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E5%8D%9A%E5%AE%A2)/" class="archive-article-date">
-  	<time datetime="2024-10-22T11:40:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-10-22</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2024/10/22/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0(%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E5%8D%9A%E5%AE%A2)/">我的第一篇文章</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
+      		 
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">教程</a>
         		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Hexo</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">博客</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">命令</a>
-        		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2024/11/04/%E5%8C%BB%E9%99%A2%E6%8C%82%E5%8F%B7springboot-vue%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2024/10/22/hello-world/" class="archive-article-date">
-  	<time datetime="2024-10-22T11:35:11.668Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-10-22</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2024/11/01/%E5%85%B3%E4%BA%8E%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">关于网络相关问题</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2024/10/22/hello-world/">Hello World</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+
+  
 
 
           </div>
@@ -383,8 +385,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
