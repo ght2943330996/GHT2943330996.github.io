@@ -299,7 +299,10 @@ return 0;
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="开发流程"><a href="#开发流程" class="headerlink" title="开发流程"></a>开发流程</h2><p>1.创建相应的数据库表，mysql，这是数据源。</p>
+        <h2 id="Vue的安装"><a href="#Vue的安装" class="headerlink" title="Vue的安装"></a>Vue的安装</h2><ol>
+<li>安装 Node.js<br>首先，你需要安装 Node.js，因为 Vue.js 依赖于它。<br>检查：node_-v<br>2.安装Vue cli工具<br>命令行：npm install -g @vue&#x2F;cli<br>检验：vue -V<br>3.创建vue项目<br>使用vue cli<br>在目录文件下命令行：vue create my-project-name<br>4.cd到项目目录：cd my-project-name<br>安装依赖：npm install<br>5.附加：添加路由和状态管理<br>npm install vue-router@4</li>
+</ol>
+<h2 id="开发流程–重点！！！"><a href="#开发流程–重点！！！" class="headerlink" title="开发流程–重点！！！"></a>开发流程–重点！！！</h2><p>1.创建相应的数据库表，mysql，这是数据源。</p>
 <p>2.创建实体层，Entity，他是个新创建的对象模型<br>&#x2F;&#x2F; 示例：User.java<br>@Data<br>public class User {<br>    private Long id;<br>    private String username;<br>    private String password;<br>    &#x2F;&#x2F; … 其他属性<br>}<br>用途：<br>对应数据库表结构<br>定义数据模型<br>通常包含属性和getter&#x2F;setter方法<br>文件类型：<br>实体类（POJO）<br>数据传输对象（DTO）</p>
 <p>3.创建映射层，Mapper，他是映射你数据库操作的<br>&#x2F;&#x2F; 示例：UserMapper.java<br>@Mapper<br>public interface UserMapper {<br>    List<User> selectAll();<br>    User selectById(Long id);<br>    int insert(User user);<br>    &#x2F;&#x2F; … 其他数据库操作方法<br>}<br>用途：<br>负责数据库操作<br>定义SQL语句<br>实现数据持久化<br>文件类型：<br>Mapper接口<br>XML映射文件</p>
 <p>4.创建服务层，Service，他比较复杂，所有的业务逻辑都在这里，比如组合多个mapper操作，处理业务规则，数据校验等<br>&#x2F;&#x2F; 示例：UserService.java<br>@Service<br>public class UserServiceImpl implements UserService {<br>    @Autowired<br>    private UserMapper userMapper;</p>
@@ -350,15 +353,15 @@ public Result&lt;User&gt; getUser(@PathVariable Long id) &#123;
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">教程</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">springboot</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vue</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">教程</a>
         		</li>
       		
 		</ul>
@@ -934,11 +937,11 @@ drawerLayout-&gt;addWidget(stackedWidget); //将堆放入布局
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Hexo</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">教程</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">教程</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Hexo</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -1158,6 +1161,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">springboot</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">教程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">计算机网络</a>
               </li>
              
@@ -1170,11 +1185,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+                <a href="javascript:void(0)" class="js-tag color2">操作系统内核</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">教程</a>
+                <a href="javascript:void(0)" class="js-tag color2">挂载镜像磁盘</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1183,22 +1202,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">命令</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">springboot</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">操作系统内核</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">挂载镜像磁盘</a>
               </li>
              
               <li class="article-tag-list-item">
