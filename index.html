@@ -152,6 +152,141 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Qt视频流转ASCII码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/11/10/Qt%E8%A7%86%E9%A2%91%E6%B5%81%E8%BD%ACASCII%E7%A0%81/">Qt视频流转ASCII码</a>
+    </h1>
+  
+
+        
+        <a href="/2024/11/10/Qt%E8%A7%86%E9%A2%91%E6%B5%81%E8%BD%ACASCII%E7%A0%81/" class="archive-article-date">
+  	<time datetime="2024-11-10T05:42:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-11-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="整个转换流程是："><a href="#整个转换流程是：" class="headerlink" title="整个转换流程是："></a>整个转换流程是：</h2><p>视频文件 → 视频流 → 视频帧 → QImage → 灰度值 → ASCII字符 → 文本显示<br>这个过程是实时的，每当有新的视频帧到来，就会重复这个转换过程，从而形成ASCII艺术动画效果</p>
+<p>流程图：<br>graph TD<br>    A[创建 QMediaPlayer] –&gt; B[创建 QVideoSink]<br>    B –&gt; C[setVideoSink 设置接收器]<br>    C –&gt; D[setSource 设置视频源]<br>    D –&gt; E[play 开始播放]<br>    E –&gt; F[QMediaPlayer 内部解码视频]<br>    F –&gt; G[产生新视频帧]<br>    G –&gt; H[自动更新到 VideoSink]<br>    H –&gt; I[触发 videoFrameChanged 信号]<br>    I –&gt; J[调用 processFrame 处理帧]</p>
+<p>代码示例：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> <span class="token class-name">GhtMp4</span><span class="token double-colon punctuation">::</span><span class="token function">setupUI</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 1. 创建播放器和接收器</span>
+    player <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">QMediaPlayer</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    videoSink <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">QVideoSink</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment">// 2. 设置视频接收器</span>
+    player<span class="token operator">-></span><span class="token function">setVideoSink</span><span class="token punctuation">(</span>videoSink<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment">// 3. 连接信号和槽，当有新帧时会调用 processFrame</span>
+    <span class="token function">connect</span><span class="token punctuation">(</span>videoSink<span class="token punctuation">,</span> <span class="token operator">&amp;</span>QVideoSink<span class="token double-colon punctuation">::</span>videoFrameChanged<span class="token punctuation">,</span>
+            <span class="token keyword">this</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>GhtMp4<span class="token double-colon punctuation">::</span>processFrame<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">void</span> <span class="token class-name">GhtMp4</span><span class="token double-colon punctuation">::</span><span class="token function">openVideo</span><span class="token punctuation">(</span><span class="token keyword">const</span> QString<span class="token operator">&amp;</span> filePath<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 4. 设置视频源</span>
+    player<span class="token operator">-></span><span class="token function">setSource</span><span class="token punctuation">(</span><span class="token class-name">QUrl</span><span class="token double-colon punctuation">::</span><span class="token function">fromLocalFile</span><span class="token punctuation">(</span>filePath<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment">// 5. 开始播放</span>
+    <span class="token function">play</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">// 6. 当有新的视频帧时，这个函数会被自动调用</span>
+<span class="token keyword">void</span> <span class="token class-name">GhtMp4</span><span class="token double-colon punctuation">::</span><span class="token function">processFrame</span><span class="token punctuation">(</span><span class="token keyword">const</span> QVideoFrame<span class="token operator">&amp;</span> frame<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 处理视频帧</span>
+    QImage image <span class="token operator">=</span> frame<span class="token punctuation">.</span><span class="token function">toImage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// ... 转换为 ASCII ...</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>关键点说明：<br>1.QMediaPlayer 负责视频的加载和播放<br>2.QVideoSink 负责接收解码后的视频帧<br>3.视频帧的更新是自动的，由 Qt 多媒体框架内部处理<br>4. 我们只需要：<br>    设置好视频源（setSource）<br>    连接好接收器（setVideoSink）<br>    处理接收到的帧（processFrame）<br>这种设计使用了观察者模式：<br>    QVideoSink 观察视频帧的变化<br>    当有新帧时，通过信号槽机制通知我们的程序<br>    我们不需要手动去获取或更新帧，整个过程是事件驱动的</p>
+<h2 id="流程运转方式"><a href="#流程运转方式" class="headerlink" title="流程运转方式"></a>流程运转方式</h2><p>1.一次性初始化的部分 (只在开始时执行一次):<br>A[创建 QMediaPlayer] –&gt; B[创建 QVideoSink]<br>B –&gt; C[setVideoSink 设置接收器]<br>C –&gt; D[setSource 设置视频源]<br>D –&gt; E[play 开始播放]</p>
+<p>2.循环执行的部分 (对每一帧重复执行):<br>F[QMediaPlayer 内部解码视频]<br>F –&gt; G[产生新视频帧]<br>G –&gt; H[自动更新到 VideoSink]<br>H –&gt; I[触发 videoFrameChanged 信号]<br>I –&gt; J[调用 processFrame 处理帧]</p>
+<p>具体解释：<br>视频通常是每秒24帧或30帧<br>QMediaPlayer 在播放时会持续解码视频<br>每当解码出一帧新的画面：<br>1.自动更新到 VideoSink<br>2.触发 videoFrameChanged 信号<br>3.执行 processFrame 处理<br>这个过程是异步的，由 Qt 的事件循环驱动</p>
+<p>代码示例：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// 一次性初始化</span>
+<span class="token keyword">void</span> <span class="token class-name">GhtMp4</span><span class="token double-colon punctuation">::</span><span class="token function">setupUI</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    player <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">QMediaPlayer</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token comment">// 步骤 A</span>
+    videoSink <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">QVideoSink</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>       <span class="token comment">// 步骤 B</span>
+    player<span class="token operator">-></span><span class="token function">setVideoSink</span><span class="token punctuation">(</span>videoSink<span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token comment">// 步骤 C</span>
+    
+    <span class="token comment">// 设置信号槽连接，准备接收每一帧</span>
+    <span class="token function">connect</span><span class="token punctuation">(</span>videoSink<span class="token punctuation">,</span> <span class="token operator">&amp;</span>QVideoSink<span class="token double-colon punctuation">::</span>videoFrameChanged<span class="token punctuation">,</span>
+            <span class="token keyword">this</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>GhtMp4<span class="token double-colon punctuation">::</span>processFrame<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">void</span> <span class="token class-name">GhtMp4</span><span class="token double-colon punctuation">::</span><span class="token function">openVideo</span><span class="token punctuation">(</span><span class="token keyword">const</span> QString<span class="token operator">&amp;</span> filePath<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    player<span class="token operator">-></span><span class="token function">setSource</span><span class="token punctuation">(</span><span class="token class-name">QUrl</span><span class="token double-colon punctuation">::</span><span class="token function">fromLocalFile</span><span class="token punctuation">(</span>filePath<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 步骤 D</span>
+    player<span class="token operator">-></span><span class="token function">play</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                                    <span class="token comment">// 步骤 E</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">// 循环执行部分（每一帧都会触发）</span>
+<span class="token keyword">void</span> <span class="token class-name">GhtMp4</span><span class="token double-colon punctuation">::</span><span class="token function">processFrame</span><span class="token punctuation">(</span><span class="token keyword">const</span> QVideoFrame<span class="token operator">&amp;</span> frame<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 步骤 F-J 在 Qt 内部自动处理</span>
+    <span class="token comment">// 我们只需要处理收到的帧</span>
+    QImage image <span class="token operator">=</span> frame<span class="token punctuation">.</span><span class="token function">toImage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    image <span class="token operator">=</span> image<span class="token punctuation">.</span><span class="token function">scaled</span><span class="token punctuation">(</span><span class="token number">220</span><span class="token punctuation">,</span> <span class="token number">60</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    display<span class="token operator">-></span><span class="token function">setText</span><span class="token punctuation">(</span><span class="token function">convertToAscii</span><span class="token punctuation">(</span>image<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>可以理解为：<br>1.初始化部分像搭建一个管道系统<br>2.一旦开始播放，视频帧就像水流一样持续通过这个管道<br>3.每一帧都会触发我们的处理函数<br>4.整个过程是自动的，我们不需要手动控制帧的获取</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Qt</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/11/10/Qt%E8%A7%86%E9%A2%91%E6%B5%81%E8%BD%ACASCII%E7%A0%81/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-类和对象" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -172,57 +307,139 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="1-在-h文件中-声明类的框架"><a href="#1-在-h文件中-声明类的框架" class="headerlink" title="1.在.h文件中 (声明类的框架)"></a>1.在.h文件中 (声明类的框架)</h2><p>class Person {<br>public:<br>    &#x2F;&#x2F; 构造函数声明<br>    Person();<br>    Person(string name, int age);</p>
-<pre><code>// 方法声明
-void sayHello();
-int getAge();
-</code></pre>
-<p>private:<br>    &#x2F;&#x2F; 属性声明<br>    string name;<br>    int age;<br>};</p>
-<h2 id="2-在-cpp文件中-实现类的具体内容"><a href="#2-在-cpp文件中-实现类的具体内容" class="headerlink" title="2.在.cpp文件中 (实现类的具体内容)"></a>2.在.cpp文件中 (实现类的具体内容)</h2><p>#include “person.h”</p>
-<p>&#x2F;&#x2F; 构造函数定义<br>Person::Person() {<br>    name &#x3D; “Unknown”;<br>    age &#x3D; 0;<br>}</p>
-<p>Person::Person(string name, int age) {<br>    this-&gt;name &#x3D; name;<br>    this-&gt;age &#x3D; age;<br>}</p>
-<p>&#x2F;&#x2F; 方法定义<br>void Person::sayHello() {<br>    cout &lt;&lt; “Hello, I am “ &lt;&lt; name &lt;&lt; endl;<br>}</p>
-<p>int Person::getAge() {<br>    return age;<br>}</p>
-<h2 id="3-在main-cpp中-创建和使用对象"><a href="#3-在main-cpp中-创建和使用对象" class="headerlink" title="3.在main.cpp中 (创建和使用对象)"></a>3.在main.cpp中 (创建和使用对象)</h2><p>#include “person.h”</p>
-<p>int main() {<br>    &#x2F;&#x2F; 实例化对象（创建具体的人）<br>    Person person1;                    &#x2F;&#x2F; 使用默认构造函数<br>    Person person2(“Alice”, 25);       &#x2F;&#x2F; 使用带参数的构造函数<br>    Person* person3 &#x3D; new Person(“Bob”, 30);  &#x2F;&#x2F; 在堆上创建对象</p>
-<pre><code>// 使用对象
-person1.sayHello();  // 输出: Hello, I am Unknown
-person2.sayHello();  // 输出: Hello, I am Alice
-person3-&gt;sayHello(); // 输出: Hello, I am Bob
+        <h2 id="1-在-h文件中-声明类的框架"><a href="#1-在-h文件中-声明类的框架" class="headerlink" title="1.在.h文件中 (声明类的框架)"></a>1.在.h文件中 (声明类的框架)</h2><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">Person</span> <span class="token punctuation">&#123;</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token comment">// 构造函数声明</span>
+    <span class="token function">Person</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">Person</span><span class="token punctuation">(</span>string name<span class="token punctuation">,</span> <span class="token keyword">int</span> age<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-// 不要忘记删除堆上的对象
-delete person3;
+    <span class="token comment">// 方法声明</span>
+    <span class="token keyword">void</span> <span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> <span class="token function">getAge</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-return 0;
-</code></pre>
-<p>}</p>
+<span class="token keyword">private</span><span class="token operator">:</span>
+    <span class="token comment">// 属性声明</span>
+    string name<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> age<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="2-在-cpp文件中-实现类的具体内容"><a href="#2-在-cpp文件中-实现类的具体内容" class="headerlink" title="2.在.cpp文件中 (实现类的具体内容)"></a>2.在.cpp文件中 (实现类的具体内容)</h2><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">"person.h"</span></span>
+
+<span class="token comment">// 构造函数定义</span>
+<span class="token class-name">Person</span><span class="token double-colon punctuation">::</span><span class="token function">Person</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    name <span class="token operator">=</span> <span class="token string">"Unknown"</span><span class="token punctuation">;</span>
+    age <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token class-name">Person</span><span class="token double-colon punctuation">::</span><span class="token function">Person</span><span class="token punctuation">(</span>string name<span class="token punctuation">,</span> <span class="token keyword">int</span> age<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">this</span><span class="token operator">-></span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token operator">-></span>age <span class="token operator">=</span> age<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">// 方法定义</span>
+<span class="token keyword">void</span> <span class="token class-name">Person</span><span class="token double-colon punctuation">::</span><span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Hello, I am "</span> <span class="token operator">&lt;&lt;</span> name <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">int</span> <span class="token class-name">Person</span><span class="token double-colon punctuation">::</span><span class="token function">getAge</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> age<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="3-在main-cpp中-创建和使用对象"><a href="#3-在main-cpp中-创建和使用对象" class="headerlink" title="3.在main.cpp中 (创建和使用对象)"></a>3.在main.cpp中 (创建和使用对象)</h2><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">"person.h"</span></span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 实例化对象（创建具体的人）</span>
+    Person person1<span class="token punctuation">;</span>                    <span class="token comment">// 使用默认构造函数</span>
+    Person <span class="token function">person2</span><span class="token punctuation">(</span><span class="token string">"Alice"</span><span class="token punctuation">,</span> <span class="token number">25</span><span class="token punctuation">)</span><span class="token punctuation">;</span>       <span class="token comment">// 使用带参数的构造函数</span>
+    Person<span class="token operator">*</span> person3 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">Person</span><span class="token punctuation">(</span><span class="token string">"Bob"</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 在堆上创建对象</span>
+
+    <span class="token comment">// 使用对象</span>
+    person1<span class="token punctuation">.</span><span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 输出: Hello, I am Unknown</span>
+    person2<span class="token punctuation">.</span><span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 输出: Hello, I am Alice</span>
+    person3<span class="token operator">-></span><span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 输出: Hello, I am Bob</span>
+
+    <span class="token comment">// 不要忘记删除堆上的对象</span>
+    <span class="token keyword">delete</span> person3<span class="token punctuation">;</span>
+
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>补充说明：<br>1.h文件：<br>包含类的声明<br>声明所有成员变量和方法<br>相当于”合同”，说明这个类能做什么<br>2.cpp文件：<br>包含类的具体实现<br>定义所有方法的具体内容<br>相当于”履行合同”，说明具体怎么做<br>3.main.cpp或其他使用该类的文件：<br>创建类的对象（实例化）<br>使用对象的方法和属性<br>相当于”使用服务”<br>一个更实用的例子：</p>
-<p>&#x2F;&#x2F; 头文件：声明<br>class Student {<br>public:<br>    Student(string name);<br>    void study();<br>    void setScore(int score);<br>    int getScore();</p>
-<p>private:<br>    string name;<br>    int score;<br>};</p>
-<p>&#x2F;&#x2F; 源文件：定义<br>#include “student.h”</p>
-<p>Student::Student(string name) {<br>    this-&gt;name &#x3D; name;<br>    this-&gt;score &#x3D; 0;<br>}</p>
-<p>void Student::study() {<br>    score +&#x3D; 10;<br>    cout &lt;&lt; name &lt;&lt; “ is studying” &lt;&lt; endl;<br>}</p>
-<p>void Student::setScore(int score) {<br>    this-&gt;score &#x3D; score;<br>}</p>
-<p>int Student::getScore() {<br>    return score;<br>}</p>
-<p>&#x2F;&#x2F; 主文件：使用<br>int main() {<br>    &#x2F;&#x2F; 实例化<br>    Student student1(“Tom”);<br>    Student* student2 &#x3D; new Student(“Jerry”);</p>
-<pre><code>// 使用对象
-student1.study();
-student2-&gt;study();
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// 头文件：声明</span>
+<span class="token keyword">class</span> <span class="token class-name">Student</span> <span class="token punctuation">&#123;</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token function">Student</span><span class="token punctuation">(</span>string name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">study</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">setScore</span><span class="token punctuation">(</span><span class="token keyword">int</span> score<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> <span class="token function">getScore</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-cout &lt;&lt; student1.getScore() &lt;&lt; endl;  // 输出: 10
-cout &lt;&lt; student2-&gt;getScore() &lt;&lt; endl; // 输出: 10
+<span class="token keyword">private</span><span class="token operator">:</span>
+    string name<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> score<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// 源文件：定义</span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">"student.h"</span></span>
 
-delete student2;
-return 0;
-</code></pre>
-<p>}</p>
+<span class="token class-name">Student</span><span class="token double-colon punctuation">::</span><span class="token function">Student</span><span class="token punctuation">(</span>string name<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">this</span><span class="token operator">-></span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token operator">-></span>score <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">void</span> <span class="token class-name">Student</span><span class="token double-colon punctuation">::</span><span class="token function">study</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    score <span class="token operator">+=</span> <span class="token number">10</span><span class="token punctuation">;</span>
+    cout <span class="token operator">&lt;&lt;</span> name <span class="token operator">&lt;&lt;</span> <span class="token string">" is studying"</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">void</span> <span class="token class-name">Student</span><span class="token double-colon punctuation">::</span><span class="token function">setScore</span><span class="token punctuation">(</span><span class="token keyword">int</span> score<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">this</span><span class="token operator">-></span>score <span class="token operator">=</span> score<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">int</span> <span class="token class-name">Student</span><span class="token double-colon punctuation">::</span><span class="token function">getScore</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> score<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// 主文件：使用</span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 实例化</span>
+    Student <span class="token function">student1</span><span class="token punctuation">(</span><span class="token string">"Tom"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    Student<span class="token operator">*</span> student2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">Student</span><span class="token punctuation">(</span><span class="token string">"Jerry"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 使用对象</span>
+    student1<span class="token punctuation">.</span><span class="token function">study</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    student2<span class="token operator">-></span><span class="token function">study</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    cout <span class="token operator">&lt;&lt;</span> student1<span class="token punctuation">.</span><span class="token function">getScore</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>  <span class="token comment">// 输出: 10</span>
+    cout <span class="token operator">&lt;&lt;</span> student2<span class="token operator">-></span><span class="token function">getScore</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span> <span class="token comment">// 输出: 10</span>
+
+    <span class="token keyword">delete</span> student2<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>记住：<br>.h文件是”承诺”（声明）<br>.cpp文件是”兑现”（定义）<br>main.cpp是”使用”（实例化和调用）</p>
-<h2 id="栈和堆的区别"><a href="#栈和堆的区别" class="headerlink" title="栈和堆的区别"></a>栈和堆的区别</h2><p>1.栈(Stack)上创建对象<br>就像在餐厅堂食<br>自动管理（离开餐厅自动清理桌子）<br>空间有限（座位数量固定）<br>访问速度快（服务员就在旁边）<br>void function() {<br>    Student tom(“Tom”);     &#x2F;&#x2F; 创建在栈上<br>    tom.study();           &#x2F;&#x2F; 使用对象<br>}   &#x2F;&#x2F; 函数结束时，tom自动销毁</p>
-<p>2.堆(Heap)上创建对象<br>就像外卖订餐<br>手动管理（需要自己处理垃圾）<br>空间更大（可以送到很多地方）<br>访问速度相对慢（需要送餐时间）<br>void function() {<br>    Student* jerry &#x3D; new Student(“Jerry”);  &#x2F;&#x2F; 创建在堆上<br>    jerry-&gt;study();                         &#x2F;&#x2F; 使用对象<br>    delete jerry;                           &#x2F;&#x2F; 必须手动删除！<br>}</p>
-<p>重点：对象生命周期明确（局部使用）<br>void calculateGrade() {<br>    Student student(“Alice”);  &#x2F;&#x2F; 函数结束就不需要了<br>    student.study();<br>    &#x2F;&#x2F; student自动销毁<br>}</p>
-<p>最佳实践：<br>1.优先使用栈，除非：<br>需要大量内存<br>需要动态生命周期<br>需要在多个函数间共享对象<br>2.使用堆时考虑智能指针：<br>&#x2F;&#x2F; 现代C++推荐使用智能指针<br>class School {<br>private:<br>    vector&lt;unique_ptr<Student>&gt; students;  &#x2F;&#x2F; 自动管理内存</p>
-<p>public:<br>    void addStudent(string name) {<br>        students.push_back(make_unique<Student>(name));<br>    }<br>    &#x2F;&#x2F; 不需要手动删除<br>};</p>
+<h2 id="栈和堆的区别"><a href="#栈和堆的区别" class="headerlink" title="栈和堆的区别"></a>栈和堆的区别</h2><p>1.栈(Stack)上创建对象<br>就像在餐厅堂食<br>自动管理（离开餐厅自动清理桌子）<br>空间有限（座位数量固定）<br>访问速度快（服务员就在旁边）</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> <span class="token function">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    Student <span class="token function">tom</span><span class="token punctuation">(</span><span class="token string">"Tom"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">// 创建在栈上</span>
+    tom<span class="token punctuation">.</span><span class="token function">study</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>           <span class="token comment">// 使用对象</span>
+<span class="token punctuation">&#125;</span>   <span class="token comment">// 函数结束时，tom自动销毁</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>2.堆(Heap)上创建对象<br>就像外卖订餐<br>手动管理（需要自己处理垃圾）<br>空间更大（可以送到很多地方）<br>访问速度相对慢（需要送餐时间）</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> <span class="token function">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    Student<span class="token operator">*</span> jerry <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">Student</span><span class="token punctuation">(</span><span class="token string">"Jerry"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 创建在堆上</span>
+    jerry<span class="token operator">-></span><span class="token function">study</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                         <span class="token comment">// 使用对象</span>
+    <span class="token keyword">delete</span> jerry<span class="token punctuation">;</span>                           <span class="token comment">// 必须手动删除！</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>重点：对象生命周期明确（局部使用）</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> <span class="token function">calculateGrade</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    Student <span class="token function">student</span><span class="token punctuation">(</span><span class="token string">"Alice"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 函数结束就不需要了</span>
+    student<span class="token punctuation">.</span><span class="token function">study</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// student自动销毁</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>最佳实践：<br>1.优先使用栈，除非：<br>需要大量内存<br>需要动态生命周期<br>需要在多个函数间共享对象<br>2.使用堆时考虑智能指针：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// 现代C++推荐使用智能指针</span>
+<span class="token keyword">class</span> <span class="token class-name">School</span> <span class="token punctuation">&#123;</span>
+<span class="token keyword">private</span><span class="token operator">:</span>
+    vector<span class="token operator">&lt;</span>unique_ptr<span class="token operator">&lt;</span>Student<span class="token operator">>></span> students<span class="token punctuation">;</span>  <span class="token comment">// 自动管理内存</span>
 
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token keyword">void</span> <span class="token function">addStudent</span><span class="token punctuation">(</span>string name<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        students<span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span><span class="token generic-function"><span class="token function">make_unique</span><span class="token generic class-name"><span class="token operator">&lt;</span>Student<span class="token operator">></span></span></span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">// 不需要手动删除</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
       
 
       
@@ -299,44 +516,86 @@ return 0;
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="Vue的安装"><a href="#Vue的安装" class="headerlink" title="Vue的安装"></a>Vue的安装</h2><ol>
-<li>安装 Node.js<br>首先，你需要安装 Node.js，因为 Vue.js 依赖于它。<br>检查：node_-v<br>2.安装Vue cli工具<br>命令行：npm install -g @vue&#x2F;cli<br>检验：vue -V<br>3.创建vue项目<br>使用vue cli<br>在目录文件下命令行：vue create my-project-name<br>4.cd到项目目录：cd my-project-name<br>安装依赖：npm install<br>5.附加：添加路由和状态管理<br>npm install vue-router@4</li>
-</ol>
+        <h2 id="Vue的安装"><a href="#Vue的安装" class="headerlink" title="Vue的安装"></a>Vue的安装</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">1.</span> 安装 Node<span class="token punctuation">.</span>js
+首先，你需要安装 Node<span class="token punctuation">.</span>js，因为 Vue<span class="token punctuation">.</span>js 依赖于它。
+检查：node <span class="token operator">-</span>v 
+<span class="token number">2.</span>安装Vue cli工具
+命令行：npm install <span class="token operator">-</span>g @vue<span class="token operator">/</span>cli
+检验：vue <span class="token operator">-</span>V
+<span class="token number">3.</span>创建vue项目
+使用vue cli
+在目录文件下命令行：vue create my<span class="token operator">-</span>project<span class="token operator">-</span>name
+<span class="token number">4.</span>cd到项目目录：cd my<span class="token operator">-</span>project<span class="token operator">-</span>name
+安装依赖：npm install
+<span class="token number">5.</span>附加：添加路由和状态管理
+npm install vue<span class="token operator">-</span>router@<span class="token number">4</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h2 id="开发流程–重点！！！"><a href="#开发流程–重点！！！" class="headerlink" title="开发流程–重点！！！"></a>开发流程–重点！！！</h2><p>1.创建相应的数据库表，mysql，这是数据源。</p>
-<p>2.创建实体层，Entity，他是个新创建的对象模型<br>&#x2F;&#x2F; 示例：User.java<br>@Data<br>public class User {<br>    private Long id;<br>    private String username;<br>    private String password;<br>    &#x2F;&#x2F; … 其他属性<br>}<br>用途：<br>对应数据库表结构<br>定义数据模型<br>通常包含属性和getter&#x2F;setter方法<br>文件类型：<br>实体类（POJO）<br>数据传输对象（DTO）</p>
-<p>3.创建映射层，Mapper，他是映射你数据库操作的<br>&#x2F;&#x2F; 示例：UserMapper.java<br>@Mapper<br>public interface UserMapper {<br>    List<User> selectAll();<br>    User selectById(Long id);<br>    int insert(User user);<br>    &#x2F;&#x2F; … 其他数据库操作方法<br>}<br>用途：<br>负责数据库操作<br>定义SQL语句<br>实现数据持久化<br>文件类型：<br>Mapper接口<br>XML映射文件</p>
-<p>4.创建服务层，Service，他比较复杂，所有的业务逻辑都在这里，比如组合多个mapper操作，处理业务规则，数据校验等<br>&#x2F;&#x2F; 示例：UserService.java<br>@Service<br>public class UserServiceImpl implements UserService {<br>    @Autowired<br>    private UserMapper userMapper;</p>
-<pre><code>public Result register(User user) &#123;
-    // 1. 业务规则验证
-    if (user.getPassword().length() &lt; 6) &#123;
-        return Result.error(&quot;密码长度不能小于6位&quot;);
-    &#125;
+<p>2.创建实体层，Entity，他是个新创建的对象模型</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">// 示例：User.java</span>
+<span class="token annotation punctuation">@Data</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">User</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Long</span> id<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> username<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> password<span class="token punctuation">;</span>
+    <span class="token comment">// ... 其他属性</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>用途：<br>对应数据库表结构<br>定义数据模型<br>通常包含属性和getter&#x2F;setter方法<br>文件类型：<br>实体类（POJO）<br>数据传输对象（DTO）</p>
+<p>3.创建映射层，Mapper，他是映射你数据库操作的</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">// 示例：UserMapper.java</span>
+<span class="token annotation punctuation">@Mapper</span>
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">UserMapper</span> <span class="token punctuation">&#123;</span>
+    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">User</span><span class="token punctuation">></span></span> <span class="token function">selectAll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">User</span> <span class="token function">selectById</span><span class="token punctuation">(</span><span class="token class-name">Long</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> <span class="token function">insert</span><span class="token punctuation">(</span><span class="token class-name">User</span> user<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// ... 其他数据库操作方法</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>用途：<br>负责数据库操作<br>定义SQL语句<br>实现数据持久化<br>文件类型：<br>Mapper接口<br>XML映射文件</p>
+<p>4.创建服务层，Service，他比较复杂，所有的业务逻辑都在这里，比如组合多个mapper操作，处理业务规则，数据校验等</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//示例:UserService.java</span>
+<span class="token annotation punctuation">@Service</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserServiceImpl</span> <span class="token keyword">implements</span> <span class="token class-name">UserService</span> <span class="token punctuation">&#123;</span>
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token keyword">private</span> <span class="token class-name">UserMapper</span> userMapper<span class="token punctuation">;</span>
     
-    // 2. 业务逻辑处理
-    if (userMapper.findByUsername(user.getUsername()) != null) &#123;
-        return Result.error(&quot;用户名已存在&quot;);
-    &#125;
+    <span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">register</span><span class="token punctuation">(</span><span class="token class-name">User</span> user<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// 1. 业务规则验证</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>user<span class="token punctuation">.</span><span class="token function">getPassword</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">6</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"密码长度不能小于6位"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        
+        <span class="token comment">// 2. 业务逻辑处理</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>userMapper<span class="token punctuation">.</span><span class="token function">findByUsername</span><span class="token punctuation">(</span>user<span class="token punctuation">.</span><span class="token function">getUsername</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"用户名已存在"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        
+        <span class="token comment">// 3. 密码加密</span>
+        user<span class="token punctuation">.</span><span class="token function">setPassword</span><span class="token punctuation">(</span><span class="token function">encryptPassword</span><span class="token punctuation">(</span>user<span class="token punctuation">.</span><span class="token function">getPassword</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        
+        <span class="token comment">// 4. 调用Mapper保存数据</span>
+        userMapper<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        
+        <span class="token comment">// 5. 发送注册成功邮件</span>
+        <span class="token function">sendWelcomeEmail</span><span class="token punctuation">(</span>user<span class="token punctuation">.</span><span class="token function">getEmail</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        
+        <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>用途：<br>实现业务逻辑<br>处理事务<br>调用Mapper层<br>文件类型：<br>服务接口<br>服务实现类</p>
+<p>5.创建控制层，Controller，他是处理和响应HTTP请求的，并连接Service层</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">// 示例：UserController.java</span>
+<span class="token annotation punctuation">@RestController</span>
+<span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/api/users"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserController</span> <span class="token punctuation">&#123;</span>
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token keyword">private</span> <span class="token class-name">UserService</span> userService<span class="token punctuation">;</span>
     
-    // 3. 密码加密
-    user.setPassword(encryptPassword(user.getPassword()));
-    
-    // 4. 调用Mapper保存数据
-    userMapper.insert(user);
-    
-    // 5. 发送注册成功邮件
-    sendWelcomeEmail(user.getEmail());
-    
-    return Result.success();
-&#125;
-</code></pre>
-<p>}<br>用途：<br>实现业务逻辑<br>处理事务<br>调用Mapper层<br>文件类型：<br>服务接口<br>服务实现类</p>
-<p>5.创建控制层，Controller，他是处理和响应HTTP请求的，并连接Service层<br>&#x2F;&#x2F; 示例：UserController.java<br>@RestController<br>@RequestMapping(“&#x2F;api&#x2F;users”)<br>public class UserController {<br>    @Autowired<br>    private UserService userService;</p>
-<pre><code>@GetMapping(&quot;/&#123;id&#125;&quot;)
-public Result&lt;User&gt; getUser(@PathVariable Long id) &#123;
-    return Result.success(userService.getUserById(id));
-&#125;
-</code></pre>
-<p>}<br>用途：<br>处理HTTP请求<br>参数验证<br>调用Service层<br>文件类型：<br>控制器类<br>请求处理方法</p>
+    <span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/&#123;id&#125;"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token class-name">Result</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">User</span><span class="token punctuation">></span></span> <span class="token function">getUser</span><span class="token punctuation">(</span><span class="token annotation punctuation">@PathVariable</span> <span class="token class-name">Long</span> id<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span>userService<span class="token punctuation">.</span><span class="token function">getUserById</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>用途：<br>处理HTTP请求<br>参数验证<br>调用Service层<br>文件类型：<br>控制器类<br>请求处理方法</p>
 <h2 id="数据流向以及完整流程（数据的去回一定都是这个流程，不能直接页面调用数据库数据）"><a href="#数据流向以及完整流程（数据的去回一定都是这个流程，不能直接页面调用数据库数据）" class="headerlink" title="数据流向以及完整流程（数据的去回一定都是这个流程，不能直接页面调用数据库数据）"></a>数据流向以及完整流程（数据的去回一定都是这个流程，不能直接页面调用数据库数据）</h2><p>浏览器 &lt;-&gt; Controller &lt;-&gt; Service &lt;-&gt; Mapper &lt;-&gt; 数据库</p>
 <p>完整流程：<br>1.用户在页面填写注册信息<br>2.点击注册按钮，前端调用Controller的API<br>3.Controller接收请求，调用Service<br>4.Service执行业务逻辑：<br>验证密码长度<br>检查用户名是否存在<br>加密密码<br>调用Mapper保存数据<br>Mapper执行数据库操作，将数据存入数据库，并返回结果<br>返回结果给前端展示</p>
 <p>所以Service层就像是一个”业务指挥官”：<br>它知道”要做什么”（业务规则）<br>它调动各种资源（Mapper、其他Service）<br>它确保业务的完整性（事务处理）<br>它处理各种业务场景（异常情况）<br>这就是为什么需要Service层的原因：它封装了核心业务逻辑，使得业务规则可以被集中管理和复用。</p>
@@ -421,16 +680,13 @@ public Result&lt;User&gt; getUser(@PathVariable Long id) &#123;
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="Vue拥有的两个访问IP"><a href="#Vue拥有的两个访问IP" class="headerlink" title="Vue拥有的两个访问IP"></a>Vue拥有的两个访问IP</h2><p>App running at:</p>
+        <h2 id="Vue拥有的两个访问IP"><a href="#Vue拥有的两个访问IP" class="headerlink" title="Vue拥有的两个访问IP"></a>Vue拥有的两个访问IP</h2><pre><code class="c">App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.31.175:8080/
+</code></pre>
 <ul>
-<li><p>Local:   <a target="_blank" rel="noopener" href="http://localhost:8080/">http://localhost:8080/</a> </p>
-</li>
-<li><p>Network: <a target="_blank" rel="noopener" href="http://192.168.31.175:8080/">http://192.168.31.175:8080/</a></p>
-</li>
-<li><p>Local:   <a target="_blank" rel="noopener" href="http://localhost:8080/">http://localhost:8080/</a><br>→ 只能在本机访问<br>→ localhost指向本机<br>→ 其他设备无法访问</p>
-</li>
-<li><p>Network: <a target="_blank" rel="noopener" href="http://192.168.31.175:8080/">http://192.168.31.175:8080/</a><br>→ 局域网地址<br>→ 同一网络下的其他设备可以访问<br>→ 比如手机、平板等</p>
-</li>
+<li>Local:   <a target="_blank" rel="noopener" href="http://localhost:8080/">http://localhost:8080/</a><br>→ 只能在本机访问<br>→ localhost指向本机<br>→ 其他设备无法访问</li>
+<li>Network: <a target="_blank" rel="noopener" href="http://192.168.31.175:8080/">http://192.168.31.175:8080/</a><br>→ 局域网地址<br>→ 同一网络下的其他设备可以访问<br>→ 比如手机、平板等</li>
 </ul>
 <h2 id="各参数解释"><a href="#各参数解释" class="headerlink" title="各参数解释"></a>各参数解释</h2><p>1.IPv4（Internet Protocol version 4）：</p>
 <ul>
@@ -636,49 +892,120 @@ public Result&lt;User&gt; getUser(@PathVariable Long id) &#123;
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>如有安装过，卸载不干净<br>先wsl -l -v看版本<br>后面执行：wsl –unregister Ubuntu-20.04 清除注册表</p>
-<h2 id="一-windows环境配置"><a href="#一-windows环境配置" class="headerlink" title="一.windows环境配置"></a>一.windows环境配置</h2><p>1.检查系统更新，并打开虚拟机平台和子系统<br>2.去ms下载ubuntu20.04.6<br>3.在命令行更新安装wsl：wsl –update<br>4.运行ubuntu并设置账号<br>5.最后在win命令中检查：wsl -l -v     2为正确，如果是1先更新系统再wsl –set-version ubuntu将版本升级</p>
-<h2 id="二-ubuntu环境配置"><a href="#二-ubuntu环境配置" class="headerlink" title="二.ubuntu环境配置"></a>二.ubuntu环境配置</h2><p>1.先更新sudo apt update 和 sudo apt upgrade</p>
-<p>2.安装工具:sudo apt install build-essential</p>
-<p>sudo apt install gcc-multilib</p>
-<p>检查：gcc–version<br>3.同时将linux源码和busybox源码放入用户根目录下</p>
-<h2 id="三-编译内核"><a href="#三-编译内核" class="headerlink" title="三.编译内核"></a>三.编译内核</h2><p>1.安装软件包5个：sudo apt install flex</p>
-<p>sudo apt install bison</p>
-<p>sudo apt install libssl-dev</p>
-<p>sudo apt install libelf-dev</p>
-<p>sudo apt install libncurses-dev</p>
-<p>2.在家目录下解压两个源码：linux：tar -xvJf linux-5.10.68.tar.xz<br>busybox:  tar -xvjf busybox-1.33.1.tar.bz2</p>
-<p>3.进入linux根目录下配置内核：make defconfig<br>并且在源码下编译内核：make -j20</p>
-<h2 id="四：安装虚拟机"><a href="#四：安装虚拟机" class="headerlink" title="四：安装虚拟机"></a>四：安装虚拟机</h2><p>家目录下：sudo apt install qemu-system-x86</p>
-<h2 id="五：编译busybox"><a href="#五：编译busybox" class="headerlink" title="五：编译busybox"></a>五：编译busybox</h2><p>1.去到busybox根目录下：make defconfig</p>
-<p>然后:make menuconfig，去勾选Settings &#x2F; Build static binary</p>
-<p>2.编译busybox：make install</p>
-<h2 id="六-制作镜像文件"><a href="#六-制作镜像文件" class="headerlink" title="六.制作镜像文件"></a>六.制作镜像文件</h2><p>1.在家目录下执行：dd if&#x3D;&#x2F;dev&#x2F;zero of&#x3D;rootfs.img bs&#x3D;1M count&#x3D;100</p>
-<p>并格式化：mkfs.ext4 rootfs.img</p>
-<p>2.创建挂载点：mkdir rootfs</p>
-<p>挂载磁盘：sudo mount ~&#x2F;rootfs.img rootfs</p>
-<p>更名：sudo chown 用户名 -R rootfs</p>
-<p>3.在rootfs目录下创建文件：mkdir -pv {bin,sbin,usr&#x2F;{bin,sbin},etc&#x2F;init.d,proc,sys,tmp,dev}</p>
-<p>4.在rootfs下拷贝busybox中的文件：cp -drv ~&#x2F;busybox-1.33.1&#x2F;_install&#x2F;* .     *号和后面的圆点(.)之间有空格。</p>
-<p>5.在rootfs下创建系统配置文件：nano etc&#x2F;inittab<br>输入以下代码：<br>::sysinit:&#x2F;etc&#x2F;init.d&#x2F;rcS<br>::respawn:-&#x2F;bin&#x2F;sh<br>::restart:&#x2F;sbin&#x2F;init<br>::shutdown:&#x2F;bin&#x2F;umount -a -r<br>保存退出</p>
-<p>6.在rootfs下创建系统设置脚本：nano etc&#x2F;init.d&#x2F;rcS<br>输入以下代码：<br>#!&#x2F;bin&#x2F;sh<br>echo ‘INIT SCRIPT’<br>mount -t proc proc &#x2F;proc<br>mount -t sysfs sysfs &#x2F;sys<br>mount -t debugfs debugfs &#x2F;sys&#x2F;kernel&#x2F;debug<br>mount -t tmpfs tmpfs &#x2F;tmp<br>mdev -s<br>mount -n -o remount,rw &#x2F;<br>echo -e “\nBoot took $(cut -d’ ‘ -f1 &#x2F;proc&#x2F;uptime) seconds\n”</p>
-<p>并在其下执行：chmod +x etc&#x2F;init.d&#x2F;rcS</p>
-<p>7.在~下（也就是rootfs上级）卸载磁盘！！！十分重要：sudo umount rootfs</p>
-<p>8.接着创建运行虚拟器命令：qemu-system-x86_64 -kernel ~&#x2F;linux-5.10.68&#x2F;arch&#x2F;x86&#x2F;boot&#x2F;bzImage -hda ~&#x2F;rootfs.img -append “root&#x3D;&#x2F;dev&#x2F;sda console&#x3D;ttyS0” -nographic<br>以后都可以直接用!qemu运行</p>
-<p>9.测试：touch test看看有没有成功  最后poweroff退出</p>
-<h2 id="七-实现系统调用"><a href="#七-实现系统调用" class="headerlink" title="七.实现系统调用"></a>七.实现系统调用</h2><p>1.先到linux下，再开始操作。<br>添加系统调用函数原型: nano include&#x2F;linux&#x2F;syscalls.h    找到sys_olduname在后面添加:asmlinkage long sys_mysyscall();</p>
-<p>2.添加新的系统调用:nano arch&#x2F;x86&#x2F;entry&#x2F;syscalls&#x2F;syscall_64.tbl 在440之后添加  441	 common	 mysyscall  sys_mysyscall</p>
-<p>3.在:nano include&#x2F;uapi&#x2F;asm-generic&#x2F;unistd.h<br>在440后添加:#define __NR_mysyscall 441<br>__SYSCALL(__NR_mysyscall, sys_mysyscall)<br>并修改#define __NR_syscalls 442    改成442</p>
-<p>4.在:nano kernel&#x2F;sys_ni.c 中搜索This list is 在后面添加：COND_SYSCALL(mysyscall);  给不支持该系统调用的平台使用</p>
-<p>5.在:nano kernel&#x2F;sys.c 中找到the same as 在后面添加代码：<br>SYSCALL_DEFINE0(mysyscall)<br>{<br> printk(“Hello&lt;123&gt;!\n”);<br> return 0;<br>}<br>保存退出并重新编译内核：make -j20</p>
-<p>6.返回~目录，创建系统调用程序:nano mysyscall.c<br>输入以下代码：<br>#include &lt;stdio.h&gt;<br>#include &lt;unistd.h&gt;</p>
-<p>int main()<br>{<br>        printf(“Calling mysyscall…\n”);<br>        long result &#x3D; syscall(441);<br>        printf(“Syscall result: %ld\n”,result);</p>
-<pre><code>    return 0;
-</code></pre>
-<p>}<br>保存退出并编译：gcc mysyscall.c -static -o mysyscall</p>
-<p>7.~目录下挂载：sudo mount rootfs.img rootfs<br>拷贝：cp mysyscall rootfs<br>卸载：sudo umount rootfs<br>最后运行虚拟机:!qemu</p>
-<p>8.进到虚拟机里面，ls看文件，然后.&#x2F;mysyscall，查看系统调用是否成功，最后poweroff退出</p>
+        <h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>1.如有安装过，卸载不干净<br>先wsl -l -v看版本</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">后面执行：wsl <span class="token operator">--</span>unregister Ubuntu<span class="token operator">-</span><span class="token number">20.04</span> 清除注册表<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>2.虚拟器平台选项找不到<br>先检查更新，如果还是不行，<br>用命令打开以管理员身份打开powershell</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">1.</span>启动Hyper<span class="token operator">-</span>V：bcdedit <span class="token operator">/</span>set hypervisorlaunchtype <span class="token keyword">auto</span>  关闭命令：bcdedit <span class="token operator">/</span>set hypervisorlaunchtype off
+<span class="token number">2.</span>启动wsl虚拟机平台
+Enable<span class="token operator">-</span>WindowsOptionalFeature <span class="token operator">-</span>Online <span class="token operator">-</span>FeatureName VirtualMachinePlatform <span class="token operator">-</span>All（启用命令）
+Disable<span class="token operator">-</span>WindowsOptionalFeature <span class="token operator">-</span>Online <span class="token operator">-</span>FeatureName VirtualMachinePlatform（禁止命令）
 
+检查是否开启：Get<span class="token operator">-</span>WindowsOptionalFeature <span class="token operator">-</span>Online <span class="token operator">-</span>FeatureName Microsoft<span class="token operator">-</span>Hyper<span class="token operator">-</span>V<span class="token operator">-</span><span class="token function">All</span> <span class="token punctuation">(</span>检测Hyper<span class="token operator">-</span>V<span class="token punctuation">)</span>
+Get<span class="token operator">-</span>WindowsOptionalFeature <span class="token operator">-</span>Online <span class="token operator">|</span> Where<span class="token operator">-</span>Object <span class="token punctuation">&#123;</span>$_<span class="token punctuation">.</span>FeatureName <span class="token operator">-</span>like <span class="token string">"*VirtualMachinePlatform*"</span><span class="token punctuation">&#125;</span>
+state：Enabled说明启用了## 一<span class="token punctuation">.</span>windows环境配置<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>1.检查系统更新，并打开虚拟机平台和子系统<br>2.去ms下载ubuntu20.04.6</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">3.</span>在命令行更新安装wsl：wsl <span class="token operator">--</span>update<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>4.运行ubuntu并设置账号</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">5.</span>最后在win命令中检查：wsl <span class="token operator">-</span>l <span class="token operator">-</span>v    <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>2为正确，如果是1先更新系统再wsl –set-version ubuntu将版本升级</p>
+<h2 id="二-ubuntu环境配置"><a href="#二-ubuntu环境配置" class="headerlink" title="二.ubuntu环境配置"></a>二.ubuntu环境配置</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">1.</span>先更新sudo apt update 和 sudo apt upgrade
+
+<span class="token number">2.</span>安装工具<span class="token operator">:</span>sudo apt install build<span class="token operator">-</span>essential
+
+sudo apt install gcc<span class="token operator">-</span>multilib
+
+检查：gcc<span class="token operator">--</span>version<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>3.同时将linux源码和busybox源码放入用户根目录下</p>
+<h2 id="三-编译内核"><a href="#三-编译内核" class="headerlink" title="三.编译内核"></a>三.编译内核</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">1.</span>安装软件包<span class="token number">5</span>个：sudo apt install flex
+
+sudo apt install bison
+
+sudo apt install libssl<span class="token operator">-</span>dev
+
+sudo apt install libelf<span class="token operator">-</span>dev
+
+sudo apt install libncurses<span class="token operator">-</span>dev<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">2.</span>在家目录下解压两个源码：linux：tar <span class="token operator">-</span>xvJf linux<span class="token operator">-</span><span class="token number">5.10</span><span class="token number">.68</span><span class="token punctuation">.</span>tar<span class="token punctuation">.</span>xz
+busybox<span class="token operator">:</span>  tar <span class="token operator">-</span>xvjf busybox<span class="token operator">-</span><span class="token number">1.33</span><span class="token number">.1</span><span class="token punctuation">.</span>tar<span class="token punctuation">.</span>bz2<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">3.</span>进入linux根目录下配置内核：make defconfig
+并且在源码下编译内核：make <span class="token operator">-</span>j20<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h2 id="四：安装虚拟机"><a href="#四：安装虚拟机" class="headerlink" title="四：安装虚拟机"></a>四：安装虚拟机</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">家目录下：sudo apt install qemu<span class="token operator">-</span>system<span class="token operator">-</span>x86<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="五：编译busybox"><a href="#五：编译busybox" class="headerlink" title="五：编译busybox"></a>五：编译busybox</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">1.</span>去到busybox根目录下：make defconfig
+
+然后<span class="token operator">:</span>make menuconfig，去勾选Settings <span class="token operator">/</span> Build <span class="token keyword">static</span> binary
+
+<span class="token number">2.</span>编译busybox：make install<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="六-制作镜像文件"><a href="#六-制作镜像文件" class="headerlink" title="六.制作镜像文件"></a>六.制作镜像文件</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">1.</span>在家目录下执行：dd <span class="token keyword">if</span><span class="token operator">=</span><span class="token operator">/</span>dev<span class="token operator">/</span>zero of<span class="token operator">=</span>rootfs<span class="token punctuation">.</span>img bs<span class="token operator">=</span><span class="token number">1</span>M count<span class="token operator">=</span><span class="token number">100</span>
+
+并格式化：mkfs<span class="token punctuation">.</span>ext4 rootfs<span class="token punctuation">.</span>img
+
+<span class="token number">2.</span>创建挂载点：mkdir rootfs
+
+挂载磁盘：sudo mount <span class="token operator">~</span><span class="token operator">/</span>rootfs<span class="token punctuation">.</span>img rootfs
+
+更名：sudo chown 用户名 <span class="token operator">-</span>R rootfs
+
+<span class="token number">3.</span>在rootfs目录下创建文件：mkdir <span class="token operator">-</span>pv <span class="token punctuation">&#123;</span>bin<span class="token punctuation">,</span>sbin<span class="token punctuation">,</span>usr<span class="token operator">/</span><span class="token punctuation">&#123;</span>bin<span class="token punctuation">,</span>sbin<span class="token punctuation">&#125;</span><span class="token punctuation">,</span>etc<span class="token operator">/</span>init<span class="token punctuation">.</span>d<span class="token punctuation">,</span>proc<span class="token punctuation">,</span>sys<span class="token punctuation">,</span>tmp<span class="token punctuation">,</span>dev<span class="token punctuation">&#125;</span>
+
+<span class="token number">4.</span>在rootfs下拷贝busybox中的文件：cp <span class="token operator">-</span>drv <span class="token operator">~</span><span class="token operator">/</span>busybox<span class="token operator">-</span><span class="token number">1.33</span><span class="token number">.1</span><span class="token operator">/</span>_install<span class="token comment">/* .     *号和后面的圆点(.)之间有空格。
+
+5.在rootfs下创建系统配置文件：nano etc/inittab</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输入以下代码：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token operator">::</span>sysinit<span class="token operator">:</span><span class="token operator">/</span>etc<span class="token operator">/</span>init<span class="token punctuation">.</span>d<span class="token operator">/</span>rcS
+<span class="token operator">::</span>respawn<span class="token operator">:</span><span class="token operator">-</span><span class="token operator">/</span>bin<span class="token operator">/</span>sh
+<span class="token operator">::</span>restart<span class="token operator">:</span><span class="token operator">/</span>sbin<span class="token operator">/</span>init
+<span class="token operator">::</span>shutdown<span class="token operator">:</span><span class="token operator">/</span>bin<span class="token operator">/</span>umount <span class="token operator">-</span>a <span class="token operator">-</span>r<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>保存退出</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">6.</span>在rootfs下创建系统设置脚本：nano etc<span class="token operator">/</span>init<span class="token punctuation">.</span>d<span class="token operator">/</span>rcS<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>输入以下代码：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">#<span class="token operator">!</span><span class="token operator">/</span>bin<span class="token operator">/</span>sh
+echo ‘INIT SCRIPT’
+mount <span class="token operator">-</span>t proc proc <span class="token operator">/</span>proc
+mount <span class="token operator">-</span>t sysfs sysfs <span class="token operator">/</span>sys
+mount <span class="token operator">-</span>t debugfs debugfs <span class="token operator">/</span>sys<span class="token operator">/</span>kernel<span class="token operator">/</span>debug
+mount <span class="token operator">-</span>t tmpfs tmpfs <span class="token operator">/</span>tmp
+mdev <span class="token operator">-</span>s
+mount <span class="token operator">-</span>n <span class="token operator">-</span>o remount<span class="token punctuation">,</span>rw <span class="token operator">/</span>
+echo <span class="token operator">-</span>e <span class="token string">"\nBoot took $(cut -d' ' -f1 /proc/uptime) seconds\n"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">并在其下执行：chmod <span class="token operator">+</span>x etc<span class="token operator">/</span>init<span class="token punctuation">.</span>d<span class="token operator">/</span>rcS<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">7.</span>在<span class="token operator">~</span>下（也就是rootfs上级）卸载磁盘！！！十分重要：sudo umount rootfs<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">8.</span>接着创建运行虚拟器命令：qemu<span class="token operator">-</span>system<span class="token operator">-</span>x86_64 <span class="token operator">-</span>kernel <span class="token operator">~</span><span class="token operator">/</span>linux<span class="token operator">-</span><span class="token number">5.10</span><span class="token number">.68</span><span class="token operator">/</span>arch<span class="token operator">/</span>x86<span class="token operator">/</span>boot<span class="token operator">/</span>bzImage <span class="token operator">-</span>hda <span class="token operator">~</span><span class="token operator">/</span>rootfs<span class="token punctuation">.</span>img <span class="token operator">-</span>append <span class="token string">"root=/dev/sda console=ttyS0"</span> <span class="token operator">-</span>nographic
+以后都可以直接用<span class="token operator">!</span>qemu运行<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">9.</span>测试：touch test看看有没有成功  最后poweroff退出<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="七-实现系统调用"><a href="#七-实现系统调用" class="headerlink" title="七.实现系统调用"></a>七.实现系统调用</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">1.</span>先到linux下，再开始操作。
+添加系统调用函数原型<span class="token operator">:</span> nano include<span class="token operator">/</span>linux<span class="token operator">/</span>syscalls<span class="token punctuation">.</span>h    找到sys_olduname在后面添加<span class="token operator">:</span>asmlinkage <span class="token keyword">long</span> <span class="token function">sys_mysyscall</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">2.</span>添加新的系统调用<span class="token operator">:</span>nano arch<span class="token operator">/</span>x86<span class="token operator">/</span>entry<span class="token operator">/</span>syscalls<span class="token operator">/</span>syscall_64<span class="token punctuation">.</span>tbl 在<span class="token number">440</span>之后添加  <span class="token number">441</span>	 common	 mysyscall  sys_mysyscall<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">3.</span>在<span class="token operator">:</span>nano include<span class="token operator">/</span>uapi<span class="token operator">/</span><span class="token keyword">asm</span><span class="token operator">-</span>generic<span class="token operator">/</span>unistd<span class="token punctuation">.</span>h 
+在<span class="token number">440</span>后添加<span class="token operator">:</span>#define __NR_mysyscall <span class="token number">441</span>
+<span class="token function">__SYSCALL</span><span class="token punctuation">(</span>__NR_mysyscall<span class="token punctuation">,</span> sys_mysyscall<span class="token punctuation">)</span>
+并修改#define __NR_syscalls <span class="token number">442</span>    改成<span class="token number">442</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">4.</span>在<span class="token operator">:</span>nano kernel<span class="token operator">/</span>sys_ni<span class="token punctuation">.</span>c 中搜索This list is 在后面添加：<span class="token function">COND_SYSCALL</span><span class="token punctuation">(</span>mysyscall<span class="token punctuation">)</span><span class="token punctuation">;</span>  给不支持该系统调用的平台使用<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">5.</span>在<span class="token operator">:</span>nano kernel<span class="token operator">/</span>sys<span class="token punctuation">.</span>c 中找到the same as 在后面添加代码：
+<span class="token function">SYSCALL_DEFINE0</span><span class="token punctuation">(</span>mysyscall<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+ <span class="token function">printk</span><span class="token punctuation">(</span><span class="token string">"Hello&lt;123>!\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">保存退出并重新编译内核：make <span class="token operator">-</span>j20<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">6.</span>返回<span class="token operator">~</span>目录，创建系统调用程序<span class="token operator">:</span>nano mysyscall<span class="token punctuation">.</span>c 
+输入以下代码：
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;unistd.h></span></span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Calling mysyscall...\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">long</span> result <span class="token operator">=</span> <span class="token function">syscall</span><span class="token punctuation">(</span><span class="token number">441</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Syscall result: %ld\n"</span><span class="token punctuation">,</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">保存退出并编译：gcc mysyscall<span class="token punctuation">.</span>c <span class="token operator">-</span><span class="token keyword">static</span> <span class="token operator">-</span>o mysyscall<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">7.</span><span class="token operator">~</span>目录下挂载：sudo mount rootfs<span class="token punctuation">.</span>img rootfs
+拷贝：cp mysyscall rootfs
+卸载：sudo umount rootfs
+最后运行虚拟机<span class="token operator">:</span><span class="token operator">!</span>qemu<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">8.</span>进到虚拟机里面，ls看文件，然后<span class="token punctuation">.</span><span class="token operator">/</span>mysyscall，查看系统调用是否成功，最后poweroff退出<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
       
 
       
@@ -752,21 +1079,54 @@ public Result&lt;User&gt; getUser(@PathVariable Long id) &#123;
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="通过按钮链接多窗口"><a href="#通过按钮链接多窗口" class="headerlink" title="通过按钮链接多窗口"></a>通过按钮链接多窗口</h2><p>注意点1 声明</p>
-<pre><code>//声明成员变量，指向newwindow1类型的对象
-QPointer&lt;newwindow1&gt; new_win1;
-QPointer&lt;newwindow2&gt; new_win2;
-QPointer&lt;QQwin&gt; new_win3;
-</code></pre>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">//声明成员变量，指向newwindow1类型的对象</span>
+QPointer<span class="token operator">&lt;</span>newwindow1<span class="token operator">></span> new_win1<span class="token punctuation">;</span>
+QPointer<span class="token operator">&lt;</span>newwindow2<span class="token operator">></span> new_win2<span class="token punctuation">;</span>
+QPointer<span class="token operator">&lt;</span>QQwin<span class="token operator">></span> new_win3<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <p>注意点2 释放内存</p>
-<dl><dt>newwindow2::newwindow2(QWidget *parent)</dt><dd>QDialog(parent)<br>, ui(new Ui::newwindow2)<br>{<br>    ui-&gt;setupUi(this);<br>    &#x2F;&#x2F;关闭窗口时，自动析构释放内存<br>    setAttribute(Qt::WA_DeleteOnClose);<br>}</dd></dl><h2 id="实现QQ抽屉效果核心技术"><a href="#实现QQ抽屉效果核心技术" class="headerlink" title="实现QQ抽屉效果核心技术"></a>实现QQ抽屉效果核心技术</h2><p>1.&#x2F;&#x2F;核心技术lambda创建一次性函数，增加代码简洁性，功能灵活性</p>
-<p>void QQwin::connection()<br>{<br>    connect(ui-&gt;fam_btn,&amp;QPushButton::clicked,this,<a href="">this</a>{openDrawer(0);}); &#x2F;&#x2F;自定义链接connect，同时使用lambda一次性函数<br>    connect(ui-&gt;tea_btn,&amp;QPushButton::clicked,this,<a href="">this</a>{openDrawer(1);});<br>    connect(ui-&gt;fri_btn,&amp;QPushButton::clicked,this,<a href="">this</a>{openDrawer(2);});<br>}<br>2.&#x2F;&#x2F;核心技术QstackedWidget,卡片堆，用于通过索引管理多页面之间的切换！！！！！后面就是无限套娃一个列表套一个列表</p>
-<pre><code>stackedWidget = new QStackedWidget(drawerWidget);  //堆抽屉，一次只能显示一个
-QVBoxLayout *drawerLayout = new QVBoxLayout(drawerWidget); //创建垂直布局
-drawerLayout-&gt;addWidget(stackedWidget); //将堆放入布局
-</code></pre>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">newwindow2<span class="token double-colon punctuation">::</span><span class="token function">newwindow2</span><span class="token punctuation">(</span>QWidget <span class="token operator">*</span>parent<span class="token punctuation">)</span>
+<span class="token operator">:</span> <span class="token function">QDialog</span><span class="token punctuation">(</span>parent<span class="token punctuation">)</span>
+<span class="token punctuation">,</span> <span class="token function">ui</span><span class="token punctuation">(</span><span class="token keyword">new</span> Ui<span class="token double-colon punctuation">::</span>newwindow2<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    ui<span class="token operator">-></span><span class="token function">setupUi</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//关闭窗口时，自动析构释放内存</span>
+    <span class="token function">setAttribute</span><span class="token punctuation">(</span>Qt<span class="token double-colon punctuation">::</span>WA_DeleteOnClose<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="实现QQ抽屉效果核心技术"><a href="#实现QQ抽屉效果核心技术" class="headerlink" title="实现QQ抽屉效果核心技术"></a>实现QQ抽屉效果核心技术</h2><p>1.&#x2F;&#x2F;核心技术lambda创建一次性函数，增加代码简洁性，功能灵活性</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> <span class="token class-name">QQwin</span><span class="token double-colon punctuation">::</span><span class="token function">connection</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token function">connect</span><span class="token punctuation">(</span>ui<span class="token operator">-></span>fam_btn<span class="token punctuation">,</span><span class="token operator">&amp;</span>QPushButton<span class="token double-colon punctuation">::</span>clicked<span class="token punctuation">,</span><span class="token keyword">this</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token function">openDrawer</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//自定义链接connect，同时使用lambda一次性函数</span>
+    <span class="token function">connect</span><span class="token punctuation">(</span>ui<span class="token operator">-></span>tea_btn<span class="token punctuation">,</span><span class="token operator">&amp;</span>QPushButton<span class="token double-colon punctuation">::</span>clicked<span class="token punctuation">,</span><span class="token keyword">this</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token function">openDrawer</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">connect</span><span class="token punctuation">(</span>ui<span class="token operator">-></span>fri_btn<span class="token punctuation">,</span><span class="token operator">&amp;</span>QPushButton<span class="token double-colon punctuation">::</span>clicked<span class="token punctuation">,</span><span class="token keyword">this</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token function">openDrawer</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>2.&#x2F;&#x2F;核心技术QstackedWidget,卡片堆，用于通过索引管理多页面之间的切换！！！！！后面就是无限套娃一个列表套一个列表</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">stackedWidget <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">QStackedWidget</span><span class="token punctuation">(</span>drawerWidget<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//堆抽屉，一次只能显示一个</span>
+QVBoxLayout <span class="token operator">*</span>drawerLayout <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">QVBoxLayout</span><span class="token punctuation">(</span>drawerWidget<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//创建垂直布局</span>
+drawerLayout<span class="token operator">-></span><span class="token function">addWidget</span><span class="token punctuation">(</span>stackedWidget<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//将堆放入布局</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <p>3.&#x2F;&#x2F;核心技术drawerAnimation打开抽屉动画设置</p>
-<p>void QQwin::openDrawer(int index)<br>{<br>    stackedWidget-&gt;setCurrentIndex(index);<br>    static int OpenIndex &#x3D; -1; &#x2F;&#x2F; 静态变量<br>    if (!isOpenDrawer) {<br>        &#x2F;&#x2F; 从左侧滑出<br>        drawerAnimation-&gt;setStartValue(QRect(-drawerWidget-&gt;width(), 0, drawerWidget-&gt;width(), height()));<br>        drawerAnimation-&gt;setEndValue(QRect(120, 0, drawerWidget-&gt;width(), height()));<br>        drawerWidget-&gt;show();<br>        isOpenDrawer &#x3D; true;<br>        OpenIndex &#x3D; index;<br>    }  else if (OpenIndex &#x3D;&#x3D; index) {<br>        &#x2F;&#x2F; 如果点击的是当前打开的抽屉，就关闭它<br>        drawerAnimation-&gt;setStartValue(QRect(120, 0, drawerWidget-&gt;width(), height()));<br>        drawerAnimation-&gt;setEndValue(QRect(-drawerWidget-&gt;width(), 0, drawerWidget-&gt;width(), height()));<br>        isOpenDrawer &#x3D; false;<br>        OpenIndex &#x3D; -1;<br>    } else {<br>        &#x2F;&#x2F; 如果抽屉已经打开，那切换内容<br>        OpenIndex &#x3D; index;<br>    }<br>    drawerAnimation-&gt;start();<br>}</p>
-
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> <span class="token class-name">QQwin</span><span class="token double-colon punctuation">::</span><span class="token function">openDrawer</span><span class="token punctuation">(</span><span class="token keyword">int</span> index<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    stackedWidget<span class="token operator">-></span><span class="token function">setCurrentIndex</span><span class="token punctuation">(</span>index<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">static</span> <span class="token keyword">int</span> OpenIndex <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span> <span class="token comment">// 静态变量</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>isOpenDrawer<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// 从左侧滑出</span>
+        drawerAnimation<span class="token operator">-></span><span class="token function">setStartValue</span><span class="token punctuation">(</span><span class="token function">QRect</span><span class="token punctuation">(</span><span class="token operator">-</span>drawerWidget<span class="token operator">-></span><span class="token function">width</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> drawerWidget<span class="token operator">-></span><span class="token function">width</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">height</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        drawerAnimation<span class="token operator">-></span><span class="token function">setEndValue</span><span class="token punctuation">(</span><span class="token function">QRect</span><span class="token punctuation">(</span><span class="token number">120</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> drawerWidget<span class="token operator">-></span><span class="token function">width</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">height</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        drawerWidget<span class="token operator">-></span><span class="token function">show</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        isOpenDrawer <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+        OpenIndex <span class="token operator">=</span> index<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>  <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>OpenIndex <span class="token operator">==</span> index<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// 如果点击的是当前打开的抽屉，就关闭它</span>
+        drawerAnimation<span class="token operator">-></span><span class="token function">setStartValue</span><span class="token punctuation">(</span><span class="token function">QRect</span><span class="token punctuation">(</span><span class="token number">120</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> drawerWidget<span class="token operator">-></span><span class="token function">width</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">height</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        drawerAnimation<span class="token operator">-></span><span class="token function">setEndValue</span><span class="token punctuation">(</span><span class="token function">QRect</span><span class="token punctuation">(</span><span class="token operator">-</span>drawerWidget<span class="token operator">-></span><span class="token function">width</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> drawerWidget<span class="token operator">-></span><span class="token function">width</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">height</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        isOpenDrawer <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+        OpenIndex <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// 如果抽屉已经打开，那切换内容</span>
+        OpenIndex <span class="token operator">=</span> index<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    drawerAnimation<span class="token operator">-></span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
       
 
       
@@ -841,9 +1201,11 @@ drawerLayout-&gt;addWidget(stackedWidget); //将堆放入布局
       
         <h2 id="1-家目录和根目录的区别"><a href="#1-家目录和根目录的区别" class="headerlink" title="1.家目录和根目录的区别"></a>1.家目录和根目录的区别</h2><p> &#x2F; 根目录是整个文件系统的起点，包含了重要系统文件，&#x2F;etc,&#x2F;bin,&#x2F;home等<br> ~ 而家目录是当前用户的个人目录通常是 &#x2F;home&#x2F;用户名</p>
 <h2 id="2-内核编译过慢，和中途停止问题（在linux源码文件下执行）"><a href="#2-内核编译过慢，和中途停止问题（在linux源码文件下执行）" class="headerlink" title="2.内核编译过慢，和中途停止问题（在linux源码文件下执行）"></a>2.内核编译过慢，和中途停止问题（在linux源码文件下执行）</h2><p> 使用make -j并行任务数量<br> ctrl+c中断，不是真正的暂停，但是可以中断编译，再继续，没有影响</p>
-<h2 id="3-挂载文件相关问题（在家目录下执行）"><a href="#3-挂载文件相关问题（在家目录下执行）" class="headerlink" title="3.挂载文件相关问题（在家目录下执行）"></a>3.挂载文件相关问题（在家目录下执行）</h2><p> 主要流程：挂载系统镜像文件-&gt;通过挂载节点修改镜像文件-&gt;卸载挂载<br> 1.挂载命令：sudo mount rootfs.img（镜像文件） rootfs（挂载点，用户目录文件）<br> 这是将名为 rootfs.img 的文件系统镜像挂载到名为 rootfs 的目录中。<br> 挂载后，你可以通过访问 rootfs 目录来查看和操作镜像文件中的内容。<br> 这通常用于检查、修改或提取文件系统镜像中的内容，而无需实际启动该文件系统。<br> 2.修改命令：cp mysyscall（目录中的源文件） rootfs（挂载点）<br> 这是在将一个名为 mysyscall 的文件复制到之前挂载的 rootfs 目录中<br> <a style="color: #FF0000;">注意：！！！千万不要写成cp mysyscall rootfs.img这是直接修改镜像文件了，可能会导致镜像文件损坏</a><br> 3.卸载磁盘：sudo umount rootfs（挂载点）<br> 这是在卸载磁盘，也就是将修改好的rootfs.img镜像文件拔离主机<br> 4.检查挂载：df -h查看dev&#x2F;loop0是否挂载，也可以通过mount | grep rootfs(挂载点) 检查具体挂载点，两行包含.img镜像文件和本地挂载点<br> 5.启动虚拟机（一定要先卸载磁盘，否则可能文件损坏）<br> 命令：qemu-system-x86_64 -kernel ~&#x2F;linux-5.10.68&#x2F;arch&#x2F;x86&#x2F;boot&#x2F;bzImage -hda ~&#x2F;rootfs.img -append “root&#x3D;&#x2F;dev&#x2F;sda console&#x3D;ttyS0” -nographic<br> 这个命令是使用QEMU模拟器启动一个x86_64架构的Linux系统，使用的磁盘镜像路径为 ~&#x2F;rootfs.img，启动在第一个串行端口，且禁用图形输出，在终端输出<br> 也可以通过!qemu调用历史启动方式<br> 6.运行镜像磁盘中你拷贝的文件(这是通过接口来修改镜像磁盘，是正常途径)<br> ls可以查看到你从主机上copy的mysyscall文件，使用.&#x2F;mysyscall,就可以运行这个文件（注意要完成内核的编译也就是写的系统调用和该文件的编译）<br> 类比说明过程：<br>    想象 rootfs.img 是一本密封的书。<br>    挂载过程就像打开这本书并放在特定的书架（rootfs 目录）上。<br>    现在，你可以通过查看这个书架来阅读书的内容，而不需要直接处理密封的书本。</p>
-<h2 id="4-如何编写系统调用"><a href="#4-如何编写系统调用" class="headerlink" title="4.如何编写系统调用"></a>4.如何编写系统调用</h2><p> 1.先在头文件声明使用 nano include&#x2F;linux&#x2F;syscalls.h<br> 2.在系统调用表中添加新的系统调用 nano arch&#x2F;x86&#x2F;entry&#x2F;syscalls&#x2F;syscall_64.tbl和nano include&#x2F;uapi&#x2F;asm-generic&#x2F;unistd.h<br> 3.添加系统调用stub（给不支持该系统调用的平台使用）nano kernel&#x2F;sys_ni.c<br> 4.实现系统调用使用 nano kernel&#x2F;sys.c中编写.c代码</p>
-
+<h2 id="3-挂载文件相关问题（在家目录下执行）"><a href="#3-挂载文件相关问题（在家目录下执行）" class="headerlink" title="3.挂载文件相关问题（在家目录下执行）"></a>3.挂载文件相关问题（在家目录下执行）</h2><p> 主要流程：挂载系统镜像文件-&gt;通过挂载节点修改镜像文件-&gt;卸载挂载<br> <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token number">1</span>.挂载命令：sudo <span class="token function">mount</span> rootfs.img（镜像文件） rootfs（挂载点，用户目录文件）<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><br> 这是将名为 rootfs.img 的文件系统镜像挂载到名为 rootfs 的目录中。<br> 挂载后，你可以通过访问 rootfs 目录来查看和操作镜像文件中的内容。<br> 这通常用于检查、修改或提取文件系统镜像中的内容，而无需实际启动该文件系统。<br> <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token number">2</span>.修改命令：cp mysyscall（目录中的源文件） rootfs（挂载点）<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><br> 这是在将一个名为 mysyscall 的文件复制到之前挂载的 rootfs 目录中<br> <a style="color: #FF0000;">注意：！！！千万不要写成cp mysyscall rootfs.img这是直接修改镜像文件了，可能会导致镜像文件损坏</a><br> <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">3.</span>卸载磁盘：sudo umount rootfs（挂载点）<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><br> 这是在卸载磁盘，也就是将修改好的rootfs.img镜像文件拔离主机<br> <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">4.</span>检查挂载：df <span class="token operator">-</span>h查看dev<span class="token operator">/</span>loop0是否挂载，也可以通过mount <span class="token operator">|</span> grep <span class="token function">rootfs</span><span class="token punctuation">(</span>挂载点<span class="token punctuation">)</span> 检查具体挂载点，两行包含<span class="token punctuation">.</span>img镜像文件和本地挂载点<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><br> 5.启动虚拟机（一定要先卸载磁盘，否则可能文件损坏）<br> <pre class="line-numbers language-c" data-language="c"><code class="language-c">命令：qemu<span class="token operator">-</span>system<span class="token operator">-</span>x86_64 <span class="token operator">-</span>kernel <span class="token operator">~</span><span class="token operator">/</span>linux<span class="token operator">-</span><span class="token number">5.10</span><span class="token number">.68</span><span class="token operator">/</span>arch<span class="token operator">/</span>x86<span class="token operator">/</span>boot<span class="token operator">/</span>bzImage <span class="token operator">-</span>hda <span class="token operator">~</span><span class="token operator">/</span>rootfs<span class="token punctuation">.</span>img <span class="token operator">-</span>append <span class="token string">"root=/dev/sda console=ttyS0"</span> <span class="token operator">-</span>nographic<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><br> 这个命令是使用QEMU模拟器启动一个x86_64架构的Linux系统，使用的磁盘镜像路径为 ~&#x2F;rootfs.img，启动在第一个串行端口，且禁用图形输出，在终端输出<br> 也可以通过!qemu调用历史启动方式<br> 6.运行镜像磁盘中你拷贝的文件(这是通过接口来修改镜像磁盘，是正常途径)<br> ls可以查看到你从主机上copy的mysyscall文件，使用.&#x2F;mysyscall,就可以运行这个文件（注意要完成内核的编译也就是写的系统调用和该文件的编译）<br> 类比说明过程：<br>    想象 rootfs.img 是一本密封的书。<br>    挂载过程就像打开这本书并放在特定的书架（rootfs 目录）上。<br>    现在，你可以通过查看这个书架来阅读书的内容，而不需要直接处理密封的书本。</p>
+<h2 id="4-如何编写系统调用"><a href="#4-如何编写系统调用" class="headerlink" title="4.如何编写系统调用"></a>4.如何编写系统调用</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">1.</span>先在头文件声明使用 nano include<span class="token operator">/</span>linux<span class="token operator">/</span>syscalls<span class="token punctuation">.</span>h
+<span class="token number">2.</span>在系统调用表中添加新的系统调用 nano arch<span class="token operator">/</span>x86<span class="token operator">/</span>entry<span class="token operator">/</span>syscalls<span class="token operator">/</span>syscall_64<span class="token punctuation">.</span>tbl和nano include<span class="token operator">/</span>uapi<span class="token operator">/</span><span class="token keyword">asm</span><span class="token operator">-</span>generic<span class="token operator">/</span>unistd<span class="token punctuation">.</span>h
+<span class="token number">3.</span>添加系统调用stub（给不支持该系统调用的平台使用）nano kernel<span class="token operator">/</span>sys_ni<span class="token punctuation">.</span>c
+<span class="token number">4.</span>实现系统调用使用 nano kernel<span class="token operator">/</span>sys<span class="token punctuation">.</span>c中编写<span class="token punctuation">.</span>c代码<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
       
 
       
@@ -1010,16 +1372,16 @@ drawerLayout-&gt;addWidget(stackedWidget); //将堆放入布局
     <div class="article-entry" itemprop="articleBody">
       
         <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo server<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo generate<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo deploy<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 
@@ -1161,15 +1523,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">springboot</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">教程</a>
+                <a href="javascript:void(0)" class="js-tag color3">Qt</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1185,11 +1539,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">操作系统内核</a>
+                <a href="javascript:void(0)" class="js-tag color1">springboot</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">挂载镜像磁盘</a>
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">教程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1202,6 +1560,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">命令</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">操作系统内核</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">挂载镜像磁盘</a>
               </li>
              
               <li class="article-tag-list-item">

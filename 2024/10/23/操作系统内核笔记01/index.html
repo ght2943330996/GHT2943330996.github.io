@@ -16,7 +16,7 @@
 <meta property="og:description" content="1.家目录和根目录的区别 &#x2F; 根目录是整个文件系统的起点，包含了重要系统文件，&#x2F;etc,&#x2F;bin,&#x2F;home等 ~ 而家目录是当前用户的个人目录通常是 &#x2F;home&#x2F;用户名 2.内核编译过慢，和中途停止问题（在linux源码文件下执行） 使用make -j并行任务数量 ctrl+c中断，不是真正的暂停，但是可以中断编译，再继续，没有影响 3">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-10-23T09:51:06.000Z">
-<meta property="article:modified_time" content="2024-10-23T10:53:29.902Z">
+<meta property="article:modified_time" content="2024-11-10T06:38:37.395Z">
 <meta property="article:author" content="seasons">
 <meta property="article:tag" content="操作系统内核">
 <meta property="article:tag" content="挂载镜像磁盘">
@@ -178,9 +178,11 @@
       
         <h2 id="1-家目录和根目录的区别"><a href="#1-家目录和根目录的区别" class="headerlink" title="1.家目录和根目录的区别"></a>1.家目录和根目录的区别</h2><p> &#x2F; 根目录是整个文件系统的起点，包含了重要系统文件，&#x2F;etc,&#x2F;bin,&#x2F;home等<br> ~ 而家目录是当前用户的个人目录通常是 &#x2F;home&#x2F;用户名</p>
 <h2 id="2-内核编译过慢，和中途停止问题（在linux源码文件下执行）"><a href="#2-内核编译过慢，和中途停止问题（在linux源码文件下执行）" class="headerlink" title="2.内核编译过慢，和中途停止问题（在linux源码文件下执行）"></a>2.内核编译过慢，和中途停止问题（在linux源码文件下执行）</h2><p> 使用make -j并行任务数量<br> ctrl+c中断，不是真正的暂停，但是可以中断编译，再继续，没有影响</p>
-<h2 id="3-挂载文件相关问题（在家目录下执行）"><a href="#3-挂载文件相关问题（在家目录下执行）" class="headerlink" title="3.挂载文件相关问题（在家目录下执行）"></a>3.挂载文件相关问题（在家目录下执行）</h2><p> 主要流程：挂载系统镜像文件-&gt;通过挂载节点修改镜像文件-&gt;卸载挂载<br> 1.挂载命令：sudo mount rootfs.img（镜像文件） rootfs（挂载点，用户目录文件）<br> 这是将名为 rootfs.img 的文件系统镜像挂载到名为 rootfs 的目录中。<br> 挂载后，你可以通过访问 rootfs 目录来查看和操作镜像文件中的内容。<br> 这通常用于检查、修改或提取文件系统镜像中的内容，而无需实际启动该文件系统。<br> 2.修改命令：cp mysyscall（目录中的源文件） rootfs（挂载点）<br> 这是在将一个名为 mysyscall 的文件复制到之前挂载的 rootfs 目录中<br> <a style="color: #FF0000;">注意：！！！千万不要写成cp mysyscall rootfs.img这是直接修改镜像文件了，可能会导致镜像文件损坏</a><br> 3.卸载磁盘：sudo umount rootfs（挂载点）<br> 这是在卸载磁盘，也就是将修改好的rootfs.img镜像文件拔离主机<br> 4.检查挂载：df -h查看dev&#x2F;loop0是否挂载，也可以通过mount | grep rootfs(挂载点) 检查具体挂载点，两行包含.img镜像文件和本地挂载点<br> 5.启动虚拟机（一定要先卸载磁盘，否则可能文件损坏）<br> 命令：qemu-system-x86_64 -kernel ~&#x2F;linux-5.10.68&#x2F;arch&#x2F;x86&#x2F;boot&#x2F;bzImage -hda ~&#x2F;rootfs.img -append “root&#x3D;&#x2F;dev&#x2F;sda console&#x3D;ttyS0” -nographic<br> 这个命令是使用QEMU模拟器启动一个x86_64架构的Linux系统，使用的磁盘镜像路径为 ~&#x2F;rootfs.img，启动在第一个串行端口，且禁用图形输出，在终端输出<br> 也可以通过!qemu调用历史启动方式<br> 6.运行镜像磁盘中你拷贝的文件(这是通过接口来修改镜像磁盘，是正常途径)<br> ls可以查看到你从主机上copy的mysyscall文件，使用.&#x2F;mysyscall,就可以运行这个文件（注意要完成内核的编译也就是写的系统调用和该文件的编译）<br> 类比说明过程：<br>    想象 rootfs.img 是一本密封的书。<br>    挂载过程就像打开这本书并放在特定的书架（rootfs 目录）上。<br>    现在，你可以通过查看这个书架来阅读书的内容，而不需要直接处理密封的书本。</p>
-<h2 id="4-如何编写系统调用"><a href="#4-如何编写系统调用" class="headerlink" title="4.如何编写系统调用"></a>4.如何编写系统调用</h2><p> 1.先在头文件声明使用 nano include&#x2F;linux&#x2F;syscalls.h<br> 2.在系统调用表中添加新的系统调用 nano arch&#x2F;x86&#x2F;entry&#x2F;syscalls&#x2F;syscall_64.tbl和nano include&#x2F;uapi&#x2F;asm-generic&#x2F;unistd.h<br> 3.添加系统调用stub（给不支持该系统调用的平台使用）nano kernel&#x2F;sys_ni.c<br> 4.实现系统调用使用 nano kernel&#x2F;sys.c中编写.c代码</p>
-
+<h2 id="3-挂载文件相关问题（在家目录下执行）"><a href="#3-挂载文件相关问题（在家目录下执行）" class="headerlink" title="3.挂载文件相关问题（在家目录下执行）"></a>3.挂载文件相关问题（在家目录下执行）</h2><p> 主要流程：挂载系统镜像文件-&gt;通过挂载节点修改镜像文件-&gt;卸载挂载<br> <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token number">1</span>.挂载命令：sudo <span class="token function">mount</span> rootfs.img（镜像文件） rootfs（挂载点，用户目录文件）<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><br> 这是将名为 rootfs.img 的文件系统镜像挂载到名为 rootfs 的目录中。<br> 挂载后，你可以通过访问 rootfs 目录来查看和操作镜像文件中的内容。<br> 这通常用于检查、修改或提取文件系统镜像中的内容，而无需实际启动该文件系统。<br> <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token number">2</span>.修改命令：cp mysyscall（目录中的源文件） rootfs（挂载点）<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><br> 这是在将一个名为 mysyscall 的文件复制到之前挂载的 rootfs 目录中<br> <a style="color: #FF0000;">注意：！！！千万不要写成cp mysyscall rootfs.img这是直接修改镜像文件了，可能会导致镜像文件损坏</a><br> <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">3.</span>卸载磁盘：sudo umount rootfs（挂载点）<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><br> 这是在卸载磁盘，也就是将修改好的rootfs.img镜像文件拔离主机<br> <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">4.</span>检查挂载：df <span class="token operator">-</span>h查看dev<span class="token operator">/</span>loop0是否挂载，也可以通过mount <span class="token operator">|</span> grep <span class="token function">rootfs</span><span class="token punctuation">(</span>挂载点<span class="token punctuation">)</span> 检查具体挂载点，两行包含<span class="token punctuation">.</span>img镜像文件和本地挂载点<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><br> 5.启动虚拟机（一定要先卸载磁盘，否则可能文件损坏）<br> <pre class="line-numbers language-c" data-language="c"><code class="language-c">命令：qemu<span class="token operator">-</span>system<span class="token operator">-</span>x86_64 <span class="token operator">-</span>kernel <span class="token operator">~</span><span class="token operator">/</span>linux<span class="token operator">-</span><span class="token number">5.10</span><span class="token number">.68</span><span class="token operator">/</span>arch<span class="token operator">/</span>x86<span class="token operator">/</span>boot<span class="token operator">/</span>bzImage <span class="token operator">-</span>hda <span class="token operator">~</span><span class="token operator">/</span>rootfs<span class="token punctuation">.</span>img <span class="token operator">-</span>append <span class="token string">"root=/dev/sda console=ttyS0"</span> <span class="token operator">-</span>nographic<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><br> 这个命令是使用QEMU模拟器启动一个x86_64架构的Linux系统，使用的磁盘镜像路径为 ~&#x2F;rootfs.img，启动在第一个串行端口，且禁用图形输出，在终端输出<br> 也可以通过!qemu调用历史启动方式<br> 6.运行镜像磁盘中你拷贝的文件(这是通过接口来修改镜像磁盘，是正常途径)<br> ls可以查看到你从主机上copy的mysyscall文件，使用.&#x2F;mysyscall,就可以运行这个文件（注意要完成内核的编译也就是写的系统调用和该文件的编译）<br> 类比说明过程：<br>    想象 rootfs.img 是一本密封的书。<br>    挂载过程就像打开这本书并放在特定的书架（rootfs 目录）上。<br>    现在，你可以通过查看这个书架来阅读书的内容，而不需要直接处理密封的书本。</p>
+<h2 id="4-如何编写系统调用"><a href="#4-如何编写系统调用" class="headerlink" title="4.如何编写系统调用"></a>4.如何编写系统调用</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">1.</span>先在头文件声明使用 nano include<span class="token operator">/</span>linux<span class="token operator">/</span>syscalls<span class="token punctuation">.</span>h
+<span class="token number">2.</span>在系统调用表中添加新的系统调用 nano arch<span class="token operator">/</span>x86<span class="token operator">/</span>entry<span class="token operator">/</span>syscalls<span class="token operator">/</span>syscall_64<span class="token punctuation">.</span>tbl和nano include<span class="token operator">/</span>uapi<span class="token operator">/</span><span class="token keyword">asm</span><span class="token operator">-</span>generic<span class="token operator">/</span>unistd<span class="token punctuation">.</span>h
+<span class="token number">3.</span>添加系统调用stub（给不支持该系统调用的平台使用）nano kernel<span class="token operator">/</span>sys_ni<span class="token punctuation">.</span>c
+<span class="token number">4.</span>实现系统调用使用 nano kernel<span class="token operator">/</span>sys<span class="token punctuation">.</span>c中编写<span class="token punctuation">.</span>c代码<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
       
 
       
@@ -429,15 +431,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">springboot</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">教程</a>
+                <a href="javascript:void(0)" class="js-tag color3">Qt</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -453,11 +447,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">操作系统内核</a>
+                <a href="javascript:void(0)" class="js-tag color1">springboot</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">挂载镜像磁盘</a>
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">教程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -470,6 +468,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">命令</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">操作系统内核</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">挂载镜像磁盘</a>
               </li>
              
               <li class="article-tag-list-item">

@@ -8,15 +8,15 @@
   <link rel="dns-prefetch" href="http://example.com">
   <title>医院挂号springboot+vue开发流程 | 我的第一个博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Vue的安装 安装 Node.js首先，你需要安装 Node.js，因为 Vue.js 依赖于它。检查：node_-v2.安装Vue cli工具命令行：npm install -g @vue&#x2F;cli检验：vue -V3.创建vue项目使用vue cli在目录文件下命令行：vue create my-project-name4.cd到项目目录：cd my-project-name安装依赖：">
+  <meta name="description" content="Vue的安装1. 安装 Node.js 首先，你需要安装 Node.js，因为 Vue.js 依赖于它。 检查：node -v  2.安装Vue cli工具 命令行：npm install -g @vue&#x2F;cli 检验：vue -V 3.创建vue项目 使用vue cli 在目录文件下命令行：vue create my-project-name 4.cd到项目目录：cd my-project-na">
 <meta property="og:type" content="article">
 <meta property="og:title" content="医院挂号springboot+vue开发流程">
 <meta property="og:url" content="http://example.com/2024/11/04/%E5%8C%BB%E9%99%A2%E6%8C%82%E5%8F%B7springboot-vue%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/index.html">
 <meta property="og:site_name" content="我的第一个博客">
-<meta property="og:description" content="Vue的安装 安装 Node.js首先，你需要安装 Node.js，因为 Vue.js 依赖于它。检查：node_-v2.安装Vue cli工具命令行：npm install -g @vue&#x2F;cli检验：vue -V3.创建vue项目使用vue cli在目录文件下命令行：vue create my-project-name4.cd到项目目录：cd my-project-name安装依赖：">
+<meta property="og:description" content="Vue的安装1. 安装 Node.js 首先，你需要安装 Node.js，因为 Vue.js 依赖于它。 检查：node -v  2.安装Vue cli工具 命令行：npm install -g @vue&#x2F;cli 检验：vue -V 3.创建vue项目 使用vue cli 在目录文件下命令行：vue create my-project-name 4.cd到项目目录：cd my-project-na">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-11-04T08:05:57.000Z">
-<meta property="article:modified_time" content="2024-11-08T15:27:23.421Z">
+<meta property="article:modified_time" content="2024-11-10T06:22:28.511Z">
 <meta property="article:author" content="seasons">
 <meta property="article:tag" content="springboot">
 <meta property="article:tag" content="vue">
@@ -177,44 +177,86 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="Vue的安装"><a href="#Vue的安装" class="headerlink" title="Vue的安装"></a>Vue的安装</h2><ol>
-<li>安装 Node.js<br>首先，你需要安装 Node.js，因为 Vue.js 依赖于它。<br>检查：node_-v<br>2.安装Vue cli工具<br>命令行：npm install -g @vue&#x2F;cli<br>检验：vue -V<br>3.创建vue项目<br>使用vue cli<br>在目录文件下命令行：vue create my-project-name<br>4.cd到项目目录：cd my-project-name<br>安装依赖：npm install<br>5.附加：添加路由和状态管理<br>npm install vue-router@4</li>
-</ol>
+        <h2 id="Vue的安装"><a href="#Vue的安装" class="headerlink" title="Vue的安装"></a>Vue的安装</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">1.</span> 安装 Node<span class="token punctuation">.</span>js
+首先，你需要安装 Node<span class="token punctuation">.</span>js，因为 Vue<span class="token punctuation">.</span>js 依赖于它。
+检查：node <span class="token operator">-</span>v 
+<span class="token number">2.</span>安装Vue cli工具
+命令行：npm install <span class="token operator">-</span>g @vue<span class="token operator">/</span>cli
+检验：vue <span class="token operator">-</span>V
+<span class="token number">3.</span>创建vue项目
+使用vue cli
+在目录文件下命令行：vue create my<span class="token operator">-</span>project<span class="token operator">-</span>name
+<span class="token number">4.</span>cd到项目目录：cd my<span class="token operator">-</span>project<span class="token operator">-</span>name
+安装依赖：npm install
+<span class="token number">5.</span>附加：添加路由和状态管理
+npm install vue<span class="token operator">-</span>router@<span class="token number">4</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h2 id="开发流程–重点！！！"><a href="#开发流程–重点！！！" class="headerlink" title="开发流程–重点！！！"></a>开发流程–重点！！！</h2><p>1.创建相应的数据库表，mysql，这是数据源。</p>
-<p>2.创建实体层，Entity，他是个新创建的对象模型<br>&#x2F;&#x2F; 示例：User.java<br>@Data<br>public class User {<br>    private Long id;<br>    private String username;<br>    private String password;<br>    &#x2F;&#x2F; … 其他属性<br>}<br>用途：<br>对应数据库表结构<br>定义数据模型<br>通常包含属性和getter&#x2F;setter方法<br>文件类型：<br>实体类（POJO）<br>数据传输对象（DTO）</p>
-<p>3.创建映射层，Mapper，他是映射你数据库操作的<br>&#x2F;&#x2F; 示例：UserMapper.java<br>@Mapper<br>public interface UserMapper {<br>    List<User> selectAll();<br>    User selectById(Long id);<br>    int insert(User user);<br>    &#x2F;&#x2F; … 其他数据库操作方法<br>}<br>用途：<br>负责数据库操作<br>定义SQL语句<br>实现数据持久化<br>文件类型：<br>Mapper接口<br>XML映射文件</p>
-<p>4.创建服务层，Service，他比较复杂，所有的业务逻辑都在这里，比如组合多个mapper操作，处理业务规则，数据校验等<br>&#x2F;&#x2F; 示例：UserService.java<br>@Service<br>public class UserServiceImpl implements UserService {<br>    @Autowired<br>    private UserMapper userMapper;</p>
-<pre><code>public Result register(User user) &#123;
-    // 1. 业务规则验证
-    if (user.getPassword().length() &lt; 6) &#123;
-        return Result.error(&quot;密码长度不能小于6位&quot;);
-    &#125;
+<p>2.创建实体层，Entity，他是个新创建的对象模型</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">// 示例：User.java</span>
+<span class="token annotation punctuation">@Data</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">User</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Long</span> id<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> username<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> password<span class="token punctuation">;</span>
+    <span class="token comment">// ... 其他属性</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>用途：<br>对应数据库表结构<br>定义数据模型<br>通常包含属性和getter&#x2F;setter方法<br>文件类型：<br>实体类（POJO）<br>数据传输对象（DTO）</p>
+<p>3.创建映射层，Mapper，他是映射你数据库操作的</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">// 示例：UserMapper.java</span>
+<span class="token annotation punctuation">@Mapper</span>
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">UserMapper</span> <span class="token punctuation">&#123;</span>
+    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">User</span><span class="token punctuation">></span></span> <span class="token function">selectAll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">User</span> <span class="token function">selectById</span><span class="token punctuation">(</span><span class="token class-name">Long</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> <span class="token function">insert</span><span class="token punctuation">(</span><span class="token class-name">User</span> user<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// ... 其他数据库操作方法</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>用途：<br>负责数据库操作<br>定义SQL语句<br>实现数据持久化<br>文件类型：<br>Mapper接口<br>XML映射文件</p>
+<p>4.创建服务层，Service，他比较复杂，所有的业务逻辑都在这里，比如组合多个mapper操作，处理业务规则，数据校验等</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//示例:UserService.java</span>
+<span class="token annotation punctuation">@Service</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserServiceImpl</span> <span class="token keyword">implements</span> <span class="token class-name">UserService</span> <span class="token punctuation">&#123;</span>
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token keyword">private</span> <span class="token class-name">UserMapper</span> userMapper<span class="token punctuation">;</span>
     
-    // 2. 业务逻辑处理
-    if (userMapper.findByUsername(user.getUsername()) != null) &#123;
-        return Result.error(&quot;用户名已存在&quot;);
-    &#125;
+    <span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">register</span><span class="token punctuation">(</span><span class="token class-name">User</span> user<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// 1. 业务规则验证</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>user<span class="token punctuation">.</span><span class="token function">getPassword</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">6</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"密码长度不能小于6位"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        
+        <span class="token comment">// 2. 业务逻辑处理</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>userMapper<span class="token punctuation">.</span><span class="token function">findByUsername</span><span class="token punctuation">(</span>user<span class="token punctuation">.</span><span class="token function">getUsername</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"用户名已存在"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        
+        <span class="token comment">// 3. 密码加密</span>
+        user<span class="token punctuation">.</span><span class="token function">setPassword</span><span class="token punctuation">(</span><span class="token function">encryptPassword</span><span class="token punctuation">(</span>user<span class="token punctuation">.</span><span class="token function">getPassword</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        
+        <span class="token comment">// 4. 调用Mapper保存数据</span>
+        userMapper<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        
+        <span class="token comment">// 5. 发送注册成功邮件</span>
+        <span class="token function">sendWelcomeEmail</span><span class="token punctuation">(</span>user<span class="token punctuation">.</span><span class="token function">getEmail</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        
+        <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>用途：<br>实现业务逻辑<br>处理事务<br>调用Mapper层<br>文件类型：<br>服务接口<br>服务实现类</p>
+<p>5.创建控制层，Controller，他是处理和响应HTTP请求的，并连接Service层</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">// 示例：UserController.java</span>
+<span class="token annotation punctuation">@RestController</span>
+<span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/api/users"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserController</span> <span class="token punctuation">&#123;</span>
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token keyword">private</span> <span class="token class-name">UserService</span> userService<span class="token punctuation">;</span>
     
-    // 3. 密码加密
-    user.setPassword(encryptPassword(user.getPassword()));
-    
-    // 4. 调用Mapper保存数据
-    userMapper.insert(user);
-    
-    // 5. 发送注册成功邮件
-    sendWelcomeEmail(user.getEmail());
-    
-    return Result.success();
-&#125;
-</code></pre>
-<p>}<br>用途：<br>实现业务逻辑<br>处理事务<br>调用Mapper层<br>文件类型：<br>服务接口<br>服务实现类</p>
-<p>5.创建控制层，Controller，他是处理和响应HTTP请求的，并连接Service层<br>&#x2F;&#x2F; 示例：UserController.java<br>@RestController<br>@RequestMapping(“&#x2F;api&#x2F;users”)<br>public class UserController {<br>    @Autowired<br>    private UserService userService;</p>
-<pre><code>@GetMapping(&quot;/&#123;id&#125;&quot;)
-public Result&lt;User&gt; getUser(@PathVariable Long id) &#123;
-    return Result.success(userService.getUserById(id));
-&#125;
-</code></pre>
-<p>}<br>用途：<br>处理HTTP请求<br>参数验证<br>调用Service层<br>文件类型：<br>控制器类<br>请求处理方法</p>
+    <span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/&#123;id&#125;"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token class-name">Result</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">User</span><span class="token punctuation">></span></span> <span class="token function">getUser</span><span class="token punctuation">(</span><span class="token annotation punctuation">@PathVariable</span> <span class="token class-name">Long</span> id<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span>userService<span class="token punctuation">.</span><span class="token function">getUserById</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>用途：<br>处理HTTP请求<br>参数验证<br>调用Service层<br>文件类型：<br>控制器类<br>请求处理方法</p>
 <h2 id="数据流向以及完整流程（数据的去回一定都是这个流程，不能直接页面调用数据库数据）"><a href="#数据流向以及完整流程（数据的去回一定都是这个流程，不能直接页面调用数据库数据）" class="headerlink" title="数据流向以及完整流程（数据的去回一定都是这个流程，不能直接页面调用数据库数据）"></a>数据流向以及完整流程（数据的去回一定都是这个流程，不能直接页面调用数据库数据）</h2><p>浏览器 &lt;-&gt; Controller &lt;-&gt; Service &lt;-&gt; Mapper &lt;-&gt; 数据库</p>
 <p>完整流程：<br>1.用户在页面填写注册信息<br>2.点击注册按钮，前端调用Controller的API<br>3.Controller接收请求，调用Service<br>4.Service执行业务逻辑：<br>验证密码长度<br>检查用户名是否存在<br>加密密码<br>调用Mapper保存数据<br>Mapper执行数据库操作，将数据存入数据库，并返回结果<br>返回结果给前端展示</p>
 <p>所以Service层就像是一个”业务指挥官”：<br>它知道”要做什么”（业务规则）<br>它调动各种资源（Mapper、其他Service）<br>它确保业务的完整性（事务处理）<br>它处理各种业务场景（异常情况）<br>这就是为什么需要Service层的原因：它封装了核心业务逻辑，使得业务规则可以被集中管理和复用。</p>
@@ -471,15 +513,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">springboot</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">教程</a>
+                <a href="javascript:void(0)" class="js-tag color3">Qt</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -495,11 +529,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">操作系统内核</a>
+                <a href="javascript:void(0)" class="js-tag color1">springboot</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">挂载镜像磁盘</a>
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">教程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -512,6 +550,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">命令</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">操作系统内核</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">挂载镜像磁盘</a>
               </li>
              
               <li class="article-tag-list-item">

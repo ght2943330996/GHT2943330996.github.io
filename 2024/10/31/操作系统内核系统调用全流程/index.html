@@ -8,15 +8,15 @@
   <link rel="dns-prefetch" href="http://example.com">
   <title>操作系统内核系统调用全流程 | 我的第一个博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="如有安装过，卸载不干净先wsl -l -v看版本后面执行：wsl –unregister Ubuntu-20.04 清除注册表 一.windows环境配置1.检查系统更新，并打开虚拟机平台和子系统2.去ms下载ubuntu20.04.63.在命令行更新安装wsl：wsl –update4.运行ubuntu并设置账号5.最后在win命令中检查：wsl -l -v     2为正确，如果是1先更新系统">
+  <meta name="description" content="注意事项1.如有安装过，卸载不干净先wsl -l -v看版本 后面执行：wsl --unregister Ubuntu-20.04 清除注册表 2.虚拟器平台选项找不到先检查更新，如果还是不行，用命令打开以管理员身份打开powershell 1.启动Hyper-V：bcdedit &#x2F;set hypervisorlaunchtype auto  关闭命令：bcdedit &#x2F;set hyperviso">
 <meta property="og:type" content="article">
 <meta property="og:title" content="操作系统内核系统调用全流程">
 <meta property="og:url" content="http://example.com/2024/10/31/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%85%A8%E6%B5%81%E7%A8%8B/index.html">
 <meta property="og:site_name" content="我的第一个博客">
-<meta property="og:description" content="如有安装过，卸载不干净先wsl -l -v看版本后面执行：wsl –unregister Ubuntu-20.04 清除注册表 一.windows环境配置1.检查系统更新，并打开虚拟机平台和子系统2.去ms下载ubuntu20.04.63.在命令行更新安装wsl：wsl –update4.运行ubuntu并设置账号5.最后在win命令中检查：wsl -l -v     2为正确，如果是1先更新系统">
+<meta property="og:description" content="注意事项1.如有安装过，卸载不干净先wsl -l -v看版本 后面执行：wsl --unregister Ubuntu-20.04 清除注册表 2.虚拟器平台选项找不到先检查更新，如果还是不行，用命令打开以管理员身份打开powershell 1.启动Hyper-V：bcdedit &#x2F;set hypervisorlaunchtype auto  关闭命令：bcdedit &#x2F;set hyperviso">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-10-31T11:58:05.000Z">
-<meta property="article:modified_time" content="2024-11-03T02:13:48.122Z">
+<meta property="article:modified_time" content="2024-11-10T06:32:03.785Z">
 <meta property="article:author" content="seasons">
 <meta property="article:tag" content="操作系统内核">
 <meta name="twitter:card" content="summary">
@@ -175,49 +175,120 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>如有安装过，卸载不干净<br>先wsl -l -v看版本<br>后面执行：wsl –unregister Ubuntu-20.04 清除注册表</p>
-<h2 id="一-windows环境配置"><a href="#一-windows环境配置" class="headerlink" title="一.windows环境配置"></a>一.windows环境配置</h2><p>1.检查系统更新，并打开虚拟机平台和子系统<br>2.去ms下载ubuntu20.04.6<br>3.在命令行更新安装wsl：wsl –update<br>4.运行ubuntu并设置账号<br>5.最后在win命令中检查：wsl -l -v     2为正确，如果是1先更新系统再wsl –set-version ubuntu将版本升级</p>
-<h2 id="二-ubuntu环境配置"><a href="#二-ubuntu环境配置" class="headerlink" title="二.ubuntu环境配置"></a>二.ubuntu环境配置</h2><p>1.先更新sudo apt update 和 sudo apt upgrade</p>
-<p>2.安装工具:sudo apt install build-essential</p>
-<p>sudo apt install gcc-multilib</p>
-<p>检查：gcc–version<br>3.同时将linux源码和busybox源码放入用户根目录下</p>
-<h2 id="三-编译内核"><a href="#三-编译内核" class="headerlink" title="三.编译内核"></a>三.编译内核</h2><p>1.安装软件包5个：sudo apt install flex</p>
-<p>sudo apt install bison</p>
-<p>sudo apt install libssl-dev</p>
-<p>sudo apt install libelf-dev</p>
-<p>sudo apt install libncurses-dev</p>
-<p>2.在家目录下解压两个源码：linux：tar -xvJf linux-5.10.68.tar.xz<br>busybox:  tar -xvjf busybox-1.33.1.tar.bz2</p>
-<p>3.进入linux根目录下配置内核：make defconfig<br>并且在源码下编译内核：make -j20</p>
-<h2 id="四：安装虚拟机"><a href="#四：安装虚拟机" class="headerlink" title="四：安装虚拟机"></a>四：安装虚拟机</h2><p>家目录下：sudo apt install qemu-system-x86</p>
-<h2 id="五：编译busybox"><a href="#五：编译busybox" class="headerlink" title="五：编译busybox"></a>五：编译busybox</h2><p>1.去到busybox根目录下：make defconfig</p>
-<p>然后:make menuconfig，去勾选Settings &#x2F; Build static binary</p>
-<p>2.编译busybox：make install</p>
-<h2 id="六-制作镜像文件"><a href="#六-制作镜像文件" class="headerlink" title="六.制作镜像文件"></a>六.制作镜像文件</h2><p>1.在家目录下执行：dd if&#x3D;&#x2F;dev&#x2F;zero of&#x3D;rootfs.img bs&#x3D;1M count&#x3D;100</p>
-<p>并格式化：mkfs.ext4 rootfs.img</p>
-<p>2.创建挂载点：mkdir rootfs</p>
-<p>挂载磁盘：sudo mount ~&#x2F;rootfs.img rootfs</p>
-<p>更名：sudo chown 用户名 -R rootfs</p>
-<p>3.在rootfs目录下创建文件：mkdir -pv {bin,sbin,usr&#x2F;{bin,sbin},etc&#x2F;init.d,proc,sys,tmp,dev}</p>
-<p>4.在rootfs下拷贝busybox中的文件：cp -drv ~&#x2F;busybox-1.33.1&#x2F;_install&#x2F;* .     *号和后面的圆点(.)之间有空格。</p>
-<p>5.在rootfs下创建系统配置文件：nano etc&#x2F;inittab<br>输入以下代码：<br>::sysinit:&#x2F;etc&#x2F;init.d&#x2F;rcS<br>::respawn:-&#x2F;bin&#x2F;sh<br>::restart:&#x2F;sbin&#x2F;init<br>::shutdown:&#x2F;bin&#x2F;umount -a -r<br>保存退出</p>
-<p>6.在rootfs下创建系统设置脚本：nano etc&#x2F;init.d&#x2F;rcS<br>输入以下代码：<br>#!&#x2F;bin&#x2F;sh<br>echo ‘INIT SCRIPT’<br>mount -t proc proc &#x2F;proc<br>mount -t sysfs sysfs &#x2F;sys<br>mount -t debugfs debugfs &#x2F;sys&#x2F;kernel&#x2F;debug<br>mount -t tmpfs tmpfs &#x2F;tmp<br>mdev -s<br>mount -n -o remount,rw &#x2F;<br>echo -e “\nBoot took $(cut -d’ ‘ -f1 &#x2F;proc&#x2F;uptime) seconds\n”</p>
-<p>并在其下执行：chmod +x etc&#x2F;init.d&#x2F;rcS</p>
-<p>7.在~下（也就是rootfs上级）卸载磁盘！！！十分重要：sudo umount rootfs</p>
-<p>8.接着创建运行虚拟器命令：qemu-system-x86_64 -kernel ~&#x2F;linux-5.10.68&#x2F;arch&#x2F;x86&#x2F;boot&#x2F;bzImage -hda ~&#x2F;rootfs.img -append “root&#x3D;&#x2F;dev&#x2F;sda console&#x3D;ttyS0” -nographic<br>以后都可以直接用!qemu运行</p>
-<p>9.测试：touch test看看有没有成功  最后poweroff退出</p>
-<h2 id="七-实现系统调用"><a href="#七-实现系统调用" class="headerlink" title="七.实现系统调用"></a>七.实现系统调用</h2><p>1.先到linux下，再开始操作。<br>添加系统调用函数原型: nano include&#x2F;linux&#x2F;syscalls.h    找到sys_olduname在后面添加:asmlinkage long sys_mysyscall();</p>
-<p>2.添加新的系统调用:nano arch&#x2F;x86&#x2F;entry&#x2F;syscalls&#x2F;syscall_64.tbl 在440之后添加  441	 common	 mysyscall  sys_mysyscall</p>
-<p>3.在:nano include&#x2F;uapi&#x2F;asm-generic&#x2F;unistd.h<br>在440后添加:#define __NR_mysyscall 441<br>__SYSCALL(__NR_mysyscall, sys_mysyscall)<br>并修改#define __NR_syscalls 442    改成442</p>
-<p>4.在:nano kernel&#x2F;sys_ni.c 中搜索This list is 在后面添加：COND_SYSCALL(mysyscall);  给不支持该系统调用的平台使用</p>
-<p>5.在:nano kernel&#x2F;sys.c 中找到the same as 在后面添加代码：<br>SYSCALL_DEFINE0(mysyscall)<br>{<br> printk(“Hello&lt;123&gt;!\n”);<br> return 0;<br>}<br>保存退出并重新编译内核：make -j20</p>
-<p>6.返回~目录，创建系统调用程序:nano mysyscall.c<br>输入以下代码：<br>#include &lt;stdio.h&gt;<br>#include &lt;unistd.h&gt;</p>
-<p>int main()<br>{<br>        printf(“Calling mysyscall…\n”);<br>        long result &#x3D; syscall(441);<br>        printf(“Syscall result: %ld\n”,result);</p>
-<pre><code>    return 0;
-</code></pre>
-<p>}<br>保存退出并编译：gcc mysyscall.c -static -o mysyscall</p>
-<p>7.~目录下挂载：sudo mount rootfs.img rootfs<br>拷贝：cp mysyscall rootfs<br>卸载：sudo umount rootfs<br>最后运行虚拟机:!qemu</p>
-<p>8.进到虚拟机里面，ls看文件，然后.&#x2F;mysyscall，查看系统调用是否成功，最后poweroff退出</p>
+        <h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>1.如有安装过，卸载不干净<br>先wsl -l -v看版本</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">后面执行：wsl <span class="token operator">--</span>unregister Ubuntu<span class="token operator">-</span><span class="token number">20.04</span> 清除注册表<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>2.虚拟器平台选项找不到<br>先检查更新，如果还是不行，<br>用命令打开以管理员身份打开powershell</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">1.</span>启动Hyper<span class="token operator">-</span>V：bcdedit <span class="token operator">/</span>set hypervisorlaunchtype <span class="token keyword">auto</span>  关闭命令：bcdedit <span class="token operator">/</span>set hypervisorlaunchtype off
+<span class="token number">2.</span>启动wsl虚拟机平台
+Enable<span class="token operator">-</span>WindowsOptionalFeature <span class="token operator">-</span>Online <span class="token operator">-</span>FeatureName VirtualMachinePlatform <span class="token operator">-</span>All（启用命令）
+Disable<span class="token operator">-</span>WindowsOptionalFeature <span class="token operator">-</span>Online <span class="token operator">-</span>FeatureName VirtualMachinePlatform（禁止命令）
 
+检查是否开启：Get<span class="token operator">-</span>WindowsOptionalFeature <span class="token operator">-</span>Online <span class="token operator">-</span>FeatureName Microsoft<span class="token operator">-</span>Hyper<span class="token operator">-</span>V<span class="token operator">-</span><span class="token function">All</span> <span class="token punctuation">(</span>检测Hyper<span class="token operator">-</span>V<span class="token punctuation">)</span>
+Get<span class="token operator">-</span>WindowsOptionalFeature <span class="token operator">-</span>Online <span class="token operator">|</span> Where<span class="token operator">-</span>Object <span class="token punctuation">&#123;</span>$_<span class="token punctuation">.</span>FeatureName <span class="token operator">-</span>like <span class="token string">"*VirtualMachinePlatform*"</span><span class="token punctuation">&#125;</span>
+state：Enabled说明启用了## 一<span class="token punctuation">.</span>windows环境配置<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>1.检查系统更新，并打开虚拟机平台和子系统<br>2.去ms下载ubuntu20.04.6</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">3.</span>在命令行更新安装wsl：wsl <span class="token operator">--</span>update<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>4.运行ubuntu并设置账号</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">5.</span>最后在win命令中检查：wsl <span class="token operator">-</span>l <span class="token operator">-</span>v    <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>2为正确，如果是1先更新系统再wsl –set-version ubuntu将版本升级</p>
+<h2 id="二-ubuntu环境配置"><a href="#二-ubuntu环境配置" class="headerlink" title="二.ubuntu环境配置"></a>二.ubuntu环境配置</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">1.</span>先更新sudo apt update 和 sudo apt upgrade
+
+<span class="token number">2.</span>安装工具<span class="token operator">:</span>sudo apt install build<span class="token operator">-</span>essential
+
+sudo apt install gcc<span class="token operator">-</span>multilib
+
+检查：gcc<span class="token operator">--</span>version<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>3.同时将linux源码和busybox源码放入用户根目录下</p>
+<h2 id="三-编译内核"><a href="#三-编译内核" class="headerlink" title="三.编译内核"></a>三.编译内核</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">1.</span>安装软件包<span class="token number">5</span>个：sudo apt install flex
+
+sudo apt install bison
+
+sudo apt install libssl<span class="token operator">-</span>dev
+
+sudo apt install libelf<span class="token operator">-</span>dev
+
+sudo apt install libncurses<span class="token operator">-</span>dev<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">2.</span>在家目录下解压两个源码：linux：tar <span class="token operator">-</span>xvJf linux<span class="token operator">-</span><span class="token number">5.10</span><span class="token number">.68</span><span class="token punctuation">.</span>tar<span class="token punctuation">.</span>xz
+busybox<span class="token operator">:</span>  tar <span class="token operator">-</span>xvjf busybox<span class="token operator">-</span><span class="token number">1.33</span><span class="token number">.1</span><span class="token punctuation">.</span>tar<span class="token punctuation">.</span>bz2<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">3.</span>进入linux根目录下配置内核：make defconfig
+并且在源码下编译内核：make <span class="token operator">-</span>j20<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h2 id="四：安装虚拟机"><a href="#四：安装虚拟机" class="headerlink" title="四：安装虚拟机"></a>四：安装虚拟机</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">家目录下：sudo apt install qemu<span class="token operator">-</span>system<span class="token operator">-</span>x86<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="五：编译busybox"><a href="#五：编译busybox" class="headerlink" title="五：编译busybox"></a>五：编译busybox</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">1.</span>去到busybox根目录下：make defconfig
+
+然后<span class="token operator">:</span>make menuconfig，去勾选Settings <span class="token operator">/</span> Build <span class="token keyword">static</span> binary
+
+<span class="token number">2.</span>编译busybox：make install<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="六-制作镜像文件"><a href="#六-制作镜像文件" class="headerlink" title="六.制作镜像文件"></a>六.制作镜像文件</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">1.</span>在家目录下执行：dd <span class="token keyword">if</span><span class="token operator">=</span><span class="token operator">/</span>dev<span class="token operator">/</span>zero of<span class="token operator">=</span>rootfs<span class="token punctuation">.</span>img bs<span class="token operator">=</span><span class="token number">1</span>M count<span class="token operator">=</span><span class="token number">100</span>
+
+并格式化：mkfs<span class="token punctuation">.</span>ext4 rootfs<span class="token punctuation">.</span>img
+
+<span class="token number">2.</span>创建挂载点：mkdir rootfs
+
+挂载磁盘：sudo mount <span class="token operator">~</span><span class="token operator">/</span>rootfs<span class="token punctuation">.</span>img rootfs
+
+更名：sudo chown 用户名 <span class="token operator">-</span>R rootfs
+
+<span class="token number">3.</span>在rootfs目录下创建文件：mkdir <span class="token operator">-</span>pv <span class="token punctuation">&#123;</span>bin<span class="token punctuation">,</span>sbin<span class="token punctuation">,</span>usr<span class="token operator">/</span><span class="token punctuation">&#123;</span>bin<span class="token punctuation">,</span>sbin<span class="token punctuation">&#125;</span><span class="token punctuation">,</span>etc<span class="token operator">/</span>init<span class="token punctuation">.</span>d<span class="token punctuation">,</span>proc<span class="token punctuation">,</span>sys<span class="token punctuation">,</span>tmp<span class="token punctuation">,</span>dev<span class="token punctuation">&#125;</span>
+
+<span class="token number">4.</span>在rootfs下拷贝busybox中的文件：cp <span class="token operator">-</span>drv <span class="token operator">~</span><span class="token operator">/</span>busybox<span class="token operator">-</span><span class="token number">1.33</span><span class="token number">.1</span><span class="token operator">/</span>_install<span class="token comment">/* .     *号和后面的圆点(.)之间有空格。
+
+5.在rootfs下创建系统配置文件：nano etc/inittab</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输入以下代码：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token operator">::</span>sysinit<span class="token operator">:</span><span class="token operator">/</span>etc<span class="token operator">/</span>init<span class="token punctuation">.</span>d<span class="token operator">/</span>rcS
+<span class="token operator">::</span>respawn<span class="token operator">:</span><span class="token operator">-</span><span class="token operator">/</span>bin<span class="token operator">/</span>sh
+<span class="token operator">::</span>restart<span class="token operator">:</span><span class="token operator">/</span>sbin<span class="token operator">/</span>init
+<span class="token operator">::</span>shutdown<span class="token operator">:</span><span class="token operator">/</span>bin<span class="token operator">/</span>umount <span class="token operator">-</span>a <span class="token operator">-</span>r<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>保存退出</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">6.</span>在rootfs下创建系统设置脚本：nano etc<span class="token operator">/</span>init<span class="token punctuation">.</span>d<span class="token operator">/</span>rcS<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>输入以下代码：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">#<span class="token operator">!</span><span class="token operator">/</span>bin<span class="token operator">/</span>sh
+echo ‘INIT SCRIPT’
+mount <span class="token operator">-</span>t proc proc <span class="token operator">/</span>proc
+mount <span class="token operator">-</span>t sysfs sysfs <span class="token operator">/</span>sys
+mount <span class="token operator">-</span>t debugfs debugfs <span class="token operator">/</span>sys<span class="token operator">/</span>kernel<span class="token operator">/</span>debug
+mount <span class="token operator">-</span>t tmpfs tmpfs <span class="token operator">/</span>tmp
+mdev <span class="token operator">-</span>s
+mount <span class="token operator">-</span>n <span class="token operator">-</span>o remount<span class="token punctuation">,</span>rw <span class="token operator">/</span>
+echo <span class="token operator">-</span>e <span class="token string">"\nBoot took $(cut -d' ' -f1 /proc/uptime) seconds\n"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">并在其下执行：chmod <span class="token operator">+</span>x etc<span class="token operator">/</span>init<span class="token punctuation">.</span>d<span class="token operator">/</span>rcS<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">7.</span>在<span class="token operator">~</span>下（也就是rootfs上级）卸载磁盘！！！十分重要：sudo umount rootfs<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">8.</span>接着创建运行虚拟器命令：qemu<span class="token operator">-</span>system<span class="token operator">-</span>x86_64 <span class="token operator">-</span>kernel <span class="token operator">~</span><span class="token operator">/</span>linux<span class="token operator">-</span><span class="token number">5.10</span><span class="token number">.68</span><span class="token operator">/</span>arch<span class="token operator">/</span>x86<span class="token operator">/</span>boot<span class="token operator">/</span>bzImage <span class="token operator">-</span>hda <span class="token operator">~</span><span class="token operator">/</span>rootfs<span class="token punctuation">.</span>img <span class="token operator">-</span>append <span class="token string">"root=/dev/sda console=ttyS0"</span> <span class="token operator">-</span>nographic
+以后都可以直接用<span class="token operator">!</span>qemu运行<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">9.</span>测试：touch test看看有没有成功  最后poweroff退出<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="七-实现系统调用"><a href="#七-实现系统调用" class="headerlink" title="七.实现系统调用"></a>七.实现系统调用</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">1.</span>先到linux下，再开始操作。
+添加系统调用函数原型<span class="token operator">:</span> nano include<span class="token operator">/</span>linux<span class="token operator">/</span>syscalls<span class="token punctuation">.</span>h    找到sys_olduname在后面添加<span class="token operator">:</span>asmlinkage <span class="token keyword">long</span> <span class="token function">sys_mysyscall</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">2.</span>添加新的系统调用<span class="token operator">:</span>nano arch<span class="token operator">/</span>x86<span class="token operator">/</span>entry<span class="token operator">/</span>syscalls<span class="token operator">/</span>syscall_64<span class="token punctuation">.</span>tbl 在<span class="token number">440</span>之后添加  <span class="token number">441</span>	 common	 mysyscall  sys_mysyscall<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">3.</span>在<span class="token operator">:</span>nano include<span class="token operator">/</span>uapi<span class="token operator">/</span><span class="token keyword">asm</span><span class="token operator">-</span>generic<span class="token operator">/</span>unistd<span class="token punctuation">.</span>h 
+在<span class="token number">440</span>后添加<span class="token operator">:</span>#define __NR_mysyscall <span class="token number">441</span>
+<span class="token function">__SYSCALL</span><span class="token punctuation">(</span>__NR_mysyscall<span class="token punctuation">,</span> sys_mysyscall<span class="token punctuation">)</span>
+并修改#define __NR_syscalls <span class="token number">442</span>    改成<span class="token number">442</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">4.</span>在<span class="token operator">:</span>nano kernel<span class="token operator">/</span>sys_ni<span class="token punctuation">.</span>c 中搜索This list is 在后面添加：<span class="token function">COND_SYSCALL</span><span class="token punctuation">(</span>mysyscall<span class="token punctuation">)</span><span class="token punctuation">;</span>  给不支持该系统调用的平台使用<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">5.</span>在<span class="token operator">:</span>nano kernel<span class="token operator">/</span>sys<span class="token punctuation">.</span>c 中找到the same as 在后面添加代码：
+<span class="token function">SYSCALL_DEFINE0</span><span class="token punctuation">(</span>mysyscall<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+ <span class="token function">printk</span><span class="token punctuation">(</span><span class="token string">"Hello&lt;123>!\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">保存退出并重新编译内核：make <span class="token operator">-</span>j20<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">6.</span>返回<span class="token operator">~</span>目录，创建系统调用程序<span class="token operator">:</span>nano mysyscall<span class="token punctuation">.</span>c 
+输入以下代码：
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;unistd.h></span></span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Calling mysyscall...\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">long</span> result <span class="token operator">=</span> <span class="token function">syscall</span><span class="token punctuation">(</span><span class="token number">441</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Syscall result: %ld\n"</span><span class="token punctuation">,</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">保存退出并编译：gcc mysyscall<span class="token punctuation">.</span>c <span class="token operator">-</span><span class="token keyword">static</span> <span class="token operator">-</span>o mysyscall<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">7.</span><span class="token operator">~</span>目录下挂载：sudo mount rootfs<span class="token punctuation">.</span>img rootfs
+拷贝：cp mysyscall rootfs
+卸载：sudo umount rootfs
+最后运行虚拟机<span class="token operator">:</span><span class="token operator">!</span>qemu<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">8.</span>进到虚拟机里面，ls看文件，然后<span class="token punctuation">.</span><span class="token operator">/</span>mysyscall，查看系统调用是否成功，最后poweroff退出<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
       
 
       
@@ -462,15 +533,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">springboot</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">教程</a>
+                <a href="javascript:void(0)" class="js-tag color3">Qt</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -486,11 +549,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">操作系统内核</a>
+                <a href="javascript:void(0)" class="js-tag color1">springboot</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">挂载镜像磁盘</a>
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">教程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -503,6 +570,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">命令</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">操作系统内核</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">挂载镜像磁盘</a>
               </li>
              
               <li class="article-tag-list-item">

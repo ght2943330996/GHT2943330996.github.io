@@ -8,15 +8,15 @@
   <link rel="dns-prefetch" href="http://example.com">
   <title>类和对象 | 我的第一个博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1.在.h文件中 (声明类的框架)class Person {public:    &#x2F;&#x2F; 构造函数声明    Person();    Person(string name, int age); &#x2F;&#x2F; 方法声明 void sayHello(); int getAge();  private:    &#x2F;&#x2F; 属性声明    string name;    int">
+  <meta name="description" content="1.在.h文件中 (声明类的框架)class Person &#123; public:     &#x2F;&#x2F; 构造函数声明     Person();     Person(string name, int age);      &#x2F;&#x2F; 方法声明     void sayHello();     int getAge();  private:     &#x2F;&#x2F; 属性声明     string name;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="类和对象">
 <meta property="og:url" content="http://example.com/2024/11/08/%E7%B1%BB%E5%92%8C%E5%AF%B9%E8%B1%A1/index.html">
 <meta property="og:site_name" content="我的第一个博客">
-<meta property="og:description" content="1.在.h文件中 (声明类的框架)class Person {public:    &#x2F;&#x2F; 构造函数声明    Person();    Person(string name, int age); &#x2F;&#x2F; 方法声明 void sayHello(); int getAge();  private:    &#x2F;&#x2F; 属性声明    string name;    int">
+<meta property="og:description" content="1.在.h文件中 (声明类的框架)class Person &#123; public:     &#x2F;&#x2F; 构造函数声明     Person();     Person(string name, int age);      &#x2F;&#x2F; 方法声明     void sayHello();     int getAge();  private:     &#x2F;&#x2F; 属性声明     string name;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-11-08T15:15:35.000Z">
-<meta property="article:modified_time" content="2024-11-08T15:16:46.412Z">
+<meta property="article:modified_time" content="2024-11-10T06:24:40.539Z">
 <meta property="article:author" content="seasons">
 <meta property="article:tag" content="类和对象">
 <meta property="article:tag" content="堆和栈">
@@ -176,57 +176,139 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="1-在-h文件中-声明类的框架"><a href="#1-在-h文件中-声明类的框架" class="headerlink" title="1.在.h文件中 (声明类的框架)"></a>1.在.h文件中 (声明类的框架)</h2><p>class Person {<br>public:<br>    &#x2F;&#x2F; 构造函数声明<br>    Person();<br>    Person(string name, int age);</p>
-<pre><code>// 方法声明
-void sayHello();
-int getAge();
-</code></pre>
-<p>private:<br>    &#x2F;&#x2F; 属性声明<br>    string name;<br>    int age;<br>};</p>
-<h2 id="2-在-cpp文件中-实现类的具体内容"><a href="#2-在-cpp文件中-实现类的具体内容" class="headerlink" title="2.在.cpp文件中 (实现类的具体内容)"></a>2.在.cpp文件中 (实现类的具体内容)</h2><p>#include “person.h”</p>
-<p>&#x2F;&#x2F; 构造函数定义<br>Person::Person() {<br>    name &#x3D; “Unknown”;<br>    age &#x3D; 0;<br>}</p>
-<p>Person::Person(string name, int age) {<br>    this-&gt;name &#x3D; name;<br>    this-&gt;age &#x3D; age;<br>}</p>
-<p>&#x2F;&#x2F; 方法定义<br>void Person::sayHello() {<br>    cout &lt;&lt; “Hello, I am “ &lt;&lt; name &lt;&lt; endl;<br>}</p>
-<p>int Person::getAge() {<br>    return age;<br>}</p>
-<h2 id="3-在main-cpp中-创建和使用对象"><a href="#3-在main-cpp中-创建和使用对象" class="headerlink" title="3.在main.cpp中 (创建和使用对象)"></a>3.在main.cpp中 (创建和使用对象)</h2><p>#include “person.h”</p>
-<p>int main() {<br>    &#x2F;&#x2F; 实例化对象（创建具体的人）<br>    Person person1;                    &#x2F;&#x2F; 使用默认构造函数<br>    Person person2(“Alice”, 25);       &#x2F;&#x2F; 使用带参数的构造函数<br>    Person* person3 &#x3D; new Person(“Bob”, 30);  &#x2F;&#x2F; 在堆上创建对象</p>
-<pre><code>// 使用对象
-person1.sayHello();  // 输出: Hello, I am Unknown
-person2.sayHello();  // 输出: Hello, I am Alice
-person3-&gt;sayHello(); // 输出: Hello, I am Bob
+        <h2 id="1-在-h文件中-声明类的框架"><a href="#1-在-h文件中-声明类的框架" class="headerlink" title="1.在.h文件中 (声明类的框架)"></a>1.在.h文件中 (声明类的框架)</h2><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">Person</span> <span class="token punctuation">&#123;</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token comment">// 构造函数声明</span>
+    <span class="token function">Person</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">Person</span><span class="token punctuation">(</span>string name<span class="token punctuation">,</span> <span class="token keyword">int</span> age<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-// 不要忘记删除堆上的对象
-delete person3;
+    <span class="token comment">// 方法声明</span>
+    <span class="token keyword">void</span> <span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> <span class="token function">getAge</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-return 0;
-</code></pre>
-<p>}</p>
+<span class="token keyword">private</span><span class="token operator">:</span>
+    <span class="token comment">// 属性声明</span>
+    string name<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> age<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="2-在-cpp文件中-实现类的具体内容"><a href="#2-在-cpp文件中-实现类的具体内容" class="headerlink" title="2.在.cpp文件中 (实现类的具体内容)"></a>2.在.cpp文件中 (实现类的具体内容)</h2><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">"person.h"</span></span>
+
+<span class="token comment">// 构造函数定义</span>
+<span class="token class-name">Person</span><span class="token double-colon punctuation">::</span><span class="token function">Person</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    name <span class="token operator">=</span> <span class="token string">"Unknown"</span><span class="token punctuation">;</span>
+    age <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token class-name">Person</span><span class="token double-colon punctuation">::</span><span class="token function">Person</span><span class="token punctuation">(</span>string name<span class="token punctuation">,</span> <span class="token keyword">int</span> age<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">this</span><span class="token operator">-></span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token operator">-></span>age <span class="token operator">=</span> age<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">// 方法定义</span>
+<span class="token keyword">void</span> <span class="token class-name">Person</span><span class="token double-colon punctuation">::</span><span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Hello, I am "</span> <span class="token operator">&lt;&lt;</span> name <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">int</span> <span class="token class-name">Person</span><span class="token double-colon punctuation">::</span><span class="token function">getAge</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> age<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="3-在main-cpp中-创建和使用对象"><a href="#3-在main-cpp中-创建和使用对象" class="headerlink" title="3.在main.cpp中 (创建和使用对象)"></a>3.在main.cpp中 (创建和使用对象)</h2><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">"person.h"</span></span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 实例化对象（创建具体的人）</span>
+    Person person1<span class="token punctuation">;</span>                    <span class="token comment">// 使用默认构造函数</span>
+    Person <span class="token function">person2</span><span class="token punctuation">(</span><span class="token string">"Alice"</span><span class="token punctuation">,</span> <span class="token number">25</span><span class="token punctuation">)</span><span class="token punctuation">;</span>       <span class="token comment">// 使用带参数的构造函数</span>
+    Person<span class="token operator">*</span> person3 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">Person</span><span class="token punctuation">(</span><span class="token string">"Bob"</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 在堆上创建对象</span>
+
+    <span class="token comment">// 使用对象</span>
+    person1<span class="token punctuation">.</span><span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 输出: Hello, I am Unknown</span>
+    person2<span class="token punctuation">.</span><span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 输出: Hello, I am Alice</span>
+    person3<span class="token operator">-></span><span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 输出: Hello, I am Bob</span>
+
+    <span class="token comment">// 不要忘记删除堆上的对象</span>
+    <span class="token keyword">delete</span> person3<span class="token punctuation">;</span>
+
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>补充说明：<br>1.h文件：<br>包含类的声明<br>声明所有成员变量和方法<br>相当于”合同”，说明这个类能做什么<br>2.cpp文件：<br>包含类的具体实现<br>定义所有方法的具体内容<br>相当于”履行合同”，说明具体怎么做<br>3.main.cpp或其他使用该类的文件：<br>创建类的对象（实例化）<br>使用对象的方法和属性<br>相当于”使用服务”<br>一个更实用的例子：</p>
-<p>&#x2F;&#x2F; 头文件：声明<br>class Student {<br>public:<br>    Student(string name);<br>    void study();<br>    void setScore(int score);<br>    int getScore();</p>
-<p>private:<br>    string name;<br>    int score;<br>};</p>
-<p>&#x2F;&#x2F; 源文件：定义<br>#include “student.h”</p>
-<p>Student::Student(string name) {<br>    this-&gt;name &#x3D; name;<br>    this-&gt;score &#x3D; 0;<br>}</p>
-<p>void Student::study() {<br>    score +&#x3D; 10;<br>    cout &lt;&lt; name &lt;&lt; “ is studying” &lt;&lt; endl;<br>}</p>
-<p>void Student::setScore(int score) {<br>    this-&gt;score &#x3D; score;<br>}</p>
-<p>int Student::getScore() {<br>    return score;<br>}</p>
-<p>&#x2F;&#x2F; 主文件：使用<br>int main() {<br>    &#x2F;&#x2F; 实例化<br>    Student student1(“Tom”);<br>    Student* student2 &#x3D; new Student(“Jerry”);</p>
-<pre><code>// 使用对象
-student1.study();
-student2-&gt;study();
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// 头文件：声明</span>
+<span class="token keyword">class</span> <span class="token class-name">Student</span> <span class="token punctuation">&#123;</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token function">Student</span><span class="token punctuation">(</span>string name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">study</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">setScore</span><span class="token punctuation">(</span><span class="token keyword">int</span> score<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> <span class="token function">getScore</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-cout &lt;&lt; student1.getScore() &lt;&lt; endl;  // 输出: 10
-cout &lt;&lt; student2-&gt;getScore() &lt;&lt; endl; // 输出: 10
+<span class="token keyword">private</span><span class="token operator">:</span>
+    string name<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> score<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// 源文件：定义</span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">"student.h"</span></span>
 
-delete student2;
-return 0;
-</code></pre>
-<p>}</p>
+<span class="token class-name">Student</span><span class="token double-colon punctuation">::</span><span class="token function">Student</span><span class="token punctuation">(</span>string name<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">this</span><span class="token operator">-></span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token operator">-></span>score <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">void</span> <span class="token class-name">Student</span><span class="token double-colon punctuation">::</span><span class="token function">study</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    score <span class="token operator">+=</span> <span class="token number">10</span><span class="token punctuation">;</span>
+    cout <span class="token operator">&lt;&lt;</span> name <span class="token operator">&lt;&lt;</span> <span class="token string">" is studying"</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">void</span> <span class="token class-name">Student</span><span class="token double-colon punctuation">::</span><span class="token function">setScore</span><span class="token punctuation">(</span><span class="token keyword">int</span> score<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">this</span><span class="token operator">-></span>score <span class="token operator">=</span> score<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">int</span> <span class="token class-name">Student</span><span class="token double-colon punctuation">::</span><span class="token function">getScore</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> score<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// 主文件：使用</span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 实例化</span>
+    Student <span class="token function">student1</span><span class="token punctuation">(</span><span class="token string">"Tom"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    Student<span class="token operator">*</span> student2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">Student</span><span class="token punctuation">(</span><span class="token string">"Jerry"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 使用对象</span>
+    student1<span class="token punctuation">.</span><span class="token function">study</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    student2<span class="token operator">-></span><span class="token function">study</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    cout <span class="token operator">&lt;&lt;</span> student1<span class="token punctuation">.</span><span class="token function">getScore</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>  <span class="token comment">// 输出: 10</span>
+    cout <span class="token operator">&lt;&lt;</span> student2<span class="token operator">-></span><span class="token function">getScore</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span> <span class="token comment">// 输出: 10</span>
+
+    <span class="token keyword">delete</span> student2<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>记住：<br>.h文件是”承诺”（声明）<br>.cpp文件是”兑现”（定义）<br>main.cpp是”使用”（实例化和调用）</p>
-<h2 id="栈和堆的区别"><a href="#栈和堆的区别" class="headerlink" title="栈和堆的区别"></a>栈和堆的区别</h2><p>1.栈(Stack)上创建对象<br>就像在餐厅堂食<br>自动管理（离开餐厅自动清理桌子）<br>空间有限（座位数量固定）<br>访问速度快（服务员就在旁边）<br>void function() {<br>    Student tom(“Tom”);     &#x2F;&#x2F; 创建在栈上<br>    tom.study();           &#x2F;&#x2F; 使用对象<br>}   &#x2F;&#x2F; 函数结束时，tom自动销毁</p>
-<p>2.堆(Heap)上创建对象<br>就像外卖订餐<br>手动管理（需要自己处理垃圾）<br>空间更大（可以送到很多地方）<br>访问速度相对慢（需要送餐时间）<br>void function() {<br>    Student* jerry &#x3D; new Student(“Jerry”);  &#x2F;&#x2F; 创建在堆上<br>    jerry-&gt;study();                         &#x2F;&#x2F; 使用对象<br>    delete jerry;                           &#x2F;&#x2F; 必须手动删除！<br>}</p>
-<p>重点：对象生命周期明确（局部使用）<br>void calculateGrade() {<br>    Student student(“Alice”);  &#x2F;&#x2F; 函数结束就不需要了<br>    student.study();<br>    &#x2F;&#x2F; student自动销毁<br>}</p>
-<p>最佳实践：<br>1.优先使用栈，除非：<br>需要大量内存<br>需要动态生命周期<br>需要在多个函数间共享对象<br>2.使用堆时考虑智能指针：<br>&#x2F;&#x2F; 现代C++推荐使用智能指针<br>class School {<br>private:<br>    vector&lt;unique_ptr<Student>&gt; students;  &#x2F;&#x2F; 自动管理内存</p>
-<p>public:<br>    void addStudent(string name) {<br>        students.push_back(make_unique<Student>(name));<br>    }<br>    &#x2F;&#x2F; 不需要手动删除<br>};</p>
+<h2 id="栈和堆的区别"><a href="#栈和堆的区别" class="headerlink" title="栈和堆的区别"></a>栈和堆的区别</h2><p>1.栈(Stack)上创建对象<br>就像在餐厅堂食<br>自动管理（离开餐厅自动清理桌子）<br>空间有限（座位数量固定）<br>访问速度快（服务员就在旁边）</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> <span class="token function">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    Student <span class="token function">tom</span><span class="token punctuation">(</span><span class="token string">"Tom"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">// 创建在栈上</span>
+    tom<span class="token punctuation">.</span><span class="token function">study</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>           <span class="token comment">// 使用对象</span>
+<span class="token punctuation">&#125;</span>   <span class="token comment">// 函数结束时，tom自动销毁</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>2.堆(Heap)上创建对象<br>就像外卖订餐<br>手动管理（需要自己处理垃圾）<br>空间更大（可以送到很多地方）<br>访问速度相对慢（需要送餐时间）</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> <span class="token function">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    Student<span class="token operator">*</span> jerry <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">Student</span><span class="token punctuation">(</span><span class="token string">"Jerry"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 创建在堆上</span>
+    jerry<span class="token operator">-></span><span class="token function">study</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                         <span class="token comment">// 使用对象</span>
+    <span class="token keyword">delete</span> jerry<span class="token punctuation">;</span>                           <span class="token comment">// 必须手动删除！</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>重点：对象生命周期明确（局部使用）</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> <span class="token function">calculateGrade</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    Student <span class="token function">student</span><span class="token punctuation">(</span><span class="token string">"Alice"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 函数结束就不需要了</span>
+    student<span class="token punctuation">.</span><span class="token function">study</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// student自动销毁</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>最佳实践：<br>1.优先使用栈，除非：<br>需要大量内存<br>需要动态生命周期<br>需要在多个函数间共享对象<br>2.使用堆时考虑智能指针：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// 现代C++推荐使用智能指针</span>
+<span class="token keyword">class</span> <span class="token class-name">School</span> <span class="token punctuation">&#123;</span>
+<span class="token keyword">private</span><span class="token operator">:</span>
+    vector<span class="token operator">&lt;</span>unique_ptr<span class="token operator">&lt;</span>Student<span class="token operator">>></span> students<span class="token punctuation">;</span>  <span class="token comment">// 自动管理内存</span>
 
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token keyword">void</span> <span class="token function">addStudent</span><span class="token punctuation">(</span>string name<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        students<span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span><span class="token generic-function"><span class="token function">make_unique</span><span class="token generic class-name"><span class="token operator">&lt;</span>Student<span class="token operator">></span></span></span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">// 不需要手动删除</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
       
 
       
@@ -333,6 +415,15 @@ return 0;
 
   
 <nav id="article-nav">
+  
+    <a href="/2024/11/10/Qt%E8%A7%86%E9%A2%91%E6%B5%81%E8%BD%ACASCII%E7%A0%81/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Qt视频流转ASCII码
+        
+      </div>
+    </a>
   
   
     <a href="/2024/11/04/%E5%8C%BB%E9%99%A2%E6%8C%82%E5%8F%B7springboot-vue%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
@@ -466,15 +557,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">springboot</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">教程</a>
+                <a href="javascript:void(0)" class="js-tag color3">Qt</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -490,11 +573,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">操作系统内核</a>
+                <a href="javascript:void(0)" class="js-tag color1">springboot</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">挂载镜像磁盘</a>
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">教程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -507,6 +594,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">命令</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">操作系统内核</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">挂载镜像磁盘</a>
               </li>
              
               <li class="article-tag-list-item">
