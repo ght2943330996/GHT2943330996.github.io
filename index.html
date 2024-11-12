@@ -596,6 +596,13 @@ npm install vue<span class="token operator">-</span>router@<span class="token nu
     <span class="token punctuation">&#125;</span>
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>用途：<br>处理HTTP请求<br>参数验证<br>调用Service层<br>文件类型：<br>控制器类<br>请求处理方法</p>
+<p>6.创建修改页面层Vue<br>菜单：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//示例Manager.vue</span>
+<span class="token operator">&lt;</span>el<span class="token operator">-</span>menu<span class="token operator">-</span>item index<span class="token operator">=</span><span class="token string">"/plan"</span><span class="token operator">></span>医生排班<span class="token operator">&lt;</span><span class="token operator">/</span>el<span class="token operator">-</span>menu<span class="token operator">-</span>item<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>路由：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//示例router/index.js</span>
+<span class="token punctuation">&#123;</span> path<span class="token operator">:</span> <span class="token char">'plan'</span><span class="token punctuation">,</span> name<span class="token operator">:</span> <span class="token char">'Plan'</span><span class="token punctuation">,</span> meta<span class="token operator">:</span> <span class="token punctuation">&#123;</span> name<span class="token operator">:</span> <span class="token char">'医生排班'</span> <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> component<span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token keyword">import</span><span class="token punctuation">(</span>'<span class="token punctuation">.</span><span class="token punctuation">.</span>/views<span class="token operator">/</span>manager<span class="token operator">/</span><span class="token class-name">Plan</span>'<span class="token punctuation">)</span> <span class="token punctuation">&#125;</span><span class="token punctuation">,</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>创建医生排班主页面<br>Doctor.vue</p>
 <h2 id="数据流向以及完整流程（数据的去回一定都是这个流程，不能直接页面调用数据库数据）"><a href="#数据流向以及完整流程（数据的去回一定都是这个流程，不能直接页面调用数据库数据）" class="headerlink" title="数据流向以及完整流程（数据的去回一定都是这个流程，不能直接页面调用数据库数据）"></a>数据流向以及完整流程（数据的去回一定都是这个流程，不能直接页面调用数据库数据）</h2><p>浏览器 &lt;-&gt; Controller &lt;-&gt; Service &lt;-&gt; Mapper &lt;-&gt; 数据库</p>
 <p>完整流程：<br>1.用户在页面填写注册信息<br>2.点击注册按钮，前端调用Controller的API<br>3.Controller接收请求，调用Service<br>4.Service执行业务逻辑：<br>验证密码长度<br>检查用户名是否存在<br>加密密码<br>调用Mapper保存数据<br>Mapper执行数据库操作，将数据存入数据库，并返回结果<br>返回结果给前端展示</p>
 <p>所以Service层就像是一个”业务指挥官”：<br>它知道”要做什么”（业务规则）<br>它调动各种资源（Mapper、其他Service）<br>它确保业务的完整性（事务处理）<br>它处理各种业务场景（异常情况）<br>这就是为什么需要Service层的原因：它封装了核心业务逻辑，使得业务规则可以被集中管理和复用。</p>
@@ -1519,23 +1526,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Qt Creator</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Qt</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">springboot</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">教程</a>
+                <a href="javascript:void(0)" class="js-tag color1">Qt Creator</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1551,6 +1546,26 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">springboot</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">教程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">操作系统内核</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">挂载镜像磁盘</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
@@ -1560,14 +1575,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">命令</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">操作系统内核</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">挂载镜像磁盘</a>
               </li>
              
               <li class="article-tag-list-item">
