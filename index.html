@@ -152,6 +152,102 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-git回滚和撤销提交记录" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2026/03/18/git%E5%9B%9E%E6%BB%9A%E5%92%8C%E6%92%A4%E9%94%80%E6%8F%90%E4%BA%A4%E8%AE%B0%E5%BD%95/">git回滚和撤销提交记录</a>
+    </h1>
+  
+
+        
+        <a href="/2026/03/18/git%E5%9B%9E%E6%BB%9A%E5%92%8C%E6%92%A4%E9%94%80%E6%8F%90%E4%BA%A4%E8%AE%B0%E5%BD%95/" class="archive-article-date">
+  	<time datetime="2026-03-18T15:50:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2026-03-18</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>##git回滚且撤销提交记录<br>示例</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token function">c96bf92</span> <span class="token punctuation">(</span>HEAD <span class="token operator">-></span> main<span class="token punctuation">)</span> add memory_mcp
+<span class="token number">703341</span>b add memory_mcp
+<span class="token number">9583</span>a56 add 注释
+<span class="token number">86</span>de786 <span class="token punctuation">(</span>origin<span class="token operator">/</span>main<span class="token punctuation">)</span> Initial commit<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>取消 9583a56 和 703341b </li>
+<li>保留 c96bf92 （add memory_mcp）作为第2次提交</li>
+<li>最终只显示2次提交： Initial commit + c96bf92</li>
+</ul>
+<p>使用git reset –soft 可以保留当前编辑器中的内容，且把main&#x2F;远端都回滚到这一次</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"># 回到 Initial commit，但保留 c96bf92 的所有文件修改
+git reset <span class="token operator">--</span>soft <span class="token number">86</span>de786
+
+# 重新提交（这会创建一个新的提交，包含 c96bf92 的所有修改）
+git add <span class="token punctuation">.</span>
+git commit <span class="token operator">-</span>m <span class="token string">"add memory_mcp"</span>
+
+# 强制推送到远程（覆盖历史，只保留<span class="token number">2</span>次提交）
+git push origin main <span class="token operator">--</span>force<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">教程</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">git</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2026/03/18/git%E5%9B%9E%E6%BB%9A%E5%92%8C%E6%92%A4%E9%94%80%E6%8F%90%E4%BA%A4%E8%AE%B0%E5%BD%95/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="ai-Agent开发笔记" class="article article-type-ai  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1487,81 +1583,10 @@ drawerLayout<span class="token operator">-></span><span class="token function">a
 
 
   
-    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/10/22/hello-world/">Hello World</a>
-    </h1>
-  
-
-        
-        <a href="/2024/10/22/hello-world/" class="archive-article-date">
-  	<time datetime="2024-10-22T11:35:11.668Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-10-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo server<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo generate<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo deploy<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/10/22/hello-world/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    </nav>
   
 
 
@@ -1724,6 +1749,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
             
             <div class="clearfix"></div>
