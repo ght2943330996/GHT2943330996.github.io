@@ -152,6 +152,132 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="ai-Agent开发笔记" class="article article-type-ai  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2026/03/18/Agent%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/">Agent开发笔记</a>
+    </h1>
+  
+
+        
+        <a href="/2026/03/18/Agent%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/" class="archive-article-date">
+  	<time datetime="2026-03-18T05:07:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2026-03-18</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>##函数调用流程<br>1.用户传入prompt，调用retrieve_contextRAG检索本地数据库得到上下文</p>
+<p>2.给agent传入模型名，工具列表，上下文等参数，并初始化</p>
+<p>3.agent初始化的过程中，先初始化client，使告知的工具依次连接服务端</p>
+<p>4.同时通过get_tools获取可用工具列表,同时也创建了一个chatopenai类</p>
+<p>5.接着再通过invoke函数传入任务，通过调用chat函数把需求传入llm，由llm返回流式文件，并把结果保存至messages，同时返回content和tool_calls</p>
+<p>6.agent拿到content和tool_calls后，如果需要使用工具，并且工具已连接，就调用并返回llm可接收的结果并加入对话历史</p>
+<p>##流程图</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">┌─────────────────────────────────────────────────────────────────┐
+│ <span class="token number">1.</span> 【可选】RAG 检索上下文                                         │
+│    <span class="token function">retrieve_context</span><span class="token punctuation">(</span>prompt<span class="token punctuation">)</span> → 得到相关文档                        │
+│    （只有需要知识库时才做，不是必须的）                           │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│ <span class="token number">2.</span> 创建 Agent，传入参数                                          │
+│    <span class="token function">Agent</span><span class="token punctuation">(</span>model<span class="token punctuation">,</span> mcp_clients<span class="token punctuation">,</span> system_prompt<span class="token punctuation">,</span> context<span class="token punctuation">)</span>             │
+│    此时只是保存参数，还没初始化                                    │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│ <span class="token number">3.</span> 初始化 <span class="token function">Agent</span> <span class="token punctuation">(</span>agent<span class="token punctuation">.</span><span class="token function">init</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>                                   │
+│    ├── 初始化所有 MCPClient（连接服务端）                         │
+│    │      └── 每个 client 获取自己的可用工具列表                   │
+│    │                                                              │
+│    ├── 收集所有工具<span class="token operator">:</span> tools <span class="token operator">=</span> <span class="token punctuation">[</span>client1<span class="token punctuation">.</span>tools<span class="token punctuation">,</span> client2<span class="token punctuation">.</span>tools<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">]</span> │
+│    │                                                              │
+│    └── 创建 ChatOpenAI，传入 tools                                │
+│           └── ChatOpenAI 保存 tools，等待后续使用                  │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│ <span class="token number">4.</span> 调用 Agent<span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span>prompt<span class="token punctuation">)</span>                                     │
+│    ├── 第一次调用 llm<span class="token punctuation">.</span><span class="token function">chat</span><span class="token punctuation">(</span>prompt<span class="token punctuation">)</span>                               │
+│    │      ├── 添加用户消息到 messages                            │
+│    │      ├── 发送请求给 LLM（带上 tools 定义）                   │
+│    │      ├── 接收流式响应，实时打印                              │
+│    │      ├── 保存 AI 回复到 messages                            │
+│    │      └── 返回 <span class="token punctuation">&#123;</span>content<span class="token punctuation">,</span> toolCalls<span class="token punctuation">&#125;</span>                         │
+│    │                                                              │
+│    └── 检查 toolCalls                                             │
+│         ├── 有工具？→ 找到对应 MCP → 执行 → 结果加入 messages     │
+│         │              └── 再次调用 llm<span class="token punctuation">.</span><span class="token function">chat</span><span class="token punctuation">(</span><span class="token punctuation">)</span>（无prompt）        │
+│         │                  └── 循环直到没有新工具                  │
+│         │                                                         │
+│         └── 无工具？→ 返回 content 给用户                         │
+└─────────────────────────────────────────────────────────────────┘<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Agent</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">llm-mcp-rag</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">笔记</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2026/03/18/Agent%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Qt视频流转ASCII码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1443,7 +1569,7 @@ drawerLayout<span class="token operator">-></span><span class="token function">a
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2024 seasons
+    		&copy; 2026 seasons
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -1583,6 +1709,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">堆和栈</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Agent</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">llm-mcp-rag</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">笔记</a>
               </li>
             
             <div class="clearfix"></div>

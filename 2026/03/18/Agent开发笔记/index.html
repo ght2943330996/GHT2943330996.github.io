@@ -6,14 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Tag: springboot | 我的第一个博客</title>
+  <title>Agent开发笔记 | 我的第一个博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="我的第一个博客">
-<meta property="og:url" content="http://example.com/tags/springboot/index.html">
+  <meta name="description" content="##函数调用流程1.用户传入prompt，调用retrieve_contextRAG检索本地数据库得到上下文 2.给agent传入模型名，工具列表，上下文等参数，并初始化 3.agent初始化的过程中，先初始化client，使告知的工具依次连接服务端 4.同时通过get_tools获取可用工具列表,同时也创建了一个chatopenai类 5.接着再通过invoke函数传入任务，通过调用chat函数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agent开发笔记">
+<meta property="og:url" content="http://example.com/2026/03/18/Agent%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="我的第一个博客">
+<meta property="og:description" content="##函数调用流程1.用户传入prompt，调用retrieve_contextRAG检索本地数据库得到上下文 2.给agent传入模型名，工具列表，上下文等参数，并初始化 3.agent初始化的过程中，先初始化client，使告知的工具依次连接服务端 4.同时通过get_tools获取可用工具列表,同时也创建了一个chatopenai类 5.接着再通过invoke函数传入任务，通过调用chat函数">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-03-18T05:07:44.000Z">
+<meta property="article:modified_time" content="2026-03-18T05:12:38.283Z">
 <meta property="article:author" content="seasons">
+<meta property="article:tag" content="Agent">
+<meta property="article:tag" content="llm-mcp-rag">
+<meta property="article:tag" content="笔记">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="我的第一个博客" type="application/atom+xml">
@@ -150,68 +157,219 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="ai-Agent开发笔记" class="article article-type-ai " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2024" class="archive-year">2024</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2024/11/04/%E5%8C%BB%E9%99%A2%E6%8C%82%E5%8F%B7springboot-vue%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/" class="archive-article-date">
-  	<time datetime="2024-11-04T08:05:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-11-04</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2024/11/04/%E5%8C%BB%E9%99%A2%E6%8C%82%E5%8F%B7springboot-vue%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/">医院挂号springboot+vue开发流程</a>
+    <h1 class="article-title" itemprop="name">
+      Agent开发笔记
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2026/03/18/Agent%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/" class="archive-article-date">
+  	<time datetime="2026-03-18T05:07:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2026-03-18</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>##函数调用流程<br>1.用户传入prompt，调用retrieve_contextRAG检索本地数据库得到上下文</p>
+<p>2.给agent传入模型名，工具列表，上下文等参数，并初始化</p>
+<p>3.agent初始化的过程中，先初始化client，使告知的工具依次连接服务端</p>
+<p>4.同时通过get_tools获取可用工具列表,同时也创建了一个chatopenai类</p>
+<p>5.接着再通过invoke函数传入任务，通过调用chat函数把需求传入llm，由llm返回流式文件，并把结果保存至messages，同时返回content和tool_calls</p>
+<p>6.agent拿到content和tool_calls后，如果需要使用工具，并且工具已连接，就调用并返回llm可接收的结果并加入对话历史</p>
+<p>##流程图</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">┌─────────────────────────────────────────────────────────────────┐
+│ <span class="token number">1.</span> 【可选】RAG 检索上下文                                         │
+│    <span class="token function">retrieve_context</span><span class="token punctuation">(</span>prompt<span class="token punctuation">)</span> → 得到相关文档                        │
+│    （只有需要知识库时才做，不是必须的）                           │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│ <span class="token number">2.</span> 创建 Agent，传入参数                                          │
+│    <span class="token function">Agent</span><span class="token punctuation">(</span>model<span class="token punctuation">,</span> mcp_clients<span class="token punctuation">,</span> system_prompt<span class="token punctuation">,</span> context<span class="token punctuation">)</span>             │
+│    此时只是保存参数，还没初始化                                    │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│ <span class="token number">3.</span> 初始化 <span class="token function">Agent</span> <span class="token punctuation">(</span>agent<span class="token punctuation">.</span><span class="token function">init</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>                                   │
+│    ├── 初始化所有 MCPClient（连接服务端）                         │
+│    │      └── 每个 client 获取自己的可用工具列表                   │
+│    │                                                              │
+│    ├── 收集所有工具<span class="token operator">:</span> tools <span class="token operator">=</span> <span class="token punctuation">[</span>client1<span class="token punctuation">.</span>tools<span class="token punctuation">,</span> client2<span class="token punctuation">.</span>tools<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">]</span> │
+│    │                                                              │
+│    └── 创建 ChatOpenAI，传入 tools                                │
+│           └── ChatOpenAI 保存 tools，等待后续使用                  │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│ <span class="token number">4.</span> 调用 Agent<span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span>prompt<span class="token punctuation">)</span>                                     │
+│    ├── 第一次调用 llm<span class="token punctuation">.</span><span class="token function">chat</span><span class="token punctuation">(</span>prompt<span class="token punctuation">)</span>                               │
+│    │      ├── 添加用户消息到 messages                            │
+│    │      ├── 发送请求给 LLM（带上 tools 定义）                   │
+│    │      ├── 接收流式响应，实时打印                              │
+│    │      ├── 保存 AI 回复到 messages                            │
+│    │      └── 返回 <span class="token punctuation">&#123;</span>content<span class="token punctuation">,</span> toolCalls<span class="token punctuation">&#125;</span>                         │
+│    │                                                              │
+│    └── 检查 toolCalls                                             │
+│         ├── 有工具？→ 找到对应 MCP → 执行 → 结果加入 messages     │
+│         │              └── 再次调用 llm<span class="token punctuation">.</span><span class="token function">chat</span><span class="token punctuation">(</span><span class="token punctuation">)</span>（无prompt）        │
+│         │                  └── 循环直到没有新工具                  │
+│         │                                                         │
+│         └── 无工具？→ 返回 content 给用户                         │
+└─────────────────────────────────────────────────────────────────┘<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">springboot</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Agent</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vue</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">llm-mcp-rag</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">教程</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">笔记</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2026/03/18/Agent%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2024/11/10/Qt%E8%A7%86%E9%A2%91%E6%B5%81%E8%BD%ACASCII%E7%A0%81/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Qt视频流转ASCII码</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -234,9 +392,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
