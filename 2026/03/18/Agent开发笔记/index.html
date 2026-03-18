@@ -16,7 +16,7 @@
 <meta property="og:description" content="##函数调用流程1.用户传入prompt，调用retrieve_contextRAG检索本地数据库得到上下文 2.给agent传入模型名，工具列表，上下文等参数，并初始化 3.agent初始化的过程中，先初始化client，使告知的工具依次连接服务端 4.同时通过get_tools获取可用工具列表,同时也创建了一个chatopenai类 5.接着再通过invoke函数传入任务，通过调用chat函数">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-03-18T05:07:44.000Z">
-<meta property="article:modified_time" content="2026-03-18T05:12:38.283Z">
+<meta property="article:modified_time" content="2026-03-18T11:26:13.463Z">
 <meta property="article:author" content="seasons">
 <meta property="article:tag" content="Agent">
 <meta property="article:tag" content="llm-mcp-rag">
@@ -223,6 +223,9 @@
 │         │                                                         │
 │         └── 无工具？→ 返回 content 给用户                         │
 └─────────────────────────────────────────────────────────────────┘<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>##语法学习<br>异步操作async和await<br>async创建异步函数，防止多个请求阻塞进程，可以提升效率<br>await暂停当前函数，等待async返回promise结果，再继续执行，期间多个请求同时执行，但需全部完成后才能继续执行后面代码</p>
+
       
 
       
