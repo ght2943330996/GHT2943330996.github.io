@@ -172,7 +172,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>##git回滚且撤销提交记录<br>示例</p>
+        <h2 id="git回滚且撤销提交记录"><a href="#git回滚且撤销提交记录" class="headerlink" title="git回滚且撤销提交记录"></a>git回滚且撤销提交记录</h2><p>示例</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token function">c96bf92</span> <span class="token punctuation">(</span>HEAD <span class="token operator">-></span> main<span class="token punctuation">)</span> add memory_mcp
 <span class="token number">703341</span>b add memory_mcp
 <span class="token number">9583</span>a56 add 注释
@@ -193,8 +193,14 @@ git commit <span class="token operator">-</span>m <span class="token string">"ad
 # 强制推送到远程（覆盖历史，只保留<span class="token number">2</span>次提交）
 git push origin main <span class="token operator">--</span>force<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>##流程图<br>工作区（修改文件）<br>    ↓ git add<br>暂存区（准备提交）<br>    ↓ git commit<br>本地仓库（真正提交）<br>    ↓ git push<br>远程仓库（GitHub）</p>
-
+<h2 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h2><pre class="line-numbers language-mermaid" data-language="mermaid"><code class="language-mermaid"><span class="token keyword">graph</span> TD
+工作区（修改文件）
+    ↓ git add
+暂存区（准备提交）
+    ↓ git commit
+本地仓库（真正提交）
+    ↓ git push
+远程仓库（GitHub）<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
       
 
       
@@ -271,14 +277,13 @@ git push origin main <span class="token operator">--</span>force<span aria-hidde
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>##函数调用流程<br>1.用户传入prompt，调用retrieve_contextRAG检索本地数据库得到上下文</p>
+        <h2 id="函数调用流程"><a href="#函数调用流程" class="headerlink" title="函数调用流程"></a>函数调用流程</h2><p>1.用户传入prompt，调用retrieve_contextRAG检索本地数据库得到上下文</p>
 <p>2.给agent传入模型名，工具列表，上下文等参数，并初始化</p>
 <p>3.agent初始化的过程中，先初始化client，使告知的工具依次连接服务端</p>
 <p>4.同时通过get_tools获取可用工具列表,同时也创建了一个chatopenai类</p>
 <p>5.接着再通过invoke函数传入任务，通过调用chat函数把需求传入llm，由llm返回流式文件，并把结果保存至messages，同时返回content和tool_calls</p>
 <p>6.agent拿到content和tool_calls后，如果需要使用工具，并且工具已连接，就调用并返回llm可接收的结果并加入对话历史</p>
-<p>##流程图</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c">┌─────────────────────────────────────────────────────────────────┐
+<h2 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">┌─────────────────────────────────────────────────────────────────┐
 │ <span class="token number">1.</span> 【可选】RAG 检索上下文                                         │
 │    <span class="token function">retrieve_context</span><span class="token punctuation">(</span>prompt<span class="token punctuation">)</span> → 得到相关文档                        │
 │    （只有需要知识库时才做，不是必须的）                           │
@@ -318,7 +323,7 @@ git push origin main <span class="token operator">--</span>force<span aria-hidde
 │         └── 无工具？→ 返回 content 给用户                         │
 └─────────────────────────────────────────────────────────────────┘<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>##语法学习<br>异步操作async和await<br>async创建异步函数，防止多个请求阻塞进程，可以提升效率<br>await暂停当前函数，等待async返回promise结果，再继续执行，期间多个请求同时执行，但需全部完成后才能继续执行后面代码</p>
+<h2 id="语法学习"><a href="#语法学习" class="headerlink" title="语法学习"></a>语法学习</h2><p>异步操作async和await<br>async创建异步函数，防止多个请求阻塞进程，可以提升效率<br>await暂停当前函数，等待async返回promise结果，再继续执行，期间多个请求同时执行，但需全部完成后才能继续执行后面代码</p>
 
       
 
@@ -401,7 +406,17 @@ git push origin main <span class="token operator">--</span>force<span aria-hidde
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="整个转换流程是："><a href="#整个转换流程是：" class="headerlink" title="整个转换流程是："></a>整个转换流程是：</h2><p>视频文件 → 视频流 → 视频帧 → QImage → 灰度值 → ASCII字符 → 文本显示<br>这个过程是实时的，每当有新的视频帧到来，就会重复这个转换过程，从而形成ASCII艺术动画效果</p>
-<p>流程图：<br>graph TD<br>    A[创建 QMediaPlayer] –&gt; B[创建 QVideoSink]<br>    B –&gt; C[setVideoSink 设置接收器]<br>    C –&gt; D[setSource 设置视频源]<br>    D –&gt; E[play 开始播放]<br>    E –&gt; F[QMediaPlayer 内部解码视频]<br>    F –&gt; G[产生新视频帧]<br>    G –&gt; H[自动更新到 VideoSink]<br>    H –&gt; I[触发 videoFrameChanged 信号]<br>    I –&gt; J[调用 processFrame 处理帧]</p>
+<p>流程图：</p>
+<pre class="line-numbers language-mermaid" data-language="mermaid"><code class="language-mermaid"><span class="token keyword">graph</span> TD
+    A<span class="token text string">[创建 QMediaPlayer]</span> <span class="token arrow operator">--></span> B<span class="token text string">[创建 QVideoSink]</span>
+    B <span class="token arrow operator">--></span> C<span class="token text string">[setVideoSink 设置接收器]</span>
+    C <span class="token arrow operator">--></span> D<span class="token text string">[setSource 设置视频源]</span>
+    D <span class="token arrow operator">--></span> E<span class="token text string">[play 开始播放]</span>
+    E <span class="token arrow operator">--></span> F<span class="token text string">[QMediaPlayer 内部解码视频]</span>
+    F <span class="token arrow operator">--></span> G<span class="token text string">[产生新视频帧]</span>
+    G <span class="token arrow operator">--></span> H<span class="token text string">[自动更新到 VideoSink]</span>
+    H <span class="token arrow operator">--></span> I<span class="token text string">[触发 videoFrameChanged 信号]</span>
+    I <span class="token arrow operator">--></span> J<span class="token text string">[调用 processFrame 处理帧]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>代码示例：</p>
 <pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> <span class="token class-name">GhtMp4</span><span class="token double-colon punctuation">::</span><span class="token function">setupUI</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
     <span class="token comment">// 1. 创建播放器和接收器</span>

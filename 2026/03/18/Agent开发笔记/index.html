@@ -8,15 +8,15 @@
   <link rel="dns-prefetch" href="http://example.com">
   <title>Agent开发笔记 | 我的第一个博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="##函数调用流程1.用户传入prompt，调用retrieve_contextRAG检索本地数据库得到上下文 2.给agent传入模型名，工具列表，上下文等参数，并初始化 3.agent初始化的过程中，先初始化client，使告知的工具依次连接服务端 4.同时通过get_tools获取可用工具列表,同时也创建了一个chatopenai类 5.接着再通过invoke函数传入任务，通过调用chat函数">
+  <meta name="description" content="函数调用流程1.用户传入prompt，调用retrieve_contextRAG检索本地数据库得到上下文 2.给agent传入模型名，工具列表，上下文等参数，并初始化 3.agent初始化的过程中，先初始化client，使告知的工具依次连接服务端 4.同时通过get_tools获取可用工具列表,同时也创建了一个chatopenai类 5.接着再通过invoke函数传入任务，通过调用chat函数把需">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Agent开发笔记">
 <meta property="og:url" content="http://example.com/2026/03/18/Agent%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="我的第一个博客">
-<meta property="og:description" content="##函数调用流程1.用户传入prompt，调用retrieve_contextRAG检索本地数据库得到上下文 2.给agent传入模型名，工具列表，上下文等参数，并初始化 3.agent初始化的过程中，先初始化client，使告知的工具依次连接服务端 4.同时通过get_tools获取可用工具列表,同时也创建了一个chatopenai类 5.接着再通过invoke函数传入任务，通过调用chat函数">
+<meta property="og:description" content="函数调用流程1.用户传入prompt，调用retrieve_contextRAG检索本地数据库得到上下文 2.给agent传入模型名，工具列表，上下文等参数，并初始化 3.agent初始化的过程中，先初始化client，使告知的工具依次连接服务端 4.同时通过get_tools获取可用工具列表,同时也创建了一个chatopenai类 5.接着再通过invoke函数传入任务，通过调用chat函数把需">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-03-18T05:07:44.000Z">
-<meta property="article:modified_time" content="2026-03-18T11:26:13.463Z">
+<meta property="article:modified_time" content="2026-03-20T15:34:24.713Z">
 <meta property="article:author" content="seasons">
 <meta property="article:tag" content="Agent">
 <meta property="article:tag" content="llm-mcp-rag">
@@ -177,14 +177,13 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>##函数调用流程<br>1.用户传入prompt，调用retrieve_contextRAG检索本地数据库得到上下文</p>
+        <h2 id="函数调用流程"><a href="#函数调用流程" class="headerlink" title="函数调用流程"></a>函数调用流程</h2><p>1.用户传入prompt，调用retrieve_contextRAG检索本地数据库得到上下文</p>
 <p>2.给agent传入模型名，工具列表，上下文等参数，并初始化</p>
 <p>3.agent初始化的过程中，先初始化client，使告知的工具依次连接服务端</p>
 <p>4.同时通过get_tools获取可用工具列表,同时也创建了一个chatopenai类</p>
 <p>5.接着再通过invoke函数传入任务，通过调用chat函数把需求传入llm，由llm返回流式文件，并把结果保存至messages，同时返回content和tool_calls</p>
 <p>6.agent拿到content和tool_calls后，如果需要使用工具，并且工具已连接，就调用并返回llm可接收的结果并加入对话历史</p>
-<p>##流程图</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c">┌─────────────────────────────────────────────────────────────────┐
+<h2 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">┌─────────────────────────────────────────────────────────────────┐
 │ <span class="token number">1.</span> 【可选】RAG 检索上下文                                         │
 │    <span class="token function">retrieve_context</span><span class="token punctuation">(</span>prompt<span class="token punctuation">)</span> → 得到相关文档                        │
 │    （只有需要知识库时才做，不是必须的）                           │
@@ -224,7 +223,7 @@
 │         └── 无工具？→ 返回 content 给用户                         │
 └─────────────────────────────────────────────────────────────────┘<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>##语法学习<br>异步操作async和await<br>async创建异步函数，防止多个请求阻塞进程，可以提升效率<br>await暂停当前函数，等待async返回promise结果，再继续执行，期间多个请求同时执行，但需全部完成后才能继续执行后面代码</p>
+<h2 id="语法学习"><a href="#语法学习" class="headerlink" title="语法学习"></a>语法学习</h2><p>异步操作async和await<br>async创建异步函数，防止多个请求阻塞进程，可以提升效率<br>await暂停当前函数，等待async返回promise结果，再继续执行，期间多个请求同时执行，但需全部完成后才能继续执行后面代码</p>
 
       
 
