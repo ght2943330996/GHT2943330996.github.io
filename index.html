@@ -172,8 +172,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="git回滚且撤销提交记录"><a href="#git回滚且撤销提交记录" class="headerlink" title="git回滚且撤销提交记录"></a>git回滚且撤销提交记录</h2><p>示例</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token function">c96bf92</span> <span class="token punctuation">(</span>HEAD <span class="token operator">-></span> main<span class="token punctuation">)</span> add memory_mcp
+        <h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token function">c96bf92</span> <span class="token punctuation">(</span>HEAD <span class="token operator">-></span> main<span class="token punctuation">)</span> add memory_mcp
 <span class="token number">703341</span>b add memory_mcp
 <span class="token number">9583</span>a56 add 注释
 <span class="token number">86</span>de786 <span class="token punctuation">(</span>origin<span class="token operator">/</span>main<span class="token punctuation">)</span> Initial commit<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
@@ -193,14 +192,13 @@ git commit <span class="token operator">-</span>m <span class="token string">"ad
 # 强制推送到远程（覆盖历史，只保留<span class="token number">2</span>次提交）
 git push origin main <span class="token operator">--</span>force<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h2><pre class="line-numbers language-mermaid" data-language="mermaid"><code class="language-mermaid"><span class="token keyword">graph</span> TD
-工作区（修改文件）
+<h2 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h2><pre class="line-numbers language-mermaid" data-language="mermaid"><code class="language-mermaid">工作区（修改文件）
     ↓ git add
 暂存区（准备提交）
     ↓ git commit
 本地仓库（真正提交）
     ↓ git push
-远程仓库（GitHub）<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+远程仓库（GitHub）<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
       
 
       

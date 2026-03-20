@@ -8,15 +8,15 @@
   <link rel="dns-prefetch" href="http://example.com">
   <title>git回滚和撤销提交记录 | 我的第一个博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="git回滚且撤销提交记录示例 c96bf92 (HEAD -&gt; main) add memory_mcp 703341b add memory_mcp 9583a56 add 注释 86de786 (origin&#x2F;main) Initial commit  取消 9583a56 和 703341b  保留 c96bf92 （add memory_mcp）作为第2次提交 最终只显示2次提交： Ini">
+  <meta name="description" content="示例c96bf92 (HEAD -&gt; main) add memory_mcp 703341b add memory_mcp 9583a56 add 注释 86de786 (origin&#x2F;main) Initial commit  取消 9583a56 和 703341b  保留 c96bf92 （add memory_mcp）作为第2次提交 最终只显示2次提交： Initial commit +">
 <meta property="og:type" content="article">
 <meta property="og:title" content="git回滚和撤销提交记录">
 <meta property="og:url" content="http://example.com/2026/03/18/git%E5%9B%9E%E6%BB%9A%E5%92%8C%E6%92%A4%E9%94%80%E6%8F%90%E4%BA%A4%E8%AE%B0%E5%BD%95/index.html">
 <meta property="og:site_name" content="我的第一个博客">
-<meta property="og:description" content="git回滚且撤销提交记录示例 c96bf92 (HEAD -&gt; main) add memory_mcp 703341b add memory_mcp 9583a56 add 注释 86de786 (origin&#x2F;main) Initial commit  取消 9583a56 和 703341b  保留 c96bf92 （add memory_mcp）作为第2次提交 最终只显示2次提交： Ini">
+<meta property="og:description" content="示例c96bf92 (HEAD -&gt; main) add memory_mcp 703341b add memory_mcp 9583a56 add 注释 86de786 (origin&#x2F;main) Initial commit  取消 9583a56 和 703341b  保留 c96bf92 （add memory_mcp）作为第2次提交 最终只显示2次提交： Initial commit +">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-03-18T15:50:32.000Z">
-<meta property="article:modified_time" content="2026-03-20T15:35:14.564Z">
+<meta property="article:modified_time" content="2026-03-20T15:37:55.560Z">
 <meta property="article:author" content="seasons">
 <meta property="article:tag" content="教程">
 <meta property="article:tag" content="git">
@@ -176,8 +176,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="git回滚且撤销提交记录"><a href="#git回滚且撤销提交记录" class="headerlink" title="git回滚且撤销提交记录"></a>git回滚且撤销提交记录</h2><p>示例</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token function">c96bf92</span> <span class="token punctuation">(</span>HEAD <span class="token operator">-></span> main<span class="token punctuation">)</span> add memory_mcp
+        <h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token function">c96bf92</span> <span class="token punctuation">(</span>HEAD <span class="token operator">-></span> main<span class="token punctuation">)</span> add memory_mcp
 <span class="token number">703341</span>b add memory_mcp
 <span class="token number">9583</span>a56 add 注释
 <span class="token number">86</span>de786 <span class="token punctuation">(</span>origin<span class="token operator">/</span>main<span class="token punctuation">)</span> Initial commit<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
@@ -197,14 +196,13 @@ git commit <span class="token operator">-</span>m <span class="token string">"ad
 # 强制推送到远程（覆盖历史，只保留<span class="token number">2</span>次提交）
 git push origin main <span class="token operator">--</span>force<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h2><pre class="line-numbers language-mermaid" data-language="mermaid"><code class="language-mermaid"><span class="token keyword">graph</span> TD
-工作区（修改文件）
+<h2 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h2><pre class="line-numbers language-mermaid" data-language="mermaid"><code class="language-mermaid">工作区（修改文件）
     ↓ git add
 暂存区（准备提交）
     ↓ git commit
 本地仓库（真正提交）
     ↓ git push
-远程仓库（GitHub）<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+远程仓库（GitHub）<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
       
 
       
