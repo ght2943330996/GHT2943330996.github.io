@@ -182,7 +182,7 @@
 <li>保留 c96bf92 （add memory_mcp）作为第2次提交</li>
 <li>最终只显示2次提交： Initial commit + c96bf92</li>
 </ul>
-<p>使用git reset –soft 可以保留当前编辑器中的内容，且把main&#x2F;远端都回滚到这一次</p>
+<p>使用git reset –soft + id  可以保留编辑代码，且把main回滚到这一次<br>使用git reset –hard origin&#x2F;main  覆盖本地代码，且把main回滚到远程分支最新版本，只要没推送都可以回滚</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"># 回到 Initial commit，但保留 c96bf92 的所有文件修改
 git reset <span class="token operator">--</span>soft <span class="token number">86</span>de786
 
