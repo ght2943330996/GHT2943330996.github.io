@@ -16,7 +16,7 @@
 <meta property="og:description" content="##git回滚且撤销提交记录示例 c96bf92 (HEAD -&gt; main) add memory_mcp 703341b add memory_mcp 9583a56 add 注释 86de786 (origin&#x2F;main) Initial commit  取消 9583a56 和 703341b  保留 c96bf92 （add memory_mcp）作为第2次提交 最终只显示2次提交： I">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-03-18T15:50:32.000Z">
-<meta property="article:modified_time" content="2026-03-20T15:26:17.935Z">
+<meta property="article:modified_time" content="2026-03-20T15:29:03.973Z">
 <meta property="article:author" content="seasons">
 <meta property="article:tag" content="教程">
 <meta property="article:tag" content="git">
@@ -196,6 +196,9 @@ git commit <span class="token operator">-</span>m <span class="token string">"ad
 
 # 强制推送到远程（覆盖历史，只保留<span class="token number">2</span>次提交）
 git push origin main <span class="token operator">--</span>force<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>##流程图<br>工作区（修改文件）<br>    ↓ git add<br>暂存区（准备提交）<br>    ↓ git commit<br>本地仓库（真正提交）<br>    ↓ git push<br>远程仓库（GitHub）</p>
+
       
 
       
