@@ -16,7 +16,7 @@
 <meta property="og:description" content="示例c96bf92 (HEAD -&gt; main) add memory_mcp 703341b add memory_mcp 9583a56 add 注释 86de786 (origin&#x2F;main) Initial commit  取消 9583a56 和 703341b  保留 c96bf92 （add memory_mcp）作为第2次提交 最终只显示2次提交： Initial commit +">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-03-18T15:50:32.000Z">
-<meta property="article:modified_time" content="2026-03-20T15:37:55.560Z">
+<meta property="article:modified_time" content="2026-03-22T07:16:09.687Z">
 <meta property="article:author" content="seasons">
 <meta property="article:tag" content="教程">
 <meta property="article:tag" content="git">
@@ -185,7 +185,7 @@
 <li>保留 c96bf92 （add memory_mcp）作为第2次提交</li>
 <li>最终只显示2次提交： Initial commit + c96bf92</li>
 </ul>
-<p>使用git reset –soft + id  可以保留编辑代码，且把main回滚到这一次<br>使用git reset –hard origin&#x2F;main  覆盖本地代码，且把main回滚到远程分支最新版本，只要没推送都可以回滚</p>
+<p>使用git reset —soft + id  可以保留编辑代码，且把main回滚到这一次<br>使用git reset —hard origin&#x2F;main  覆盖本地代码，且把main回滚到远程分支最新版本，只要没推送都可以回滚<br>再执行git clean –fd  清除未追踪的文件，因为上面只是覆盖已追踪的文件</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"># 回到 Initial commit，但保留 c96bf92 的所有文件修改
 git reset <span class="token operator">--</span>soft <span class="token number">86</span>de786
 
