@@ -8,15 +8,15 @@
   <link rel="dns-prefetch" href="http://example.com">
   <title>RAG处理流程 | 我的第一个博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="##RAG检索增强生成处理流程1.先把知识库中的内容切片，切片方式(固定切片，递归切片，语义切片），同时进行合并和重叠2.然后使用模型把切片向量化，并储存到向量库中3.把问题也向量化，然后与向量库比较，通过余弦相似度得出相似分数，分数高表明越接近问题内容4.把高相似的向量和问题返回给大模型，让他根据知识库中的数据进行回答 ##流程tu ┌─────────────┐     ┌──────────">
+  <meta name="description" content="##RAG检索增强生成处理流程1.先把知识库中的内容切片，切片方式(固定切片，递归切片，语义切片），同时进行合并和重叠2.然后使用模型把切片向量化，并储存到向量库中3.把问题也向量化，然后与向量库比较，通过余弦相似度得出相似分数，分数高表明越接近问题内容4.把高相似的向量和问题返回给大模型，让他根据知识库中的数据进行回答 ##流程图 ┌─────────────┐     ┌───────────">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RAG处理流程">
 <meta property="og:url" content="http://example.com/2026/03/27/RAG%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B/index.html">
 <meta property="og:site_name" content="我的第一个博客">
-<meta property="og:description" content="##RAG检索增强生成处理流程1.先把知识库中的内容切片，切片方式(固定切片，递归切片，语义切片），同时进行合并和重叠2.然后使用模型把切片向量化，并储存到向量库中3.把问题也向量化，然后与向量库比较，通过余弦相似度得出相似分数，分数高表明越接近问题内容4.把高相似的向量和问题返回给大模型，让他根据知识库中的数据进行回答 ##流程tu ┌─────────────┐     ┌──────────">
+<meta property="og:description" content="##RAG检索增强生成处理流程1.先把知识库中的内容切片，切片方式(固定切片，递归切片，语义切片），同时进行合并和重叠2.然后使用模型把切片向量化，并储存到向量库中3.把问题也向量化，然后与向量库比较，通过余弦相似度得出相似分数，分数高表明越接近问题内容4.把高相似的向量和问题返回给大模型，让他根据知识库中的数据进行回答 ##流程图 ┌─────────────┐     ┌───────────">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-03-27T14:08:34.000Z">
-<meta property="article:modified_time" content="2026-03-27T14:21:33.895Z">
+<meta property="article:modified_time" content="2026-03-27T14:27:24.987Z">
 <meta property="article:author" content="seasons">
 <meta property="article:tag" content="教程">
 <meta property="article:tag" content="Agent">
@@ -178,7 +178,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>##RAG检索增强生成处理流程<br>1.先把知识库中的内容切片，切片方式(固定切片，递归切片，语义切片），同时进行合并和重叠<br>2.然后使用模型把切片向量化，并储存到向量库中<br>3.把问题也向量化，然后与向量库比较，通过余弦相似度得出相似分数，分数高表明越接近问题内容<br>4.把高相似的向量和问题返回给大模型，让他根据知识库中的数据进行回答</p>
-<p>##流程tu</p>
+<p>##流程图</p>
 <pre class="line-numbers language-C" data-language="C"><code class="language-C">┌─────────────┐     ┌─────────────┐     ┌─────────────────┐
 │  知识库文档  │────▶│   文本切片   │────▶│  文本嵌入模型    │
 └─────────────┘     └─────────────┘     └────────┬────────┘
