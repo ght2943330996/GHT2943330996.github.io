@@ -152,6 +152,123 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-RAG处理流程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2026/03/27/RAG%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B/">RAG处理流程</a>
+    </h1>
+  
+
+        
+        <a href="/2026/03/27/RAG%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B/" class="archive-article-date">
+  	<time datetime="2026-03-27T14:08:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2026-03-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>##RAG检索增强生成处理流程<br>1.先把知识库中的内容切片，切片方式(固定切片，递归切片，语义切片），同时进行合并和重叠<br>2.然后使用模型把切片向量化，并储存到向量库中<br>3.把问题也向量化，然后与向量库比较，通过余弦相似度得出相似分数，分数高表明越接近问题内容<br>4.把高相似的向量和问题返回给大模型，让他根据知识库中的数据进行回答</p>
+<p>##流程tu</p>
+<pre class="line-numbers language-C" data-language="C"><code class="language-C">┌─────────────┐     ┌─────────────┐     ┌─────────────────┐
+│  知识库文档  │────▶│   文本切片   │────▶│  文本嵌入模型    │
+└─────────────┘     └─────────────┘     └────────┬────────┘
+                                                  │
+                         ┌────────────────────────┘
+                         ▼
+                  ┌─────────────┐
+                  │   向量数据库   │◄──────────────┐
+                  └──────┬──────┘               │
+                         │                      │
+                         │    ┌─────────────┐   │
+                         └───▶│  相似度检索  │◄──┘
+                              │  (Top-K召回) │
+                              └──────┬──────┘
+                                     │
+    ┌─────────┐    ┌─────────────────┘
+    │  用户问题 │───▶│   问题向量化      │
+    └─────────┘    └─────────────────┐
+                                     ▼
+                              ┌─────────────┐
+                              │  检索结果排序  │
+                              │ (重排序&#x2F;Rerank)│
+                              └──────┬──────┘
+                                     │
+                                     ▼
+    ┌─────────────────────────────────────────────────┐
+    │              大语言模型 (LLM)                     │
+    │  Prompt: [系统指令] + [检索到的上下文] + [问题]   │
+    └─────────────────────────────────────────────────┘
+                                     │
+                                     ▼
+                              ┌─────────────┐
+                              │   生成回答    │
+                              └─────────────┘
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">教程</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Agent</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">RAG</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2026/03/27/RAG%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-git回滚和撤销提交记录" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1513,95 +1630,6 @@ drawerLayout<span class="token operator">-></span><span class="token function">a
 
 
   
-    <article id="post-我的第一篇文章(如何发布博客)" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/10/22/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0(%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E5%8D%9A%E5%AE%A2)/">我的第一篇文章</a>
-    </h1>
-  
-
-        
-        <a href="/2024/10/22/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0(%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E5%8D%9A%E5%AE%A2)/" class="archive-article-date">
-  	<time datetime="2024-10-22T11:40:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-10-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="发布步骤"><a href="#发布步骤" class="headerlink" title="发布步骤"></a>发布步骤</h2><p>你好，hello world！！！<br>今天刚刚部署好hexo，开始记笔记<br>先写一个如何发布，上传把<br>1.先来到你的文件目录下，my-blog<br>2.使用hexo新建文章，hexo new “文章标题”，他会在source&#x2F;_posts 目录下创建一个新的 Markdown文件<br>3.用任意编辑器编辑markdown文件<br>4.完成后，首先生成静态文件hexo generate，简：hexo g<br>5.部署到github，hexo deploy，简：hexo d<br>45组合命令：hexo g -d 然后去https:&#x2F;&#x2F;你的域名.github.io&#x2F;下查看<br>如果想本地浏览，那就执行 hexo server，在<a target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000</a> 查看效果</p>
-<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>注意：1.所有命令都要在你的文件目录下执行，my-blog下<br>2.如果遇到问题，可以先清理缓存如：hexo claen 然后再hexo g -d  记得关闭my-blog文件夹，防止资源占用</p>
-<p>2024&#x2F;11&#x2F;2</p>
-<h2 id="命令行方法"><a href="#命令行方法" class="headerlink" title="命令行方法"></a>命令行方法</h2><p>1.管理员身份打开当前目录：先复制路径，win+R，然后输入cmd，用shift+ctrl+enter打开，然后cd &#x2F;d 复制的路径 (注意d是转盘标志)<br>2.反过来从命令行到当前目录窗口：输入explorer .   点表示当前路径<br>3.powershell和cmd的转换，powershell前面有个PS<br>4.win+R是命令行，win+X是powershell</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">教程</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Hexo</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">博客</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">命令</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/10/22/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0(%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E5%8D%9A%E5%AE%A2)/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1772,6 +1800,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">RAG</a>
               </li>
             
             <div class="clearfix"></div>
