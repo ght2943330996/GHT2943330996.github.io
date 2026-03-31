@@ -6,19 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Qt视频流转ASCII码 | 我的第一个博客</title>
+  <title>线程创建方式对比 | 我的第一个博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="整个转换流程是：视频文件 → 视频流 → 视频帧 → QImage → 灰度值 → ASCII字符 → 文本显示这个过程是实时的，每当有新的视频帧到来，就会重复这个转换过程，从而形成ASCII艺术动画效果 流程图： graph TD     A[创建 QMediaPlayer] --&gt; B[创建 QVideoSink]     B --&gt; C[setVideoSink 设置接收器]     C -">
+  <meta name="description" content="##线程的创建方式1.Thread      无法获取返回值的，同时有个致命的缺点，因为java不能同时继承两个父类，导致存在父类的子类不能继承Thread2.Runnable    也是无返回值，但是不需要继承3.Callable    有返回值，可抛出异常4.线程池       有返回值，可复用线程，降低资源消耗（减少线程创建销毁的开销），提高响应速度和线程可管理性 ##线程池工作流程任务提交">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Qt视频流转ASCII码">
-<meta property="og:url" content="http://example.com/2024/11/10/Qt%E8%A7%86%E9%A2%91%E6%B5%81%E8%BD%ACASCII%E7%A0%81/index.html">
+<meta property="og:title" content="线程创建方式对比">
+<meta property="og:url" content="http://example.com/2026/03/31/%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA%E6%96%B9%E5%BC%8F%E5%AF%B9%E6%AF%94/index.html">
 <meta property="og:site_name" content="我的第一个博客">
-<meta property="og:description" content="整个转换流程是：视频文件 → 视频流 → 视频帧 → QImage → 灰度值 → ASCII字符 → 文本显示这个过程是实时的，每当有新的视频帧到来，就会重复这个转换过程，从而形成ASCII艺术动画效果 流程图： graph TD     A[创建 QMediaPlayer] --&gt; B[创建 QVideoSink]     B --&gt; C[setVideoSink 设置接收器]     C -">
+<meta property="og:description" content="##线程的创建方式1.Thread      无法获取返回值的，同时有个致命的缺点，因为java不能同时继承两个父类，导致存在父类的子类不能继承Thread2.Runnable    也是无返回值，但是不需要继承3.Callable    有返回值，可抛出异常4.线程池       有返回值，可复用线程，降低资源消耗（减少线程创建销毁的开销），提高响应速度和线程可管理性 ##线程池工作流程任务提交">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-11-10T05:42:35.000Z">
-<meta property="article:modified_time" content="2026-03-20T15:34:00.090Z">
+<meta property="article:published_time" content="2026-03-31T15:28:46.000Z">
+<meta property="article:modified_time" content="2026-03-31T15:34:59.557Z">
 <meta property="article:author" content="seasons">
-<meta property="article:tag" content="Qt">
+<meta property="article:tag" content="线程">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="我的第一个博客" type="application/atom+xml">
@@ -155,98 +155,28 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Qt视频流转ASCII码" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-线程创建方式对比" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      Qt视频流转ASCII码
+      线程创建方式对比
     </h1>
   
 
         
-        <a href="/2024/11/10/Qt%E8%A7%86%E9%A2%91%E6%B5%81%E8%BD%ACASCII%E7%A0%81/" class="archive-article-date">
-  	<time datetime="2024-11-10T05:42:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-11-10</time>
+        <a href="/2026/03/31/%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA%E6%96%B9%E5%BC%8F%E5%AF%B9%E6%AF%94/" class="archive-article-date">
+  	<time datetime="2026-03-31T15:28:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2026-03-31</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="整个转换流程是："><a href="#整个转换流程是：" class="headerlink" title="整个转换流程是："></a>整个转换流程是：</h2><p>视频文件 → 视频流 → 视频帧 → QImage → 灰度值 → ASCII字符 → 文本显示<br>这个过程是实时的，每当有新的视频帧到来，就会重复这个转换过程，从而形成ASCII艺术动画效果</p>
-<p>流程图：</p>
-<pre class="line-numbers language-mermaid" data-language="mermaid"><code class="language-mermaid"><span class="token keyword">graph</span> TD
-    A<span class="token text string">[创建 QMediaPlayer]</span> <span class="token arrow operator">--></span> B<span class="token text string">[创建 QVideoSink]</span>
-    B <span class="token arrow operator">--></span> C<span class="token text string">[setVideoSink 设置接收器]</span>
-    C <span class="token arrow operator">--></span> D<span class="token text string">[setSource 设置视频源]</span>
-    D <span class="token arrow operator">--></span> E<span class="token text string">[play 开始播放]</span>
-    E <span class="token arrow operator">--></span> F<span class="token text string">[QMediaPlayer 内部解码视频]</span>
-    F <span class="token arrow operator">--></span> G<span class="token text string">[产生新视频帧]</span>
-    G <span class="token arrow operator">--></span> H<span class="token text string">[自动更新到 VideoSink]</span>
-    H <span class="token arrow operator">--></span> I<span class="token text string">[触发 videoFrameChanged 信号]</span>
-    I <span class="token arrow operator">--></span> J<span class="token text string">[调用 processFrame 处理帧]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>代码示例：</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> <span class="token class-name">GhtMp4</span><span class="token double-colon punctuation">::</span><span class="token function">setupUI</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">// 1. 创建播放器和接收器</span>
-    player <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">QMediaPlayer</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    videoSink <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">QVideoSink</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-    <span class="token comment">// 2. 设置视频接收器</span>
-    player<span class="token operator">-></span><span class="token function">setVideoSink</span><span class="token punctuation">(</span>videoSink<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-    <span class="token comment">// 3. 连接信号和槽，当有新帧时会调用 processFrame</span>
-    <span class="token function">connect</span><span class="token punctuation">(</span>videoSink<span class="token punctuation">,</span> <span class="token operator">&amp;</span>QVideoSink<span class="token double-colon punctuation">::</span>videoFrameChanged<span class="token punctuation">,</span>
-            <span class="token keyword">this</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>GhtMp4<span class="token double-colon punctuation">::</span>processFrame<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">void</span> <span class="token class-name">GhtMp4</span><span class="token double-colon punctuation">::</span><span class="token function">openVideo</span><span class="token punctuation">(</span><span class="token keyword">const</span> QString<span class="token operator">&amp;</span> filePath<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">// 4. 设置视频源</span>
-    player<span class="token operator">-></span><span class="token function">setSource</span><span class="token punctuation">(</span><span class="token class-name">QUrl</span><span class="token double-colon punctuation">::</span><span class="token function">fromLocalFile</span><span class="token punctuation">(</span>filePath<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-    <span class="token comment">// 5. 开始播放</span>
-    <span class="token function">play</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token comment">// 6. 当有新的视频帧时，这个函数会被自动调用</span>
-<span class="token keyword">void</span> <span class="token class-name">GhtMp4</span><span class="token double-colon punctuation">::</span><span class="token function">processFrame</span><span class="token punctuation">(</span><span class="token keyword">const</span> QVideoFrame<span class="token operator">&amp;</span> frame<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">// 处理视频帧</span>
-    QImage image <span class="token operator">=</span> frame<span class="token punctuation">.</span><span class="token function">toImage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// ... 转换为 ASCII ...</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>关键点说明：<br>1.QMediaPlayer 负责视频的加载和播放<br>2.QVideoSink 负责接收解码后的视频帧<br>3.视频帧的更新是自动的，由 Qt 多媒体框架内部处理<br>4. 我们只需要：<br>    设置好视频源（setSource）<br>    连接好接收器（setVideoSink）<br>    处理接收到的帧（processFrame）<br>这种设计使用了观察者模式：<br>    QVideoSink 观察视频帧的变化<br>    当有新帧时，通过信号槽机制通知我们的程序<br>    我们不需要手动去获取或更新帧，整个过程是事件驱动的</p>
-<h2 id="流程运转方式"><a href="#流程运转方式" class="headerlink" title="流程运转方式"></a>流程运转方式</h2><p>1.一次性初始化的部分 (只在开始时执行一次):<br>A[创建 QMediaPlayer] –&gt; B[创建 QVideoSink]<br>B –&gt; C[setVideoSink 设置接收器]<br>C –&gt; D[setSource 设置视频源]<br>D –&gt; E[play 开始播放]</p>
-<p>2.循环执行的部分 (对每一帧重复执行):<br>F[QMediaPlayer 内部解码视频]<br>F –&gt; G[产生新视频帧]<br>G –&gt; H[自动更新到 VideoSink]<br>H –&gt; I[触发 videoFrameChanged 信号]<br>I –&gt; J[调用 processFrame 处理帧]</p>
-<p>具体解释：<br>视频通常是每秒24帧或30帧<br>QMediaPlayer 在播放时会持续解码视频<br>每当解码出一帧新的画面：<br>1.自动更新到 VideoSink<br>2.触发 videoFrameChanged 信号<br>3.执行 processFrame 处理<br>这个过程是异步的，由 Qt 的事件循环驱动</p>
-<p>代码示例：</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// 一次性初始化</span>
-<span class="token keyword">void</span> <span class="token class-name">GhtMp4</span><span class="token double-colon punctuation">::</span><span class="token function">setupUI</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    player <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">QMediaPlayer</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token comment">// 步骤 A</span>
-    videoSink <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">QVideoSink</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>       <span class="token comment">// 步骤 B</span>
-    player<span class="token operator">-></span><span class="token function">setVideoSink</span><span class="token punctuation">(</span>videoSink<span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token comment">// 步骤 C</span>
-    
-    <span class="token comment">// 设置信号槽连接，准备接收每一帧</span>
-    <span class="token function">connect</span><span class="token punctuation">(</span>videoSink<span class="token punctuation">,</span> <span class="token operator">&amp;</span>QVideoSink<span class="token double-colon punctuation">::</span>videoFrameChanged<span class="token punctuation">,</span>
-            <span class="token keyword">this</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>GhtMp4<span class="token double-colon punctuation">::</span>processFrame<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">void</span> <span class="token class-name">GhtMp4</span><span class="token double-colon punctuation">::</span><span class="token function">openVideo</span><span class="token punctuation">(</span><span class="token keyword">const</span> QString<span class="token operator">&amp;</span> filePath<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    player<span class="token operator">-></span><span class="token function">setSource</span><span class="token punctuation">(</span><span class="token class-name">QUrl</span><span class="token double-colon punctuation">::</span><span class="token function">fromLocalFile</span><span class="token punctuation">(</span>filePath<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 步骤 D</span>
-    player<span class="token operator">-></span><span class="token function">play</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                                    <span class="token comment">// 步骤 E</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token comment">// 循环执行部分（每一帧都会触发）</span>
-<span class="token keyword">void</span> <span class="token class-name">GhtMp4</span><span class="token double-colon punctuation">::</span><span class="token function">processFrame</span><span class="token punctuation">(</span><span class="token keyword">const</span> QVideoFrame<span class="token operator">&amp;</span> frame<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">// 步骤 F-J 在 Qt 内部自动处理</span>
-    <span class="token comment">// 我们只需要处理收到的帧</span>
-    QImage image <span class="token operator">=</span> frame<span class="token punctuation">.</span><span class="token function">toImage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    image <span class="token operator">=</span> image<span class="token punctuation">.</span><span class="token function">scaled</span><span class="token punctuation">(</span><span class="token number">220</span><span class="token punctuation">,</span> <span class="token number">60</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    display<span class="token operator">-></span><span class="token function">setText</span><span class="token punctuation">(</span><span class="token function">convertToAscii</span><span class="token punctuation">(</span>image<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>可以理解为：<br>1.初始化部分像搭建一个管道系统<br>2.一旦开始播放，视频帧就像水流一样持续通过这个管道<br>3.每一帧都会触发我们的处理函数<br>4.整个过程是自动的，我们不需要手动控制帧的获取</p>
+        <p>##线程的创建方式<br>1.Thread      无法获取返回值的，同时有个致命的缺点，因为java不能同时继承两个父类，导致存在父类的子类不能继承Thread<br>2.Runnable    也是无返回值，但是不需要继承<br>3.Callable    有返回值，可抛出异常<br>4.线程池       有返回值，可复用线程，降低资源消耗（减少线程创建销毁的开销），提高响应速度和线程可管理性</p>
+<p>##线程池工作流程<br>任务提交 → 核心线程数检查 → 工作队列检查 → 最大线程数检查 → 拒绝策略<br>1.如果当前运行线程数 &lt; corePoolSize（核心线程数），创建新线程执行任务<br>2.如果当前运行线程数 ≥ corePoolSize，任务进入工作队列等待<br>3.如果队列已满，且运行线程数 &lt; maximumPoolSize（最大线程数），创建临时线程处理任务<br>4.如果已达到 maximumPoolSize，执行拒绝策略</p>
 
       
 
@@ -281,7 +211,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Qt</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">线程</a>
         		</li>
       		
 		</ul>
@@ -337,7 +267,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2024/11/10/Qt%E8%A7%86%E9%A2%91%E6%B5%81%E8%BD%ACASCII%E7%A0%81/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2026/03/31/%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA%E6%96%B9%E5%BC%8F%E5%AF%B9%E6%AF%94/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -351,18 +281,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2026/03/18/Agent%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Agent开发笔记
-        
-      </div>
-    </a>
   
-  
-    <a href="/2024/11/08/%E7%B1%BB%E5%92%8C%E5%AF%B9%E8%B1%A1/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">类和对象</div>
+    <a href="/2026/03/27/RAG%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">RAG处理流程</div>
       <i class="icon-circle-right"></i>
     </a>
   
