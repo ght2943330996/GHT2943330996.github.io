@@ -1340,7 +1340,7 @@ npm install vue<span class="token operator">-</span>router@<span class="token nu
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>1.如有安装过，卸载不干净<br>先wsl -l -v看版本</p>
+        <h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>1.如有安装过，卸载不干净<br>先wsl -l -v或者wsl –version看版本</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c">后面执行：wsl <span class="token operator">--</span>unregister Ubuntu<span class="token operator">-</span><span class="token number">20.04</span> 清除注册表<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>2.虚拟器平台选项找不到<br>先检查更新，如果还是不行，<br>用命令打开以管理员身份打开powershell 开启Hyper-V(注意Hyper与其他第三方虚拟机Vmware不兼容)</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">1.</span>启动Hyper<span class="token operator">-</span>V：bcdedit <span class="token operator">/</span>set hypervisorlaunchtype <span class="token keyword">auto</span>  关闭命令：bcdedit <span class="token operator">/</span>set hypervisorlaunchtype off
@@ -1351,7 +1351,7 @@ Disable<span class="token operator">-</span>WindowsOptionalFeature <span class="
 检查是否开启：Get<span class="token operator">-</span>WindowsOptionalFeature <span class="token operator">-</span>Online <span class="token operator">-</span>FeatureName Microsoft<span class="token operator">-</span>Hyper<span class="token operator">-</span>V<span class="token operator">-</span><span class="token function">All</span> <span class="token punctuation">(</span>检测Hyper<span class="token operator">-</span>V<span class="token punctuation">)</span>
 Get<span class="token operator">-</span>WindowsOptionalFeature <span class="token operator">-</span>Online <span class="token operator">|</span> Where<span class="token operator">-</span>Object <span class="token punctuation">&#123;</span>$_<span class="token punctuation">.</span>FeatureName <span class="token operator">-</span>like <span class="token string">"*VirtualMachinePlatform*"</span><span class="token punctuation">&#125;</span>
 state：Enabled说明启用了## 一<span class="token punctuation">.</span>windows环境配置<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>1.检查系统更新，并打开虚拟机平台和子系统<br>2.去ms下载ubuntu20.04.6</p>
+<h2 id="一-wsl和ubuntu安装"><a href="#一-wsl和ubuntu安装" class="headerlink" title="一.wsl和ubuntu安装"></a>一.wsl和ubuntu安装</h2><p>1.检查系统更新，并打开虚拟机平台和子系统<br>2.去微软商店下载ubuntu20.04.6</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">3.</span>在命令行更新安装wsl：wsl <span class="token operator">--</span>update<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>4.运行ubuntu并设置账号</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">5.</span>最后在win命令中检查：wsl <span class="token operator">-</span>l <span class="token operator">-</span>v    <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
