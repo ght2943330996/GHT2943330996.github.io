@@ -6,14 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Tag: 挂载镜像磁盘 | 我的第一个博客</title>
+  <title>Docker常用命令 | 我的第一个博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="我的第一个博客">
-<meta property="og:url" content="http://example.com/tags/%E6%8C%82%E8%BD%BD%E9%95%9C%E5%83%8F%E7%A3%81%E7%9B%98/index.html">
+  <meta name="description" content="镜像命令docker pull [用户名&#x2F;镜像名]:tag           	  #拉取对应版本镜像 docker push [用户名&#x2F;镜像名]:tag                #推送镜像到仓库  docker build -t [镜像名]:[版本号] .            #构建镜像+tag docker tag [镜像ID][镜像名]:1.0                #加上">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker常用命令">
+<meta property="og:url" content="http://example.com/2026/04/07/Docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/index.html">
 <meta property="og:site_name" content="我的第一个博客">
+<meta property="og:description" content="镜像命令docker pull [用户名&#x2F;镜像名]:tag           	  #拉取对应版本镜像 docker push [用户名&#x2F;镜像名]:tag                #推送镜像到仓库  docker build -t [镜像名]:[版本号] .            #构建镜像+tag docker tag [镜像ID][镜像名]:1.0                #加上">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-07T14:07:37.000Z">
+<meta property="article:modified_time" content="2026-04-07T15:20:05.554Z">
 <meta property="article:author" content="seasons">
+<meta property="article:tag" content="Docker">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="我的第一个博客" type="application/atom+xml">
@@ -150,64 +155,205 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Docker常用命令" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2024" class="archive-year">2024</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2024/10/23/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E7%AC%94%E8%AE%B001/" class="archive-article-date">
-  	<time datetime="2024-10-23T09:51:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-10-23</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2024/10/23/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E7%AC%94%E8%AE%B001/">操作系统内核笔记01</a>
+    <h1 class="article-title" itemprop="name">
+      Docker常用命令
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2026/04/07/Docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="archive-article-date">
+  	<time datetime="2026-04-07T14:07:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2026-04-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="镜像命令"><a href="#镜像命令" class="headerlink" title="镜像命令"></a>镜像命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker pull <span class="token punctuation">[</span>用户名<span class="token operator">/</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span>tag           	  #拉取对应版本镜像
+docker push <span class="token punctuation">[</span>用户名<span class="token operator">/</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span>tag                #推送镜像到仓库
+
+docker build <span class="token operator">-</span>t <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span><span class="token punctuation">[</span>版本号<span class="token punctuation">]</span> <span class="token punctuation">.</span>            #构建镜像<span class="token operator">+</span>tag
+docker tag <span class="token punctuation">[</span>镜像ID<span class="token punctuation">]</span><span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span><span class="token number">1.0</span>                #加上tag
+docker tag <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span><span class="token punctuation">[</span>旧tag<span class="token punctuation">]</span> <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span><span class="token punctuation">[</span>新tag<span class="token punctuation">]</span>    #新增tag
+
+docker images                                 #列出本地镜像
+docker rmi <span class="token punctuation">[</span>镜像名<span class="token operator">/</span>id<span class="token punctuation">]</span>                         #删除镜像<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="容器命令"><a href="#容器命令" class="headerlink" title="容器命令"></a>容器命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker run <span class="token operator">-</span>d <span class="token operator">-</span>p <span class="token number">8080</span><span class="token operator">:</span><span class="token number">8080</span> <span class="token operator">-</span>v <span class="token punctuation">[</span>宿主机文件路径<span class="token punctuation">]</span><span class="token operator">:</span><span class="token punctuation">[</span>容器路径<span class="token operator">/</span>app<span class="token operator">/</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">]</span> <span class="token operator">--</span>name <span class="token punctuation">[</span>容器名<span class="token punctuation">]</span> <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>      #创建并运行容器<span class="token punctuation">(</span>后台运行<span class="token punctuation">)</span>
+docker run <span class="token operator">-</span>it <span class="token operator">-</span>p <span class="token number">8080</span><span class="token operator">:</span><span class="token number">8080</span> <span class="token operator">--</span>name <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>                                                   #交互式运行 
+docker run <span class="token operator">--</span>rm <span class="token operator">-</span>it <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span> sh<span class="token operator">/</span>bash                                                          #创建临时的可交互容器用于检测文件等    
+
+docker ps <span class="token operator">-</span>a               #查看所有容器
+docker rm id			#删除容器
+docker start id            #启动
+docker stop id			#停止
+
+docker inspect id          #查看容器详细信息
+docker logs id             #查看容器日志
+docker stats id            #实时查看容器资源使用情况<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="网络命令"><a href="#网络命令" class="headerlink" title="网络命令"></a>网络命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker network ls                      #列出所有网络
+docker network rm <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span>              #删除网络
+docker network create <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span>          #创建自定义网络
+
+docker network connect <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span> id      #把容器加入子网
+docker network disconnect <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span> id   #把容器移出子网
+
+docker run <span class="token operator">-</span>d <span class="token operator">--</span>network hsot <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>   #hsot模式创建容器 共享宿主机网络<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="Compose命令"><a href="#Compose命令" class="headerlink" title="Compose命令"></a>Compose命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker<span class="token operator">-</span>compose up <span class="token operator">-</span>d       #后台启动docker<span class="token operator">-</span>compose<span class="token punctuation">.</span>yaml文件<span class="token punctuation">(</span>脚本<span class="token punctuation">)</span>
+docker<span class="token operator">-</span>compose stop		#启动容器
+docker<span class="token operator">-</span>compose stop		#停止容器
+docker<span class="token operator">-</span>compose down		#停止并删除容器<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>##其他命令</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">docker system prune        #一键清理未使用资源
+docker system df           #查看磁盘占用<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">操作系统内核</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">挂载镜像磁盘</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Docker</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2026/04/07/Docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2026/03/31/%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA%E6%96%B9%E5%BC%8F%E5%AF%B9%E6%AF%94/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">线程创建方式对比</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -230,9 +376,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

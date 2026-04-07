@@ -152,6 +152,118 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Docker常用命令" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2026/04/07/Docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">Docker常用命令</a>
+    </h1>
+  
+
+        
+        <a href="/2026/04/07/Docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="archive-article-date">
+  	<time datetime="2026-04-07T14:07:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2026-04-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="镜像命令"><a href="#镜像命令" class="headerlink" title="镜像命令"></a>镜像命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker pull <span class="token punctuation">[</span>用户名<span class="token operator">/</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span>tag           	  #拉取对应版本镜像
+docker push <span class="token punctuation">[</span>用户名<span class="token operator">/</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span>tag                #推送镜像到仓库
+
+docker build <span class="token operator">-</span>t <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span><span class="token punctuation">[</span>版本号<span class="token punctuation">]</span> <span class="token punctuation">.</span>            #构建镜像<span class="token operator">+</span>tag
+docker tag <span class="token punctuation">[</span>镜像ID<span class="token punctuation">]</span><span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span><span class="token number">1.0</span>                #加上tag
+docker tag <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span><span class="token punctuation">[</span>旧tag<span class="token punctuation">]</span> <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span><span class="token punctuation">[</span>新tag<span class="token punctuation">]</span>    #新增tag
+
+docker images                                 #列出本地镜像
+docker rmi <span class="token punctuation">[</span>镜像名<span class="token operator">/</span>id<span class="token punctuation">]</span>                         #删除镜像<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="容器命令"><a href="#容器命令" class="headerlink" title="容器命令"></a>容器命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker run <span class="token operator">-</span>d <span class="token operator">-</span>p <span class="token number">8080</span><span class="token operator">:</span><span class="token number">8080</span> <span class="token operator">-</span>v <span class="token punctuation">[</span>宿主机文件路径<span class="token punctuation">]</span><span class="token operator">:</span><span class="token punctuation">[</span>容器路径<span class="token operator">/</span>app<span class="token operator">/</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">]</span> <span class="token operator">--</span>name <span class="token punctuation">[</span>容器名<span class="token punctuation">]</span> <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>      #创建并运行容器<span class="token punctuation">(</span>后台运行<span class="token punctuation">)</span>
+docker run <span class="token operator">-</span>it <span class="token operator">-</span>p <span class="token number">8080</span><span class="token operator">:</span><span class="token number">8080</span> <span class="token operator">--</span>name <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>                                                   #交互式运行 
+docker run <span class="token operator">--</span>rm <span class="token operator">-</span>it <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span> sh<span class="token operator">/</span>bash                                                          #创建临时的可交互容器用于检测文件等    
+
+docker ps <span class="token operator">-</span>a               #查看所有容器
+docker rm id			#删除容器
+docker start id            #启动
+docker stop id			#停止
+
+docker inspect id          #查看容器详细信息
+docker logs id             #查看容器日志
+docker stats id            #实时查看容器资源使用情况<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="网络命令"><a href="#网络命令" class="headerlink" title="网络命令"></a>网络命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker network ls                      #列出所有网络
+docker network rm <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span>              #删除网络
+docker network create <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span>          #创建自定义网络
+
+docker network connect <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span> id      #把容器加入子网
+docker network disconnect <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span> id   #把容器移出子网
+
+docker run <span class="token operator">-</span>d <span class="token operator">--</span>network hsot <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>   #hsot模式创建容器 共享宿主机网络<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="Compose命令"><a href="#Compose命令" class="headerlink" title="Compose命令"></a>Compose命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker<span class="token operator">-</span>compose up <span class="token operator">-</span>d       #后台启动docker<span class="token operator">-</span>compose<span class="token punctuation">.</span>yaml文件<span class="token punctuation">(</span>脚本<span class="token punctuation">)</span>
+docker<span class="token operator">-</span>compose stop		#启动容器
+docker<span class="token operator">-</span>compose stop		#停止容器
+docker<span class="token operator">-</span>compose down		#停止并删除容器<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>##其他命令</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">docker system prune        #一键清理未使用资源
+docker system df           #查看磁盘占用<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Docker</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2026/04/07/Docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-线程创建方式对比" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1506,127 +1618,6 @@ echo <span class="token operator">-</span>e <span class="token string">"\nBoot t
 
 
   
-    <article id="post-Qt学习笔记01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/10/23/Qt%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B001/">Qt学习笔记01</a>
-    </h1>
-  
-
-        
-        <a href="/2024/10/23/Qt%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B001/" class="archive-article-date">
-  	<time datetime="2024-10-23T10:58:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-10-23</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="通过按钮链接多窗口"><a href="#通过按钮链接多窗口" class="headerlink" title="通过按钮链接多窗口"></a>通过按钮链接多窗口</h2><p>注意点1 声明</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">//声明成员变量，指向newwindow1类型的对象</span>
-QPointer<span class="token operator">&lt;</span>newwindow1<span class="token operator">></span> new_win1<span class="token punctuation">;</span>
-QPointer<span class="token operator">&lt;</span>newwindow2<span class="token operator">></span> new_win2<span class="token punctuation">;</span>
-QPointer<span class="token operator">&lt;</span>QQwin<span class="token operator">></span> new_win3<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-<p>注意点2 释放内存</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">newwindow2<span class="token double-colon punctuation">::</span><span class="token function">newwindow2</span><span class="token punctuation">(</span>QWidget <span class="token operator">*</span>parent<span class="token punctuation">)</span>
-<span class="token operator">:</span> <span class="token function">QDialog</span><span class="token punctuation">(</span>parent<span class="token punctuation">)</span>
-<span class="token punctuation">,</span> <span class="token function">ui</span><span class="token punctuation">(</span><span class="token keyword">new</span> Ui<span class="token double-colon punctuation">::</span>newwindow2<span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    ui<span class="token operator">-></span><span class="token function">setupUi</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">//关闭窗口时，自动析构释放内存</span>
-    <span class="token function">setAttribute</span><span class="token punctuation">(</span>Qt<span class="token double-colon punctuation">::</span>WA_DeleteOnClose<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="实现QQ抽屉效果核心技术"><a href="#实现QQ抽屉效果核心技术" class="headerlink" title="实现QQ抽屉效果核心技术"></a>实现QQ抽屉效果核心技术</h2><p>1.&#x2F;&#x2F;核心技术lambda创建一次性函数，增加代码简洁性，功能灵活性</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> <span class="token class-name">QQwin</span><span class="token double-colon punctuation">::</span><span class="token function">connection</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token function">connect</span><span class="token punctuation">(</span>ui<span class="token operator">-></span>fam_btn<span class="token punctuation">,</span><span class="token operator">&amp;</span>QPushButton<span class="token double-colon punctuation">::</span>clicked<span class="token punctuation">,</span><span class="token keyword">this</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token function">openDrawer</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//自定义链接connect，同时使用lambda一次性函数</span>
-    <span class="token function">connect</span><span class="token punctuation">(</span>ui<span class="token operator">-></span>tea_btn<span class="token punctuation">,</span><span class="token operator">&amp;</span>QPushButton<span class="token double-colon punctuation">::</span>clicked<span class="token punctuation">,</span><span class="token keyword">this</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token function">openDrawer</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">connect</span><span class="token punctuation">(</span>ui<span class="token operator">-></span>fri_btn<span class="token punctuation">,</span><span class="token operator">&amp;</span>QPushButton<span class="token double-colon punctuation">::</span>clicked<span class="token punctuation">,</span><span class="token keyword">this</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token function">openDrawer</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>2.&#x2F;&#x2F;核心技术QstackedWidget,卡片堆，用于通过索引管理多页面之间的切换！！！！！后面就是无限套娃一个列表套一个列表</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">stackedWidget <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">QStackedWidget</span><span class="token punctuation">(</span>drawerWidget<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//堆抽屉，一次只能显示一个</span>
-QVBoxLayout <span class="token operator">*</span>drawerLayout <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">QVBoxLayout</span><span class="token punctuation">(</span>drawerWidget<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//创建垂直布局</span>
-drawerLayout<span class="token operator">-></span><span class="token function">addWidget</span><span class="token punctuation">(</span>stackedWidget<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//将堆放入布局</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<p>3.&#x2F;&#x2F;核心技术drawerAnimation打开抽屉动画设置</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> <span class="token class-name">QQwin</span><span class="token double-colon punctuation">::</span><span class="token function">openDrawer</span><span class="token punctuation">(</span><span class="token keyword">int</span> index<span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    stackedWidget<span class="token operator">-></span><span class="token function">setCurrentIndex</span><span class="token punctuation">(</span>index<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">static</span> <span class="token keyword">int</span> OpenIndex <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span> <span class="token comment">// 静态变量</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>isOpenDrawer<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token comment">// 从左侧滑出</span>
-        drawerAnimation<span class="token operator">-></span><span class="token function">setStartValue</span><span class="token punctuation">(</span><span class="token function">QRect</span><span class="token punctuation">(</span><span class="token operator">-</span>drawerWidget<span class="token operator">-></span><span class="token function">width</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> drawerWidget<span class="token operator">-></span><span class="token function">width</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">height</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        drawerAnimation<span class="token operator">-></span><span class="token function">setEndValue</span><span class="token punctuation">(</span><span class="token function">QRect</span><span class="token punctuation">(</span><span class="token number">120</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> drawerWidget<span class="token operator">-></span><span class="token function">width</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">height</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        drawerWidget<span class="token operator">-></span><span class="token function">show</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        isOpenDrawer <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
-        OpenIndex <span class="token operator">=</span> index<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>  <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>OpenIndex <span class="token operator">==</span> index<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token comment">// 如果点击的是当前打开的抽屉，就关闭它</span>
-        drawerAnimation<span class="token operator">-></span><span class="token function">setStartValue</span><span class="token punctuation">(</span><span class="token function">QRect</span><span class="token punctuation">(</span><span class="token number">120</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> drawerWidget<span class="token operator">-></span><span class="token function">width</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">height</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        drawerAnimation<span class="token operator">-></span><span class="token function">setEndValue</span><span class="token punctuation">(</span><span class="token function">QRect</span><span class="token punctuation">(</span><span class="token operator">-</span>drawerWidget<span class="token operator">-></span><span class="token function">width</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> drawerWidget<span class="token operator">-></span><span class="token function">width</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">height</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        isOpenDrawer <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
-        OpenIndex <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-        <span class="token comment">// 如果抽屉已经打开，那切换内容</span>
-        OpenIndex <span class="token operator">=</span> index<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    drawerAnimation<span class="token operator">-></span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Qt Creator</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/10/23/Qt%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B001/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1809,6 +1800,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Hash表</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
               </li>
             
             <div class="clearfix"></div>
