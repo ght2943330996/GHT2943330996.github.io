@@ -172,7 +172,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="镜像命令"><a href="#镜像命令" class="headerlink" title="镜像命令"></a>镜像命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker pull <span class="token punctuation">[</span>用户名<span class="token operator">/</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span>tag           	  #拉取对应版本镜像
+        <h2 id="镜像命令"><a href="#镜像命令" class="headerlink" title="镜像命令"></a>镜像命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker pull <span class="token punctuation">[</span>用户名<span class="token operator">/</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span>tag                #拉取对应版本镜像
 docker push <span class="token punctuation">[</span>用户名<span class="token operator">/</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span>tag                #推送镜像到仓库
 
 docker build <span class="token operator">-</span>t <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span><span class="token punctuation">[</span>版本号<span class="token punctuation">]</span> <span class="token punctuation">.</span>            #构建镜像<span class="token operator">+</span>tag
@@ -182,14 +182,14 @@ docker tag <span class="token punctuation">[</span>镜像名<span class="token p
 docker images                                 #列出本地镜像
 docker rmi <span class="token punctuation">[</span>镜像名<span class="token operator">/</span>id<span class="token punctuation">]</span>                         #删除镜像<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="容器命令"><a href="#容器命令" class="headerlink" title="容器命令"></a>容器命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker run <span class="token operator">-</span>d <span class="token operator">-</span>p <span class="token number">8080</span><span class="token operator">:</span><span class="token number">8080</span> <span class="token operator">-</span>v <span class="token punctuation">[</span>宿主机文件路径<span class="token punctuation">]</span><span class="token operator">:</span><span class="token punctuation">[</span>容器路径<span class="token operator">/</span>app<span class="token operator">/</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">]</span> <span class="token operator">--</span>name <span class="token punctuation">[</span>容器名<span class="token punctuation">]</span> <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>      #创建并运行容器<span class="token punctuation">(</span>后台运行<span class="token punctuation">)</span>
-docker run <span class="token operator">-</span>it <span class="token operator">-</span>p <span class="token number">8080</span><span class="token operator">:</span><span class="token number">8080</span> <span class="token operator">--</span>name <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>                                                   #交互式运行 
-docker run <span class="token operator">--</span>rm <span class="token operator">-</span>it <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span> sh<span class="token operator">/</span>bash                                                          #创建临时的可交互容器用于检测文件等    
+<h2 id="容器命令"><a href="#容器命令" class="headerlink" title="容器命令"></a>容器命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker run <span class="token operator">-</span>d <span class="token operator">-</span>p <span class="token number">8080</span><span class="token operator">:</span><span class="token number">8080</span> <span class="token operator">-</span>v <span class="token punctuation">[</span>宿主机文件路径<span class="token punctuation">]</span><span class="token operator">:</span><span class="token punctuation">[</span>容器路径<span class="token operator">/</span>app<span class="token operator">/</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">]</span> <span class="token operator">--</span>name <span class="token punctuation">[</span>容器名<span class="token punctuation">]</span> <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>   #创建并运行容器<span class="token punctuation">(</span>后台运行<span class="token punctuation">)</span>
+docker run <span class="token operator">-</span>it <span class="token operator">-</span>p <span class="token number">8080</span><span class="token operator">:</span><span class="token number">8080</span> <span class="token operator">--</span>name <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>              #交互式运行 
+docker run <span class="token operator">--</span>rm <span class="token operator">-</span>it <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span> sh<span class="token operator">/</span>bash                     #创建临时的可交互容器用于检测文件等    
 
 docker ps <span class="token operator">-</span>a               #查看所有容器
-docker rm id			#删除容器
+docker rm id               #删除容器
 docker start id            #启动
-docker stop id			#停止
+docker stop id             #停止
 
 docker inspect id          #查看容器详细信息
 docker logs id             #查看容器日志
@@ -205,12 +205,11 @@ docker network disconnect <span class="token punctuation">[</span>子网名<span
 docker run <span class="token operator">-</span>d <span class="token operator">--</span>network hsot <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>   #hsot模式创建容器 共享宿主机网络<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h2 id="Compose命令"><a href="#Compose命令" class="headerlink" title="Compose命令"></a>Compose命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker<span class="token operator">-</span>compose up <span class="token operator">-</span>d       #后台启动docker<span class="token operator">-</span>compose<span class="token punctuation">.</span>yaml文件<span class="token punctuation">(</span>脚本<span class="token punctuation">)</span>
-docker<span class="token operator">-</span>compose stop		#启动容器
-docker<span class="token operator">-</span>compose stop		#停止容器
-docker<span class="token operator">-</span>compose down		#停止并删除容器<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+docker<span class="token operator">-</span>compose stop        #启动容器
+docker<span class="token operator">-</span>compose stop        #停止容器
+docker<span class="token operator">-</span>compose down        #停止并删除容器<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>##其他命令</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c">docker system prune        #一键清理未使用资源
+<h2 id="其他命令"><a href="#其他命令" class="headerlink" title="其他命令"></a>其他命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker system prune        #一键清理未使用资源
 docker system df           #查看磁盘占用<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
       
 
