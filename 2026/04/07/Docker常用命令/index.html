@@ -16,7 +16,7 @@
 <meta property="og:description" content="镜像命令docker pull [用户名&#x2F;镜像名]:tag                #拉取对应版本镜像 docker push [用户名&#x2F;镜像名]:tag                #推送镜像到仓库  docker build -t [镜像名]:[版本号] .            #构建镜像+tag docker tag [镜像ID][镜像名]:1.0                #">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-04-07T14:07:37.000Z">
-<meta property="article:modified_time" content="2026-04-07T15:24:40.409Z">
+<meta property="article:modified_time" content="2026-04-10T05:05:21.277Z">
 <meta property="article:author" content="seasons">
 <meta property="article:tag" content="Docker">
 <meta name="twitter:card" content="summary">
@@ -175,46 +175,46 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="镜像命令"><a href="#镜像命令" class="headerlink" title="镜像命令"></a>镜像命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker pull <span class="token punctuation">[</span>用户名<span class="token operator">/</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span>tag                #拉取对应版本镜像
-docker push <span class="token punctuation">[</span>用户名<span class="token operator">/</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span>tag                #推送镜像到仓库
+        <h2 id="镜像命令"><a href="#镜像命令" class="headerlink" title="镜像命令"></a>镜像命令</h2><pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml">docker pull <span class="token punctuation">[</span>用户名/镜像名<span class="token punctuation">]</span><span class="token punctuation">:</span>tag                <span class="token comment">#拉取对应版本镜像</span>
+docker push <span class="token punctuation">[</span>用户名/镜像名<span class="token punctuation">]</span><span class="token punctuation">:</span>tag                <span class="token comment">#推送镜像到仓库</span>
 
-docker build <span class="token operator">-</span>t <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span><span class="token punctuation">[</span>版本号<span class="token punctuation">]</span> <span class="token punctuation">.</span>            #构建镜像<span class="token operator">+</span>tag
-docker tag <span class="token punctuation">[</span>镜像ID<span class="token punctuation">]</span><span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span><span class="token number">1.0</span>                #加上tag
-docker tag <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span><span class="token punctuation">[</span>旧tag<span class="token punctuation">]</span> <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span><span class="token punctuation">[</span>新tag<span class="token punctuation">]</span>    #新增tag
+docker build <span class="token punctuation">-</span>t <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token punctuation">:</span><span class="token punctuation">[</span>版本号<span class="token punctuation">]</span> .            <span class="token comment">#构建镜像+tag</span>
+docker tag <span class="token punctuation">[</span>镜像ID<span class="token punctuation">]</span><span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token punctuation">:</span><span class="token number">1.0</span>                <span class="token comment">#加上tag</span>
+docker tag <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token punctuation">:</span><span class="token punctuation">[</span>旧tag<span class="token punctuation">]</span> <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token punctuation">:</span><span class="token punctuation">[</span>新tag<span class="token punctuation">]</span>    <span class="token comment">#新增tag</span>
 
-docker images                                 #列出本地镜像
-docker rmi <span class="token punctuation">[</span>镜像名<span class="token operator">/</span>id<span class="token punctuation">]</span>                         #删除镜像<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+docker images                                 <span class="token comment">#列出本地镜像</span>
+docker rmi <span class="token punctuation">[</span>镜像名/id<span class="token punctuation">]</span>                         <span class="token comment">#删除镜像</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="容器命令"><a href="#容器命令" class="headerlink" title="容器命令"></a>容器命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker run <span class="token operator">-</span>d <span class="token operator">-</span>p <span class="token number">8080</span><span class="token operator">:</span><span class="token number">8080</span> <span class="token operator">-</span>v <span class="token punctuation">[</span>宿主机文件路径<span class="token punctuation">]</span><span class="token operator">:</span><span class="token punctuation">[</span>容器路径<span class="token operator">/</span>app<span class="token operator">/</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">]</span> <span class="token operator">--</span>name <span class="token punctuation">[</span>容器名<span class="token punctuation">]</span> <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>   
-#创建并运行容器<span class="token punctuation">(</span>后台运行<span class="token punctuation">)</span>
-docker run <span class="token operator">-</span>it <span class="token operator">-</span>p <span class="token number">8080</span><span class="token operator">:</span><span class="token number">8080</span> <span class="token operator">--</span>name <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>              #交互式运行 
-docker run <span class="token operator">--</span>rm <span class="token operator">-</span>it <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span> sh<span class="token operator">/</span>bash                     #创建临时的可交互容器用于检测文件等    
+<h2 id="容器命令"><a href="#容器命令" class="headerlink" title="容器命令"></a>容器命令</h2><pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml">docker run <span class="token punctuation">-</span>d <span class="token punctuation">-</span>p 8080<span class="token punctuation">:</span>8080 <span class="token punctuation">-</span>v <span class="token punctuation">[</span>宿主机文件路径<span class="token punctuation">]</span><span class="token punctuation">:</span><span class="token punctuation">[</span>容器路径/app/<span class="token punctuation">...</span><span class="token punctuation">]</span> <span class="token punctuation">-</span><span class="token punctuation">-</span>name <span class="token punctuation">[</span>容器名<span class="token punctuation">]</span> <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>   
+<span class="token comment">#创建并运行容器(后台运行)</span>
+docker run <span class="token punctuation">-</span>it <span class="token punctuation">-</span>p 8080<span class="token punctuation">:</span>8080 <span class="token punctuation">-</span><span class="token punctuation">-</span>name <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>              <span class="token comment">#交互式运行 </span>
+docker run <span class="token punctuation">-</span><span class="token punctuation">-</span>rm <span class="token punctuation">-</span>it <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span> sh/bash                     <span class="token comment">#创建临时的可交互容器用于检测文件等    </span>
 
-docker ps <span class="token operator">-</span>a               #查看所有容器
-docker rm id               #删除容器
-docker start id            #启动
-docker stop id             #停止
+docker ps <span class="token punctuation">-</span>a               <span class="token comment">#查看所有容器</span>
+docker rm id               <span class="token comment">#删除容器</span>
+docker start id            <span class="token comment">#启动</span>
+docker stop id             <span class="token comment">#停止</span>
 
-docker inspect id          #查看容器详细信息
-docker logs id             #查看容器日志
-docker stats id            #实时查看容器资源使用情况<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+docker inspect id          <span class="token comment">#查看容器详细信息</span>
+docker logs id             <span class="token comment">#查看容器日志</span>
+docker stats id            <span class="token comment">#实时查看容器资源使用情况</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="网络命令"><a href="#网络命令" class="headerlink" title="网络命令"></a>网络命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker network ls                      #列出所有网络
-docker network rm <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span>              #删除网络
-docker network create <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span>          #创建自定义网络
+<h2 id="网络命令"><a href="#网络命令" class="headerlink" title="网络命令"></a>网络命令</h2><pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml">docker network ls                      <span class="token comment">#列出所有网络</span>
+docker network rm <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span>              <span class="token comment">#删除网络</span>
+docker network create <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span>          <span class="token comment">#创建自定义网络</span>
 
-docker network connect <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span> id      #把容器加入子网
-docker network disconnect <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span> id   #把容器移出子网
+docker network connect <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span> id      <span class="token comment">#把容器加入子网</span>
+docker network disconnect <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span> id   <span class="token comment">#把容器移出子网</span>
 
-docker run <span class="token operator">-</span>d <span class="token operator">--</span>network hsot <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>   #hsot模式创建容器 共享宿主机网络<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+docker run <span class="token punctuation">-</span>d <span class="token punctuation">-</span><span class="token punctuation">-</span>network hsot <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>   <span class="token comment">#hsot模式创建容器 共享宿主机网络</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="Compose命令"><a href="#Compose命令" class="headerlink" title="Compose命令"></a>Compose命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker<span class="token operator">-</span>compose up <span class="token operator">-</span>d       #后台启动docker<span class="token operator">-</span>compose<span class="token punctuation">.</span>yaml文件<span class="token punctuation">(</span>脚本<span class="token punctuation">)</span>
-docker<span class="token operator">-</span>compose stop        #启动容器
-docker<span class="token operator">-</span>compose stop        #停止容器
-docker<span class="token operator">-</span>compose down        #停止并删除容器<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="Compose命令"><a href="#Compose命令" class="headerlink" title="Compose命令"></a>Compose命令</h2><pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml">docker<span class="token punctuation">-</span>compose up <span class="token punctuation">-</span>d       <span class="token comment">#后台启动docker-compose.yaml文件(脚本)</span>
+docker<span class="token punctuation">-</span>compose stop        <span class="token comment">#启动容器</span>
+docker<span class="token punctuation">-</span>compose stop        <span class="token comment">#停止容器</span>
+docker<span class="token punctuation">-</span>compose down        <span class="token comment">#停止并删除容器</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="其他命令"><a href="#其他命令" class="headerlink" title="其他命令"></a>其他命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker system prune        #一键清理未使用资源
-docker system df           #查看磁盘占用<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h2 id="其他命令"><a href="#其他命令" class="headerlink" title="其他命令"></a>其他命令</h2><pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml">docker system prune        <span class="token comment">#一键清理未使用资源</span>
+docker system df           <span class="token comment">#查看磁盘占用</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
       
 
       

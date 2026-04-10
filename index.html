@@ -172,12 +172,13 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="k8s框架图"><a href="#k8s框架图" class="headerlink" title="k8s框架图"></a>k8s框架图</h2><p><img src="/img/k8s.webp" alt="描述" title="k8s框架图"><br>概念介绍<br>Node:用于存放pod，pod里面包含容器，节点可以是一个虚拟机或者物理机器，取决于所在的集群配置</p>
-<p>Controller:追踪一种类型的k8s资源，并负责确保其当前状态接近期望状态</p>
-<p>Lease:提供一种机制来锁定共享资源并协调集合成员之间的活动</p>
-<p>CGroup V2：</p>
-<p>垃圾清理：</p>
-<p>混合版本代理:</p>
+        <h2 id="k8s框架图"><a href="#k8s框架图" class="headerlink" title="k8s框架图"></a>k8s框架图</h2><p><img src="/img/k8s.webp" alt="描述" title="k8s框架图"></p>
+<h2 id="概念介绍"><a href="#概念介绍" class="headerlink" title="概念介绍"></a>概念介绍</h2><h3 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h3><p>用于存放pod，pod是K8s中最小的部署单元，pod里面包含一个或多个容器，节点可以是一个虚拟机或者物理机器，取决于所在的集群配置</p>
+<h3 id="Controller"><a href="#Controller" class="headerlink" title="Controller"></a>Controller</h3><p>追踪一种类型的k8s资源，并负责确保其当前状态接近期望状态</p>
+<h3 id="Lease（？）"><a href="#Lease（？）" class="headerlink" title="Lease（？）"></a>Lease（？）</h3><p>提供一种机制来锁定共享资源并协调集合成员之间的活动</p>
+<p>CGroup V2（？）</p>
+<h3 id="垃圾清理"><a href="#垃圾清理" class="headerlink" title="垃圾清理"></a>垃圾清理</h3><p>镜像垃圾回收：当镜像存储分区使用率超过指定值时，删除未使用的镜像，直到使用率降至指定值</p>
+<p>容器垃圾回收：针对停止的容器回收，两个参数1.每个Pod保留的最大容器数2.容器停止后保留的最短时间</p>
 <h2 id="一-核心组件"><a href="#一-核心组件" class="headerlink" title="一.核心组件"></a>一.核心组件</h2><p>1.控制平面组件 Control Plane<br>负责容器编排和维护集群的状态</p>
 <pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token comment">#管理API请求，协调控制平面和工作节点</span>
 kube<span class="token punctuation">-</span>apiserver        
@@ -195,58 +196,68 @@ kube<span class="token punctuation">-</span>controller<span class="token punctua
 cloud<span class="token punctuation">-</span>controller<span class="token punctuation">-</span>manager                                      <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>2.工作Node组件 Worker Node<br>负责运行容器化应用程序</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c">#管理Pod和容器运行
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token comment">#管理Pod和容器运行</span>
 kubelet        
  
-#管理node的网络代理                                              
-kube<span class="token operator">-</span>proxy	     
+<span class="token comment">#管理node的网络代理                                              </span>
+kube<span class="token punctuation">-</span>proxy	     
 
-#管理运行容器所需的软件组件                           
+<span class="token comment">#管理运行容器所需的软件组件                           </span>
 container runtime                                              <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>3.集群插件组件</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c">CNI 插件（容器网络接口）
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml">CNI 插件（容器网络接口）
 CoreDNS（用于 DNS 服务）
 Metrics Server（用于资源指标）
 Web UI（Kubernetes 仪表板<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h2 id="二-k8s对象"><a href="#二-k8s对象" class="headerlink" title="二.k8s对象"></a>二.k8s对象</h2><p>1.管理方式</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c">命令式<span class="token operator">--</span>创建Deployment对象运行nginx容器：kubectl create deployment nginx <span class="token operator">--</span>image nginx
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml">命令式<span class="token punctuation">-</span><span class="token punctuation">-</span>创建Deployment对象运行nginx容器：kubectl create deployment nginx <span class="token punctuation">-</span><span class="token punctuation">-</span>image nginx
 
-指令式<span class="token operator">--</span>创建配置文件中定义的对象：kubectl create <span class="token operator">-</span>f nginx<span class="token punctuation">.</span>yaml
+指令式<span class="token punctuation">-</span><span class="token punctuation">-</span>创建配置文件中定义的对象：kubectl create <span class="token punctuation">-</span>f nginx.yaml
 
-声明式<span class="token operator">--</span>处理configs目录中的所有对象配置文件<span class="token operator">:</span>kubectl diff <span class="token operator">-</span>f configs<span class="token operator">/</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+声明式<span class="token punctuation">-</span><span class="token punctuation">-</span>处理configs目录中的所有对象配置文件<span class="token punctuation">:</span>kubectl diff <span class="token punctuation">-</span>f configs/<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>2.常用对象</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c">核心对象：Pod，Namespace，Replicaset，Deployment，Daemonset，Statefulset，Jobs <span class="token operator">&amp;</span> Cronjobs，ConfigMaps <span class="token operator">&amp;</span> Secrets
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml">核心对象：Pod，Namespace，Replicaset，Deployment，Daemonset，Statefulset，Jobs &amp; Cronjobs，ConfigMaps &amp; Secrets
 
 网络相关：Service，Ingress，NetworkPolicy<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <h2 id="三-API–负责集群的不同部分以及外部组件的互相通信-通过API服务器通信"><a href="#三-API–负责集群的不同部分以及外部组件的互相通信-通过API服务器通信" class="headerlink" title="三.API–负责集群的不同部分以及外部组件的互相通信(通过API服务器通信)"></a>三.API–负责集群的不同部分以及外部组件的互相通信(通过API服务器通信)</h2><p>1.OpenAPI 接口定义，参考文档<a target="_blank" rel="noopener" href="https://www.openapis.org/">https://www.openapis.org/</a></p>
 <p>2.Protobuf 序列化格式，用于集群内部通信</p>
+<p>3.API版本管理</p>
 <h2 id="四-kubectl命令–执行K8s操作"><a href="#四-kubectl命令–执行K8s操作" class="headerlink" title="四.kubectl命令–执行K8s操作"></a>四.kubectl命令–执行K8s操作</h2><p>基本语法：kubectl [操作类型] [资源类型] [资源的名称] [可选标志]</p>
 <p>参考文档<a target="_blank" rel="noopener" href="https://kubernetes.io/docs/reference/kubectl/">https://kubernetes.io/docs/reference/kubectl/</a></p>
-<h2 id="五-容器"><a href="#五-容器" class="headerlink" title="五.容器"></a>五.容器</h2><p>镜像：封装了应用程序及其所有软件依赖的二进制数据（可以理解为Java的类）</p>
-<p>容器环境：给容器提供资源（包括文件系统，容器自身的信息，集群中其他对象的信息）</p>
-<p>容器运行时类：运行 Pod 中的容器，用于选择容器运行时配置的特性，容器运行时配置用于运行 Pod 中的容器（理解为Java的对象）</p>
-<p>容器生命周期回调</p>
-<p>容器运行时接口</p>
+<h2 id="五-容器"><a href="#五-容器" class="headerlink" title="五.容器"></a>五.容器</h2><h3 id="镜像"><a href="#镜像" class="headerlink" title="镜像"></a>镜像</h3><p>封装了应用程序及其所有软件依赖的二进制数据（可以理解为Java的类）</p>
+<h3 id="容器环境"><a href="#容器环境" class="headerlink" title="容器环境"></a>容器环境</h3><p>给容器提供资源（包括文件系统，容器自身的信息，集群中其他对象的信息）</p>
+<h3 id="容器运行时类"><a href="#容器运行时类" class="headerlink" title="容器运行时类"></a>容器运行时类</h3><p>运行 Pod 中的容器，用于选择容器运行时配置的特性，容器运行时配置用于运行 Pod 中的容器（理解为Java的对象实例化）</p>
+<h3 id="容器生命周期回调（？？）"><a href="#容器生命周期回调（？？）" class="headerlink" title="容器生命周期回调（？？）"></a>容器生命周期回调（？？）</h3><h3 id="容器运行时接口"><a href="#容器运行时接口" class="headerlink" title="容器运行时接口"></a>容器运行时接口</h3><p>kubelet与容器运行时通信的gRPC接口</p>
 <h2 id="六-工作负载"><a href="#六-工作负载" class="headerlink" title="六.工作负载"></a>六.工作负载</h2><p>工作负载是在 K8s上运行的应用<br>在 K8s中，由单个组件或者多个一同工作的组件构成， 都可以在一组 Pod中运行， Pod代表的是集群上处于运行状态的一组容器的集合</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c">#用于管理集群上的无状态应用
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token comment">#用于管理集群上的无状态应用</span>
 Deployment 和 ReplicaSet   
    
-#带身份的 Deployment，跟踪应用状态的 Pod                                     
+<span class="token comment">#带身份的 Deployment，跟踪应用状态的 Pod                                     </span>
 StatefulSet         
  
-#监控每一个节点                                             
+<span class="token comment">#监控每一个节点                                             </span>
 DaemonSet     
 
-#一次性任务，结束就停止                                                   
+<span class="token comment">#一次性任务，结束就停止                                                   </span>
 Job 和 CronJob                                                 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="七-K8s网络（通信规则）"><a href="#七-K8s网络（通信规则）" class="headerlink" title="七.K8s网络（通信规则）"></a>七.K8s网络（通信规则）</h2><p>Pod 网络（Pod之间的通信）</p>
+<h2 id="七-K8s网络（通信规则）"><a href="#七-K8s网络（通信规则）" class="headerlink" title="七.K8s网络（通信规则）"></a>七.K8s网络（通信规则）</h2><p>K8s网络中每个Pod有独立IP，Pod间可直接通信</p>
+<p>Pod 网络（Pod之间的通信）</p>
 <p>Service API（？？？）</p>
 <p>Gateway API（提供客户端到内部集群的路由，由Ingress迁移，区别在于管理并提供多个路由）</p>
 <p>NetworkPolicy（网络隔离，用于安全隔离）</p>
-<h2 id="八-存储"><a href="#八-存储" class="headerlink" title="八.存储"></a>八.存储</h2><p>各类卷，用于提供长期和临时存储</p>
+<h2 id="八-存储"><a href="#八-存储" class="headerlink" title="八.存储"></a>八.存储</h2><h3 id="卷类型"><a href="#卷类型" class="headerlink" title="卷类型"></a>卷类型</h3><p>configMap：将K8s中存储的配置数据以文件形式挂载到容器内（用户定义,不可改）</p>
+<p>downwardAPI：将Pod或Node的运行时元数据自动投射为容器内的文件或环境变量（自动生成，自动更新）</p>
+<p>emptyDir：Pod调度到Node时，由kubelet在节点本地创建的空目录，挂载到容器内，供临时共享使用（可改，Pod删除则清除）</p>
+<h3 id="各类卷的用处"><a href="#各类卷的用处" class="headerlink" title="各类卷的用处"></a>各类卷的用处</h3><p>持久卷：实际的存储后端</p>
+<p>投射卷：组合型卷，将多个卷源同时挂载到容器的同一个目录下</p>
+<p>临时卷：临时存储，与Pod生命周期绑定</p>
+<p>存储类：定义如何创建存储卷</p>
+<p>卷属性类：修改已有卷的性能参数，这样就不用重新创建</p>
+<p>动态卷制备：自动创建存储卷，消除了集群管理员预先配置存储的需要</p>
+<p>卷快照：某一时刻持久卷的只读副本，用于数据备份和恢复</p>
 
       
 
@@ -320,46 +331,46 @@ Job 和 CronJob                                                 <span aria-hidde
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="镜像命令"><a href="#镜像命令" class="headerlink" title="镜像命令"></a>镜像命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker pull <span class="token punctuation">[</span>用户名<span class="token operator">/</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span>tag                #拉取对应版本镜像
-docker push <span class="token punctuation">[</span>用户名<span class="token operator">/</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span>tag                #推送镜像到仓库
+        <h2 id="镜像命令"><a href="#镜像命令" class="headerlink" title="镜像命令"></a>镜像命令</h2><pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml">docker pull <span class="token punctuation">[</span>用户名/镜像名<span class="token punctuation">]</span><span class="token punctuation">:</span>tag                <span class="token comment">#拉取对应版本镜像</span>
+docker push <span class="token punctuation">[</span>用户名/镜像名<span class="token punctuation">]</span><span class="token punctuation">:</span>tag                <span class="token comment">#推送镜像到仓库</span>
 
-docker build <span class="token operator">-</span>t <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span><span class="token punctuation">[</span>版本号<span class="token punctuation">]</span> <span class="token punctuation">.</span>            #构建镜像<span class="token operator">+</span>tag
-docker tag <span class="token punctuation">[</span>镜像ID<span class="token punctuation">]</span><span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span><span class="token number">1.0</span>                #加上tag
-docker tag <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span><span class="token punctuation">[</span>旧tag<span class="token punctuation">]</span> <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token operator">:</span><span class="token punctuation">[</span>新tag<span class="token punctuation">]</span>    #新增tag
+docker build <span class="token punctuation">-</span>t <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token punctuation">:</span><span class="token punctuation">[</span>版本号<span class="token punctuation">]</span> .            <span class="token comment">#构建镜像+tag</span>
+docker tag <span class="token punctuation">[</span>镜像ID<span class="token punctuation">]</span><span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token punctuation">:</span><span class="token number">1.0</span>                <span class="token comment">#加上tag</span>
+docker tag <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token punctuation">:</span><span class="token punctuation">[</span>旧tag<span class="token punctuation">]</span> <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span><span class="token punctuation">:</span><span class="token punctuation">[</span>新tag<span class="token punctuation">]</span>    <span class="token comment">#新增tag</span>
 
-docker images                                 #列出本地镜像
-docker rmi <span class="token punctuation">[</span>镜像名<span class="token operator">/</span>id<span class="token punctuation">]</span>                         #删除镜像<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+docker images                                 <span class="token comment">#列出本地镜像</span>
+docker rmi <span class="token punctuation">[</span>镜像名/id<span class="token punctuation">]</span>                         <span class="token comment">#删除镜像</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="容器命令"><a href="#容器命令" class="headerlink" title="容器命令"></a>容器命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker run <span class="token operator">-</span>d <span class="token operator">-</span>p <span class="token number">8080</span><span class="token operator">:</span><span class="token number">8080</span> <span class="token operator">-</span>v <span class="token punctuation">[</span>宿主机文件路径<span class="token punctuation">]</span><span class="token operator">:</span><span class="token punctuation">[</span>容器路径<span class="token operator">/</span>app<span class="token operator">/</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">]</span> <span class="token operator">--</span>name <span class="token punctuation">[</span>容器名<span class="token punctuation">]</span> <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>   
-#创建并运行容器<span class="token punctuation">(</span>后台运行<span class="token punctuation">)</span>
-docker run <span class="token operator">-</span>it <span class="token operator">-</span>p <span class="token number">8080</span><span class="token operator">:</span><span class="token number">8080</span> <span class="token operator">--</span>name <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>              #交互式运行 
-docker run <span class="token operator">--</span>rm <span class="token operator">-</span>it <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span> sh<span class="token operator">/</span>bash                     #创建临时的可交互容器用于检测文件等    
+<h2 id="容器命令"><a href="#容器命令" class="headerlink" title="容器命令"></a>容器命令</h2><pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml">docker run <span class="token punctuation">-</span>d <span class="token punctuation">-</span>p 8080<span class="token punctuation">:</span>8080 <span class="token punctuation">-</span>v <span class="token punctuation">[</span>宿主机文件路径<span class="token punctuation">]</span><span class="token punctuation">:</span><span class="token punctuation">[</span>容器路径/app/<span class="token punctuation">...</span><span class="token punctuation">]</span> <span class="token punctuation">-</span><span class="token punctuation">-</span>name <span class="token punctuation">[</span>容器名<span class="token punctuation">]</span> <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>   
+<span class="token comment">#创建并运行容器(后台运行)</span>
+docker run <span class="token punctuation">-</span>it <span class="token punctuation">-</span>p 8080<span class="token punctuation">:</span>8080 <span class="token punctuation">-</span><span class="token punctuation">-</span>name <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>              <span class="token comment">#交互式运行 </span>
+docker run <span class="token punctuation">-</span><span class="token punctuation">-</span>rm <span class="token punctuation">-</span>it <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span> sh/bash                     <span class="token comment">#创建临时的可交互容器用于检测文件等    </span>
 
-docker ps <span class="token operator">-</span>a               #查看所有容器
-docker rm id               #删除容器
-docker start id            #启动
-docker stop id             #停止
+docker ps <span class="token punctuation">-</span>a               <span class="token comment">#查看所有容器</span>
+docker rm id               <span class="token comment">#删除容器</span>
+docker start id            <span class="token comment">#启动</span>
+docker stop id             <span class="token comment">#停止</span>
 
-docker inspect id          #查看容器详细信息
-docker logs id             #查看容器日志
-docker stats id            #实时查看容器资源使用情况<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+docker inspect id          <span class="token comment">#查看容器详细信息</span>
+docker logs id             <span class="token comment">#查看容器日志</span>
+docker stats id            <span class="token comment">#实时查看容器资源使用情况</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="网络命令"><a href="#网络命令" class="headerlink" title="网络命令"></a>网络命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker network ls                      #列出所有网络
-docker network rm <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span>              #删除网络
-docker network create <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span>          #创建自定义网络
+<h2 id="网络命令"><a href="#网络命令" class="headerlink" title="网络命令"></a>网络命令</h2><pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml">docker network ls                      <span class="token comment">#列出所有网络</span>
+docker network rm <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span>              <span class="token comment">#删除网络</span>
+docker network create <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span>          <span class="token comment">#创建自定义网络</span>
 
-docker network connect <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span> id      #把容器加入子网
-docker network disconnect <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span> id   #把容器移出子网
+docker network connect <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span> id      <span class="token comment">#把容器加入子网</span>
+docker network disconnect <span class="token punctuation">[</span>子网名<span class="token punctuation">]</span> id   <span class="token comment">#把容器移出子网</span>
 
-docker run <span class="token operator">-</span>d <span class="token operator">--</span>network hsot <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>   #hsot模式创建容器 共享宿主机网络<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+docker run <span class="token punctuation">-</span>d <span class="token punctuation">-</span><span class="token punctuation">-</span>network hsot <span class="token punctuation">[</span>镜像名<span class="token punctuation">]</span>   <span class="token comment">#hsot模式创建容器 共享宿主机网络</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="Compose命令"><a href="#Compose命令" class="headerlink" title="Compose命令"></a>Compose命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker<span class="token operator">-</span>compose up <span class="token operator">-</span>d       #后台启动docker<span class="token operator">-</span>compose<span class="token punctuation">.</span>yaml文件<span class="token punctuation">(</span>脚本<span class="token punctuation">)</span>
-docker<span class="token operator">-</span>compose stop        #启动容器
-docker<span class="token operator">-</span>compose stop        #停止容器
-docker<span class="token operator">-</span>compose down        #停止并删除容器<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="Compose命令"><a href="#Compose命令" class="headerlink" title="Compose命令"></a>Compose命令</h2><pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml">docker<span class="token punctuation">-</span>compose up <span class="token punctuation">-</span>d       <span class="token comment">#后台启动docker-compose.yaml文件(脚本)</span>
+docker<span class="token punctuation">-</span>compose stop        <span class="token comment">#启动容器</span>
+docker<span class="token punctuation">-</span>compose stop        <span class="token comment">#停止容器</span>
+docker<span class="token punctuation">-</span>compose down        <span class="token comment">#停止并删除容器</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="其他命令"><a href="#其他命令" class="headerlink" title="其他命令"></a>其他命令</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c">docker system prune        #一键清理未使用资源
-docker system df           #查看磁盘占用<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h2 id="其他命令"><a href="#其他命令" class="headerlink" title="其他命令"></a>其他命令</h2><pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml">docker system prune        <span class="token comment">#一键清理未使用资源</span>
+docker system df           <span class="token comment">#查看磁盘占用</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
       
 
       
