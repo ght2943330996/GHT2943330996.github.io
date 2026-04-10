@@ -179,20 +179,20 @@
 <p>垃圾清理：</p>
 <p>混合版本代理:</p>
 <h2 id="一-核心组件"><a href="#一-核心组件" class="headerlink" title="一.核心组件"></a>一.核心组件</h2><p>1.控制平面组件 Control Plane<br>负责容器编排和维护集群的状态</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c">#管理API请求，协调控制平面和工作节点
-kube<span class="token operator">-</span>apiserver        
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token comment">#管理API请求，协调控制平面和工作节点</span>
+kube<span class="token punctuation">-</span>apiserver        
 	                                
-#后台数据库键值存储，强一致性
+<span class="token comment">#后台数据库键值存储，强一致性</span>
 etcd       
            	                                    
-#分配调度节点
-kube<span class="token operator">-</span>scheduler    
+<span class="token comment">#分配调度节点</span>
+kube<span class="token punctuation">-</span>scheduler    
     	                                   
-#管理k8s控制器的组件
-kube<span class="token operator">-</span>controller<span class="token operator">-</span>manager 
+<span class="token comment">#管理k8s控制器的组件</span>
+kube<span class="token punctuation">-</span>controller<span class="token punctuation">-</span>manager 
                                        
-#云控制管理器，连接云平台与k8s
-cloud<span class="token operator">-</span>controller<span class="token operator">-</span>manager                                      <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token comment">#云控制管理器，连接云平台与k8s</span>
+cloud<span class="token punctuation">-</span>controller<span class="token punctuation">-</span>manager                                      <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>2.工作Node组件 Worker Node<br>负责运行容器化应用程序</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c">#管理Pod和容器运行
