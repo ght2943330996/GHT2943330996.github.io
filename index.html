@@ -173,13 +173,13 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="k8s框架图"><a href="#k8s框架图" class="headerlink" title="k8s框架图"></a>k8s框架图</h2><p><img src="/img/k8s.webp" alt="描述" title="k8s框架图"></p>
-<h2 id="概念介绍"><a href="#概念介绍" class="headerlink" title="概念介绍"></a>概念介绍</h2><h3 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h3><p>用于存放pod，pod是K8s中最小的部署单元，pod里面包含一个或多个容器，节点可以是一个虚拟机或者物理机器，取决于所在的集群配置</p>
-<h3 id="Controller"><a href="#Controller" class="headerlink" title="Controller"></a>Controller</h3><p>追踪一种类型的k8s资源，并负责确保其当前状态接近期望状态</p>
-<h3 id="Lease（？）"><a href="#Lease（？）" class="headerlink" title="Lease（？）"></a>Lease（？）</h3><p>提供一种机制来锁定共享资源并协调集合成员之间的活动</p>
+<h2 id="概念介绍"><a href="#概念介绍" class="headerlink" title="概念介绍"></a>概念介绍</h2><p>Node<br>用于存放pod，pod是K8s中最小的部署单元，pod里面包含一个或多个容器，节点可以是一个虚拟机或者物理机器，取决于所在的集群配置</p>
+<p>Controller<br>追踪一种类型的k8s资源，并负责确保其当前状态接近期望状态</p>
+<p>Lease（？）<br>提供一种机制来锁定共享资源并协调集合成员之间的活动</p>
 <p>CGroup V2（？）</p>
-<h3 id="垃圾清理"><a href="#垃圾清理" class="headerlink" title="垃圾清理"></a>垃圾清理</h3><p>镜像垃圾回收：当镜像存储分区使用率超过指定值时，删除未使用的镜像，直到使用率降至指定值</p>
+<p>垃圾清理<br>镜像垃圾回收：当镜像存储分区使用率超过指定值时，删除未使用的镜像，直到使用率降至指定值</p>
 <p>容器垃圾回收：针对停止的容器回收，两个参数1.每个Pod保留的最大容器数2.容器停止后保留的最短时间</p>
-<h2 id="一-核心组件"><a href="#一-核心组件" class="headerlink" title="一.核心组件"></a>一.核心组件</h2><p>1.控制平面组件 Control Plane<br>负责容器编排和维护集群的状态</p>
+<h2 id="一-核心组件"><a href="#一-核心组件" class="headerlink" title="一.核心组件"></a>一.核心组件</h2><p>1.控制平面组件（Control Plane）<br>负责容器编排和维护集群的状态</p>
 <pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token comment">#管理API请求，协调控制平面和工作节点</span>
 kube<span class="token punctuation">-</span>apiserver        
 	                                
@@ -195,7 +195,7 @@ kube<span class="token punctuation">-</span>controller<span class="token punctua
 <span class="token comment">#云控制管理器，连接云平台与k8s</span>
 cloud<span class="token punctuation">-</span>controller<span class="token punctuation">-</span>manager                                      <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>2.工作Node组件 Worker Node<br>负责运行容器化应用程序</p>
+<p>2.工作Node组件（Worker Node）<br>负责运行容器化应用程序</p>
 <pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token comment">#管理Pod和容器运行</span>
 kubelet        
  
@@ -226,10 +226,11 @@ Web UI（Kubernetes 仪表板<span aria-hidden="true" class="line-numbers-rows">
 <p>3.API版本管理</p>
 <h2 id="四-kubectl命令–执行K8s操作"><a href="#四-kubectl命令–执行K8s操作" class="headerlink" title="四.kubectl命令–执行K8s操作"></a>四.kubectl命令–执行K8s操作</h2><p>基本语法：kubectl [操作类型] [资源类型] [资源的名称] [可选标志]</p>
 <p>参考文档<a target="_blank" rel="noopener" href="https://kubernetes.io/docs/reference/kubectl/">https://kubernetes.io/docs/reference/kubectl/</a></p>
-<h2 id="五-容器"><a href="#五-容器" class="headerlink" title="五.容器"></a>五.容器</h2><h3 id="镜像"><a href="#镜像" class="headerlink" title="镜像"></a>镜像</h3><p>封装了应用程序及其所有软件依赖的二进制数据（可以理解为Java的类）</p>
-<h3 id="容器环境"><a href="#容器环境" class="headerlink" title="容器环境"></a>容器环境</h3><p>给容器提供资源（包括文件系统，容器自身的信息，集群中其他对象的信息）</p>
-<h3 id="容器运行时类"><a href="#容器运行时类" class="headerlink" title="容器运行时类"></a>容器运行时类</h3><p>运行 Pod 中的容器，用于选择容器运行时配置的特性，容器运行时配置用于运行 Pod 中的容器（理解为Java的对象实例化）</p>
-<h3 id="容器生命周期回调（？？）"><a href="#容器生命周期回调（？？）" class="headerlink" title="容器生命周期回调（？？）"></a>容器生命周期回调（？？）</h3><h3 id="容器运行时接口"><a href="#容器运行时接口" class="headerlink" title="容器运行时接口"></a>容器运行时接口</h3><p>kubelet与容器运行时通信的gRPC接口</p>
+<h2 id="五-容器"><a href="#五-容器" class="headerlink" title="五.容器"></a>五.容器</h2><p>镜像<br>封装了应用程序及其所有软件依赖的二进制数据（可以理解为Java的类）</p>
+<p>容器环境<br>给容器提供资源（包括文件系统，容器自身的信息，集群中其他对象的信息）</p>
+<p>容器运行时类<br>运行 Pod 中的容器，用于选择容器运行时配置的特性，容器运行时配置用于运行 Pod 中的容器（理解为Java的对象实例化）</p>
+<p>容器生命周期回调（？？）</p>
+<p>容器运行时接口<br>kubelet与容器运行时通信的gRPC接口</p>
 <h2 id="六-工作负载"><a href="#六-工作负载" class="headerlink" title="六.工作负载"></a>六.工作负载</h2><p>工作负载是在 K8s上运行的应用<br>在 K8s中，由单个组件或者多个一同工作的组件构成， 都可以在一组 Pod中运行， Pod代表的是集群上处于运行状态的一组容器的集合</p>
 <pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token comment">#用于管理集群上的无状态应用</span>
 Deployment 和 ReplicaSet   
